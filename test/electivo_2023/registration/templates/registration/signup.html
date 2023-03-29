@@ -4,7 +4,6 @@
         <title>EcoFácil</title>
      
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
     </head>
         <style media="screen">    
@@ -34,13 +33,13 @@ body{
 }
 
 form{
-    height: 620px;
-    width: 450px;
+    height: 500px;
+    width: 400px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
     transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
+    margin-top: 25%;
+    margin-left: 50%;
     border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255,255,255,0.1);
@@ -53,30 +52,32 @@ form *{
     letter-spacing: 0.5px;
     outline: none;
     border: none;
-    font-size: 10px;
+    
 }
+
 form h3{
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 500;
     line-height: 22px;
     text-align: center;
 }
 form a {
     
-    font-size: 13px;
+    font-size: 15px;
     text-decoration: none;
-    
+    line-height: 35px;
+
 }
 label{
     display: block;
-    margin-top: 15px;
+    margin-top: 10px;
     font-size: 16px;
     font-weight: 500;
 }
 input{
     display: block;
     height: 35px;
-    width: 100%;
+    width: 95%;
     background-color: rgba(255,255,255,0.07);
     border-radius: 3px;
     padding: 0 10px;
@@ -88,7 +89,7 @@ input{
     color: #ffffff6e;
 }
 button{
-    margin-top: 14px;
+    margin-top: 10px;
     width: 100%;
     background-color: #ffffff;
     color: #080710;
@@ -97,6 +98,7 @@ button{
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+   
 }    
 
 .logo {
@@ -140,6 +142,12 @@ button{
     width: 100%;
     z-index: 100;
 }
+.helptext{
+display: none;
+}
+ul li{
+display: none;
+}
     </style>
 <body>
     <div class="head">
@@ -158,8 +166,8 @@ button{
                     </div>
                 <form action="" method="post">{% csrf_token %}
                     <h3 class="mb-4">Crear cuenta</h3>
-                    {{form.as_p}}
-                    <p><input type="submit" class="btn btn-primary btn-block" value="Confirmar"></p>
+                    {{form.as_p}} 
+                    <button type="submit">Confirmar</button>
                     <a href="{% url 'login' %}" >Ya tengo cuenta</a>
                 </form>
             </body>
