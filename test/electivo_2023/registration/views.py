@@ -26,6 +26,10 @@ class SignUpView(CreateView):
         form.fields['password1'].widget = forms.PasswordInput(attrs={'class':'form-control mb-2','placeholder':'Ingrese su contraseña'})
         form.fields['password2'].widget = forms.PasswordInput(attrs={'class':'form-control mb-2','placeholder':'Re ingrese su contraseña'})    
         return form
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, '¡Registro exitoso! Ahora puede iniciar sesión.')
+        return response
 
 @method_decorator(login_required, name='dispatch')
 class ProfileUpdate(UpdateView):

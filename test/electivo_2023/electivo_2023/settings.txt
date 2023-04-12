@@ -82,9 +82,9 @@ DATABASES = {
     'default': {
         'HOST': 'localhost',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ecofacil',
-        'USER': 'postgres',
-        'PASSWORD': 'admin'
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': ''
     }
 }
 

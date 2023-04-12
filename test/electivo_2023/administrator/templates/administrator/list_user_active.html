@@ -1,12 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">   
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+    padding: 0 ;
+}
+.errorlist{color:red;}
 
-{% load static %}
+th h3{
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 0.5px;
 
-{% block content %}
-{% block extrahead %}
-
-{% endblock %}
-    <style>.errorlist{color:red;}
-
+}
+thead tr th{
+    font-size: 18px;
+    text-transform: uppercase;
+}
+tbody tr th{
+    color: #333;
+}
+th a{
+    text-decoration: none;
+    color: #000000;
+}
     </style>
     <main role="main">
         <div class="container col-12">
@@ -97,4 +121,4 @@
             </div>
         </div>
     </main>
-{% endblock %}
+

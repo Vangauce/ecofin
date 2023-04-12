@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">   
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+    padding: 0 ;
+}
+
+a {
+  color: #fff;
+  font-size: 24px;
+  text-decoration: none;
+  text-align: center;
+}
+h3{
+    font-size: 25px; 
+    text-align: center;
+
+}
+
+.navbar {
+    display: flex;
+    margin: 0 ;
+
+
+}
+
+.navbar h3 {
+    margin: 0;
+    background-color: #4d8066;
+    display:block;
+    padding: 20px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 25px;
+    width: 100%;
+}
+
+input[type=file].form-control {
+    background-color: #4d8066;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 23px;
+    border-radius: 5px;
+    width: 100%;
+    color: #333;
+
+}
+.row{
+    text-align: left;
+
+}
+.row div a {
+    font-size: 23px ;
+    text-decoration:underline;
+    color: #333;
+
+}
+.col-12.col-sm-3 button {
+    width: 200px;
+    background-color: #fffefe;
+    color: #333;
+    padding: 5px 0;
+    font-size: 23px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+        </style>          
+<body>
+  <nav class="navbar">
+    <h3>Carga Masiva de usuarios</h3> 
+  </nav>  
+  {%if profiles.group_id == 1 %}
+  <div class="col-12">
+      <form action="{% url 'carga_masiva_users_save' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row">  
+              <div class="col-12 col-sm-6 mb-3">
+                  <a href="{% url 'import_file_users' %}">Descarga archivo de importación</a>
+              </div>   
+              <div class="col-12 col-sm-6 mb-3">
+                  <input type="file" name="myfile" class="form-control border border-danger" required>
+              </div>   
+              <div class="col-12 col-sm-3">
+                  <button class="btn btn btn-danger form-control mt-2" type="submit">Cargar</button>
+              </div>
+              <div class="col-12 col-sm-3">
+                  <a href="{% url 'users_main' %}" class="btn btn btn-danger form-control mt-2">Volver</a>
+              </div>
+          </div>
+      </form>
+  </div>
+{% endif %}
+</body>
+</html>   
