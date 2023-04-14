@@ -31,6 +31,7 @@ th a{
     text-decoration: none;
     color: #000000;
 }
+
     </style>
     <main role="main">
         <div class="container col-12">
@@ -58,7 +59,7 @@ th a{
                             <th width="450" scope="col">Nombre Completo</th>
                             <th width="300" scope="col">Correo</th>
                             {% if profiles.group_id == 1 %}
-                                <th width="250" scope="col">Funciones</th>
+                                <th width="300" scope="col">Funciones</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -71,14 +72,13 @@ th a{
                                 {% if profiles.group_id == 1 %}
                                     <th scope="row">
                                         {% if s.id != request.user.id %}
-                                            <a href="{% url 'edit_user' s.id %}">
-                                                Edita Usuario
-                                            </a>
+                                            <a href="{% url 'edit_user' s.id %}">Editar</a>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="{% url 'view_user' s.id %}">Ver</a>
                                             {% if s.id != request.user.id %}
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a href="{% url 'user_block' s.id  %}" data-toggle="modal" data-target="#userBlock" data-u_id="{{s.id}}" data-u_name="{{s.name}}"  data-page="{{page}}">
-                                                    Bloquea Usuario
-                                                </a>
+                                                    Bloquear</a>
                                             {% endif %}
                                         {% endif %}
                                     </th>   

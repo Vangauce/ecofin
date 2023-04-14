@@ -21,7 +21,13 @@ import pandas as pd
 import xlwt
 
 from registration.models import Profile
-
+@login_required
+def view_user(request, user_id):
+    user_data = User.objects.get(pk=user_id)
+    profile_data = Profile.objects.get(user_id=user_id)
+    groups = Group.objects.get(pk=profile_data.group_id) 
+    template_name = 'administrator/view_user.html'
+    return render(request, template_name, {'user_data': user_data, 'profile_data': profile_data, 'groups': groups})
 
 @login_required
 def admin_main(request):

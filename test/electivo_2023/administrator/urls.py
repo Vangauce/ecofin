@@ -9,6 +9,7 @@ administrator_patterns = [
     #flujo usuarios
     path('users_main', views.users_main,name="users_main"),
     path('new_user/',views.new_user, name='new_user'),
+    path('view_user/<user_id>',views.view_user, name='view_user'),
     path('carga_masiva_users/',views.carga_masiva_users, name='carga_masiva_users'),
     path('carga_masiva_users_save/',views.carga_masiva_users_save,name="carga_masiva_users_save"),
     path('import_file_users/',views.import_file_users,name="import_file_users"),

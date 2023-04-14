@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">   
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+    padding: 0 ;
+}       
+
+h3{
+    font-size: 25px; 
+    text-align: left;
+}
+
+.navbar {
+    display: flex;
+    margin: 0 ;
+
+
+}
+
+.navbar h3 {
+    margin: 0;
+    background-color: #4d8066;
+    display:block;
+    padding: 20px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 25px;
+    width: 100%;
+}
+
+table{
+  font-size: 20px;
+
+}
+td{
+  padding-left: 20px;
+}
+a{
+    text-decoration: none;
+    padding-top: 10px;
+    font-size: 20px;
+    color: #000000;
+}
+</style> 
+        <body>
+
+          <nav class="navbar">
+            <h3>Detalles del usario</h3> 
+          </nav> 
+<table>
+  <tr>
+    <th>Nombre:</th>
+    <td>{{ user_data.first_name }}</td>
+  </tr>
+  <tr>
+    <th>Apellido:</th>
+    <td>{{ user_data.last_name }}</td>
+  </tr>
+  <tr>
+    <th>Email:</th>
+    <td>{{ user_data.email }}</td>
+  </tr>
+  <tr>
+    <th>Grupo:</th>
+    <td>{{ groups.name }}</td>
+  </tr>
+</table>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<div class="col-12 col-sm-6 mb-3">
+  <a href="{% url 'list_user_active' groups.id %}" class="btn btn-danger form-control">Volver</a>
+</div>
+        </body>
+
+</html>
+
+
+
