@@ -31,6 +31,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('registration.urls')),
+    path('productos/', include('productos.urls')),
 ]
 
 admin.site.site_header = 'Administrador Bussiness_Solutions'

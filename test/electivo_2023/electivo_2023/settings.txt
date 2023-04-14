@@ -42,7 +42,13 @@ INSTALLED_APPS = [
     'administrator',
     'core',
     'ejemplos',
+    'productos',
+    'crispy_forms',
+    'bootstrap4',
+    'crispy_bootstrap4',
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,9 +88,9 @@ DATABASES = {
     'default': {
         'HOST': 'localhost',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': ''
+        'NAME': 'ecofacil',
+        'USER': 'postgres',
+        'PASSWORD': 'admin'
     }
 }
 
