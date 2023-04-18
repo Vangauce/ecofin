@@ -10,3 +10,6 @@ django-mathfilters
 djangorestframework
 psycopg2==2.8.5
 djangorestframework==3.11.2
+django-bootstrap4
+django-crispy-forms
+crispy-bootstrap4
