@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">   
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+    padding: 0 ;
+}       
+input{
+    background-color: #ffffff;
+    margin: 15px;
+    width: 150px;
+    height: 22px;
+}
+option{
+    background-color: #ffffff;
+    margin: 15px;
+    text-align: left;
+    width: 150px;
+    height: 22px;
+}
+main{
+    text-align: left;
+}
+h3{
+    font-size: 25px; 
+    text-align: left;
+}
+form div {
+    text-align: left;
+}
+.navbar {
+    display: flex;
+    margin: 0 ;
+
+
+}
+
+.navbar h3 {
+    margin: 0;
+    background-color: #4d8066;
+    display:block;
+    padding: 20px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 25px;
+    width: 100%;
+}
+label{
+    font-size: 18px;
+}
+button{
+    background-color: #333333;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 50px;
+    width: 220px;
+}
+a{
+    text-decoration: none;
+    color: #000000;
+}
+</style> 
+    <main role="main">
+        <body>
+            <nav class="navbar">
+              <h3>Crear nuevo usuario</h3> 
+            </nav> 
+
+            <div class="col-12  mt-3 border">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="row"> 
+                        <div class="col-12 col-sm-8 mb-3">
+                            <label for="rut">Nombre de usuario</label>
+                            <input type="text" name="rut"  required oninput="checkRut(this)" autofocus maxlength="254" required id="id_rut" class="form-control border border-danger"/>
+                        </div>  
+                        <div class="col-12 col-sm-4 mb-3">
+                            <label for="email">Perfil</label>
+                            <select name="grupo" id="grupo" class="form-control border border-danger" required>
+                                <option value="">--------------------------</option>
+                                {% for g in groups %}
+                                <option value="{{g.id}}">{{g.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>  
+                    </div>    
+                    <div class="row">                       
+                        <div class="col-12 col-sm-4 mb-3">
+                            <label for="name">Nombre (*)</label>
+                            <input type="text" class="form-control border border-danger" id="name" name="name" autofocus maxlength="254" required/>
+                        </div>
+                        <div class="col-12 col-sm-4 mb-3">
+                            <label for="last_name">Apellidos</label>
+                            <input type="text" class="form-control border border-danger" id="last_name1" name="last_name1" required/>
+                        </div>                        
+                        <div class="col-12 col-sm-4 mb-3">
+                            <label for="mobile">Celular</label>
+                            <input type="number" class="form-control border border-danger" id="mobile" name="mobile"/>
+                        </div>                        
+                    </div>
+                    <div class="row"> 
+                        <div class="col-12 col-sm-8 mb-3">
+                            <label for="email">Correo (*)</label>
+                            <input type="email" class="form-control border border-danger" placeholder="nombre@gmail.cl" name="email"/>
+                        </div>
+                        <div class="col-12 col-sm-4 mb-3">
+                            <label for="position">Cargo</label>
+                            <input type="position" class="form-control border border-danger" placeholder="Administrador" name="position" required/>
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-12 col-sm-6 mb-3">
+                            <button type="submit">Crear usuario</button>
+                        </div>
+                        <div class="col-12 col-sm-6 mb-3">
+                            <a href="{% url 'users_main' %}" class="btn btn-danger form-control">Volver</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </body>
+    </main>
+</html>

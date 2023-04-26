@@ -1,0 +1,8 @@
+{% extends "insumos/base.html" %}
+
+{% block content %}
+    <h2>{{ insumos.nombre }}</h2>
+    <p><strong>Material:</strong> {{ insumos.material }}</p>
+    <p><strong>Cantidad:</strong> {{ insumos.cantidad }}</p>
+    <a href="{% url 'insumos_list' %}" class="btn btn-secondary">Regresar al listado</a>
+{% endblock %}
