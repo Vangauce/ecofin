@@ -1,4 +1,4 @@
-django==2.0.2
+django==3.2.18
 Pillow 
 pylint
 pylint-django
