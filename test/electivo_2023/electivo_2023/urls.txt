@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.views.generic import TemplateView
 from django.contrib import admin
 from django.urls import path,include
 from administrator.urls import administrator_patterns
@@ -24,6 +24,7 @@ from core.urls import core_urlpatterns
 from ejemplos.urls import ejemplos_urlpatterns
 urlpatterns = [
     path('',include(core_urlpatterns)),
+    path('', TemplateView.as_view(template_name='core/home.html'), name='home'),
     path('ejemplos/',include(ejemplos_urlpatterns)),
     path('administrator/',include(administrator_patterns)),
 
@@ -33,6 +34,7 @@ urlpatterns = [
     path('productos/', include('productos.urls')),
     path('categorias/', include('categorias.urls')),
     path('insumos/', include('insumos.urls')),
+    path('proveedores/', include('proveedores.urls')),
 ]
 
 admin.site.site_header = 'Administrador Bussiness_Solutions'

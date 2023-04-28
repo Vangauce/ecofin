@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 from .models import Producto
 from .forms import ProductosForm
 
+
+def productos_main(request):
+    total_productos = Producto.total_productos()
+    return render(request, 'productos/productos_main.html', {'total_productos': total_productos})
+
 def productos_lista(request):
     q = request.GET.get('q')
     if q:

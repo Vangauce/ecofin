@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'categorias',
     'insumos',
+    'proveedores',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -90,8 +91,8 @@ DATABASES = {
         'HOST': 'localhost',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'Base_de_Datos',
-        'USER': '',
-        'PASSWORD': ''
+        'USER': 'postgres',
+        'PASSWORD': 'smhwtsv'
     }
 }
 

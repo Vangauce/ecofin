@@ -3,9 +3,18 @@ from .models import Insumos
 from .forms import InsumosForm
 
 
+def insumos_main(request):
+    total_insumos = Insumos.total_insumos()
+    return render(request, 'insumos/insumos_main.html', {'total_insumos': total_insumos})
+
 def insumos_lista(request):
-    context = {'insumos_lista': Insumos.objects.all()}
-    return render(request,"insumos/insumos_lista.html",context)
+    q = request.GET.get('q')
+    if q:
+        insumos_lista = Insumos.objects.filter(nombre__icontains=q)
+    else:
+        insumos_lista = Insumos.objects.all()
+    context = {'insumos_lista': insumos_lista}
+    return render(request, "insumos/insumos_lista.html", context)
 
 def insumos_form(request,id=0):
     if request.method == "GET":
