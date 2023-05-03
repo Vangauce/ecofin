@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+.bg-mi-color{
+    background-color: #4d8066 ;
+    font-family:'Poppins',sans-serif;
+}
+.bg-mi-color1{
+    background-color: #333 ;
+    font-family:'Poppins',sans-serif;
+}
+
+    
+    
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bootstrap Minimalista</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body class="bg-mi-color">
+  <nav class="navbar navbar-expand-lg navbar bg-mi-color1">
+        <a style="color: white;" class="navbar-brand" href="#">EcoFácil</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a style="color: white;"class="nav-link" href="{% url 'home' %}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="#">Sobre nosotros</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="#">Servicios</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;"class="nav-link" href="#">Contacto</a>
+                </li>
+                {% if not user.is_authenticated %}
+                  <a href="{% url 'login' %}" class="btn btn-dark">Iniciar sesión</a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a style="color: white;" class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h1 class="mb-3">Bienvenido a nuestra tienda de productos desechables</h1>
+                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius faucibus eros, eu lacinia elit laoreet vitae. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam venenatis nisl a justo ornare, ut ultrices velit mollis.</p>
+                <a style="color: white;" href="#" class="btn btn-dark">Leer más</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

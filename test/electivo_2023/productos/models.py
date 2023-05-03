@@ -7,4 +7,7 @@ class Producto(models.Model):  #Employee
     cantidad = models.CharField(max_length=3)  #emp_code
     material= models.CharField(max_length=15)  #mobile
     categoria= models.ForeignKey(Categorias,on_delete=models.CASCADE)  #position
+    @classmethod
+    def total_productos(cls):
+        return cls.objects.count()
 

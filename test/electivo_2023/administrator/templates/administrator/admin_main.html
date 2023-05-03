@@ -1,107 +1,82 @@
-
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <title>EcoFácil</title>
-     
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    </head>
-        <style media="screen">   
-body{
-    background-color: #4d8066;
-    font-family: 'Poppins',sans-serif;
-    padding: 0 ;
+<style>
+.navbar-default {
+  background-color: #333333;
 }
-.square-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70vh;
+.bg-mi-color{
+    background-color: #4d8066 ;
+    font-family:'Poppins',sans-serif;
 }
-
-.square {
-  background-color: #333;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 150px;
-  width: 150px;
-  margin: 50px;
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
-}
-.square:hover {
-  transform: translateY(-20px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-}
-
-a {
-  color: #fff;
-  font-size: 24px;
-  text-decoration: none;
-  text-align: center;
-}
-h3{
-    font-size: 25px; 
-    text-align: center;
-    animation: fadeIn 2s;
-
-}
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.navbar {
-    display: flex;
-    margin: 0 ;
-
-
-}
-
-.navbar h3 {
-    margin: 0;
-    background-color: #4d8066;
-    display:block;
-    padding: 20px 20px;
-    color: #333;
-    text-decoration: none;
-    font-size: 25px;
-    width: 100%;
-}
-
-
-
-
-        </style>          
-<body>
-  <nav class="navbar">
-    <h3>¡Bienvenido {{request.user.first_name}} {{request.user.last_name}}!</h3> 
-  </nav>  
-
-    <div class="square-container">
-        <div class="square">
-          <a href="{% url 'users_main' %}">Gestión de usuarios</a>
-        </div>
-        <div class="square">
-          <a href="{% url 'productos_list' %}">Gestión de productos</a>
-        </div>
-        <div class="square">
-          <a href="{% url 'categorias_list' %}">Gestión de categorías</a>
-        </div>
-        <div class="square">
-          <a href="{% url 'insumos_list' %}">Gestión de insumos</a>
-        </div>
-
+</style>
+<head>
+    <title>EcoFácil</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-mi-color">
+  <nav class="navbar navbar-default">
+      <div class="container-fluid">
+          <div class="navbar-header">
+              <a style="color: #fff;" class="navbar-brand" href="#">EcoFácil</a>
+          </div>
+          <ul class="nav navbar-nav navbar-right">
+              <li><a style="color: #fff; font-size: 23px;" href="#"><span class="glyphicon glyphicon-user"></span> 
+                ¡Bienvenido {{request.user.first_name}} {{request.user.last_name}}!</a></li>  
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a style="color: #fff;" href="#"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+        </ul>
       </div>
-      
-</body>
-</html>        
+  </nav>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div style="background-color: #333333;" class="card mb-4">
+                <div class="card-body">
+                    <h5  class="card-title text-center"><a style="color: #fff;" href="{% url 'users_main' %}">Gestión de usuarios</a></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div style="background-color: #333333;" class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center"><a style="color: #fff;" href="{% url 'productos_main' %}">Gestión de productos</a></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div style="background-color: #333333;" class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center"><a style="color: #fff;" href="{% url 'categorias_main' %}">Gestión de categorías</a></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div style="background-color: #333333;" class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center"><a style="color: #fff;" href="{% url 'insumos_main' %}">Gestión de insumos</a></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div style="background-color: #333333;" class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center"><a style="color: #fff;"  href="{% url 'proveedores_list' %}">Gestión de proveedores</a></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div style="background-color: #333333;" class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center"><a style="color: #fff;" href="{% url 'insumos_list' %}">Gestión de orden de compra</a></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@
