@@ -1,0 +1,62 @@
+{% extends 'insumos/base.html' %}
+
+{% block content %}
+
+<!-- Encabezado del dashboard -->
+<div class="jumbotron">
+  <h1 class="display-4">Dashboard de Insumos</h1>
+  <p class="lead">Bienvenido al dashboard de Insumos.</p>
+</div>
+
+<!-- Contenido del dashboard -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Insumos</h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text">Total de insumos: {{ insumos_count }}</p>
+          <a href="{% url 'insumos_list' %}" class="btn btn-primary">Ver insumos</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Nuevo Insumo</h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text">Agregar un nuevo insumo.</p>
+          <a href="{% url 'insumos_insert' %}" class="btn btn-success">Agregar Insumo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Insumos -->
+  <h2 class="mt-4">Lista de Insumos</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Material</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for insumo in insumos %}
+      <tr>
+        <th scope="row">{{ insumo.id }}</th>
+        <td>{{ insumo.nombre }}</td>
+        <td>{{ insumo.cantidad }}</td>
+        <td>{{ insumo.material }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

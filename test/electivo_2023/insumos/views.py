@@ -34,3 +34,8 @@ def insumos_read(request, id):
     insumos = Insumos.objects.get(pk=id)
     context = {'insumos': insumos}
     return render(request, "insumos/insumos_read.html", context)
+
+
+def insumos_dashboard(request):
+    context = {'insumos': Insumos.objects.all()}
+    return render(request, "insumos/dashboard.html", context)

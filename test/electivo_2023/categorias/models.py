@@ -10,8 +10,8 @@ from django.db import models
 
 class Categorias(models.Model):  #Employee
     nombre = models.CharField(max_length=100)  #fullname
-    #cantidad = models.CharField(max_length=3)  #emp_code
-    #material= models.CharField(max_length=15)  #mobile
+    cantidad = models.IntegerField(default=0) #emp_code
+    material= models.CharField(max_length=15)  #mobile
     #categoria= models.ForeignKey(Categoria,on_delete=models.CASCADE)  #position
     def __str__(self):
         return self.nombre
