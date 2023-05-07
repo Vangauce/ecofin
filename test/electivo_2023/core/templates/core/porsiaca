@@ -1,0 +1,122 @@
+{% block content %}
+
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+
+<style>
+
+.bg-mi-color{
+    background-color: #4d8066 ;
+    font-family:'Poppins',sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.bg-mi-color1{
+    background-color: #333 ;
+    font-family:'Poppins',sans-serif;
+}
+
+.footer{
+    background-color: #333 ;
+    font-family:'Poppins',sans-serif;
+    text-align: center;
+    margin-top: auto;
+    
+
+}
+
+    
+    
+
+    
+
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sobre nosotros - EcoFácil</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body class="bg-mi-color">
+    <nav class="navbar navbar-expand-lg navbar bg-mi-color1">
+        <a style="color: white;" class="navbar-brand" href="#">EcoFácil</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="{% url 'home' %}">Inicio</a>
+                </li>
+                <li class="nav-item active">
+                    <a style="color: white;" class="nav-link" href="{% url 'sobre_nosotros' %}">Sobre nosotros</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="#">Servicios</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="#">Contacto</a>
+                </li>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}" class="btn btn-dark">Iniciar sesión</a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+
+               <div class= texto> 
+                    <h1 class="mb-3">Sobre nosotros</h1>
+                    <p class="lead">En EcoFácil, nuestro objetivo es hacer que el cuidado del medio ambiente sea fácil y
+                    accesible para todos. Comenzamos como un pequeño negocio local en la ciudad de X, ofreciendo
+                    soluciones sostenibles y ecológicas para hogares y empresas.</p>
+                    
+                    <img src="{% static 'core/basura.jpg' %}" alt="basura">
+
+                    <p class="lead">Con el tiempo, hemos crecido y expandido nuestras operaciones a nivel nacional, pero
+                    nuestro compromiso con la sostenibilidad y la responsabilidad ambiental sigue siendo el mismo. Nos
+                    esforzamos por ser líderes en la industria, siempre buscando formas innovadoras de reducir nuestra
+                    huella de carbono y promover prácticas más ecológicas en todas las áreas de nuestro negocio.</p>
+                    
+                </div>
+
+                
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+ 
+</body>
+
+<footer class="footer">
+
+    <p style="color: white;" class="navbar-brand" href="#">
+        Tienda EcoFácil
+        2023. Todos los derechos reservados.
+
+    </p>
+    
+</footer>
+
+
+{% endblock %}

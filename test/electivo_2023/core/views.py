@@ -18,6 +18,8 @@ from registration.models import Profile #importa el modelo profile, el que usare
 def home(request):
     return render(request, 'core/home.html')
 
+def sobre_nosotros(request):
+    return render(request, 'core/sobre_nosotros.html')
 
 @login_required
 def pre_check_profile(request):

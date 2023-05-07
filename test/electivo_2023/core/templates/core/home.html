@@ -4,10 +4,22 @@
 .bg-mi-color{
     background-color: #4d8066 ;
     font-family:'Poppins',sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 .bg-mi-color1{
     background-color: #333 ;
     font-family:'Poppins',sans-serif;
+}
+
+.footer{
+    background-color: #333 ;
+    font-family:'Poppins',sans-serif;
+    text-align: center;
+    margin-top: auto;
+    
+
 }
 
     
@@ -32,7 +44,7 @@
                     <a style="color: white;"class="nav-link" href="{% url 'home' %}">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a style="color: white;" class="nav-link" href="#">Sobre nosotros</a>
+                    <a style="color: white;" class="nav-link" href="{% url 'sobre_nosotros' %}">Sobre nosotros</a>
                 </li>
                 <li class="nav-item">
                     <a style="color: white;" class="nav-link" href="#">Servicios</a>
@@ -62,8 +74,16 @@
         </div>
     </div>
 
+    <footer class="footer" ><p style="color: white;" class="navbar-brand" href="#">
+        Tienda EcoFácil
+         2023. Todos los derechos reservados.
+    </p></footer>
+
+    
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
+
+
 </html>
