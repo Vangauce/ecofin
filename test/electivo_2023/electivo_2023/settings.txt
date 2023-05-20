@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'administrator',
     'core',
+    'productos',
     'crispy_forms',
     'bootstrap4',
     'crispy_bootstrap4',
