@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'categorias',
     'insumos',
+    'proveedores',
     
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
