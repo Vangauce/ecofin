@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Proveedores
+from .models import Proveedores, Detalle_orden, Compras
 from .forms import ProveedoresForm
 from django.shortcuts import render, redirect
 import xlwt
@@ -140,7 +140,117 @@ def import_file_proveedores(request):
 def proveedores_main(request):
     total_proveedores = Proveedores.total_proveedores()
     return render(request, 'proveedores/proveedores_main.html', {'total_proveedores': total_proveedores})
+def prueba(request, id=None):
+    proveedores = Proveedores.objects.all()
+    productos = Producto.objects.all()
 
+    template_name = 'proveedores/prueba.html'
+    detalle_orden = {}
+
+    if request.method == "GET":
+        compra = Compras.objects.filter(pk=id).first()
+
+        if not compra:
+            encabezado = {
+                'id': 0,
+                'proveedor': 0,
+                'subTotal': 0,
+                'descuento': 0,
+                'total': 0
+            }
+
+            detalle_orden = None
+        else:
+            encabezado = {
+                'id': compra.id,
+                'proveedor': compra.proveedores,
+                'subTotal': compra.sub_total,
+                'descuento': compra.descuento,
+                'total': compra.total
+            }
+
+            detalle_orden = Detalle_orden.objects.filter(compra=compra)
+
+        context = {
+            "compra": encabezado,
+            "detallecompra": detalle_orden,
+            "proveedores": proveedores,
+            "productos": productos,
+        }
+
+        return render(request, template_name, context)
+
+    if request.method == "POST":
+        idProveedor = request.POST.get("proveedor")
+        proveedor = Proveedores.objects.get(pk=idProveedor)
+
+        if not id:
+            compra = Compras(proveedores=proveedor)
+
+            if compra:
+                compra.save()
+
+                id = compra.id
+        else:
+            compra = Compras.objects.filter(pk=id).first()
+
+            if compra:
+                compra.proveedores = proveedor
+
+                compra.save()
+
+        id_producto= request.POST.get("producto")
+        cantidad = request.POST.get("cantidad")
+        precio = request.POST.get("precio")
+        producto = Producto.objects.get(id=id_producto)
+        desc = request.POST.get("descuento")
+
+        sub_total_detalle = float(cantidad) * float(precio)
+        descuento_detalle = float(desc)
+        total_detalle = sub_total_detalle - descuento_detalle
+
+        detalle_orden = Detalle_orden(compra=compra, producto=producto, cantidad=cantidad, precio=precio, sub_total_detalle=sub_total_detalle, descuento_detalle=descuento_detalle, total_detalle=total_detalle)
+
+        if detalle_orden:
+            detalle_orden.save()
+
+        compra = Compras.objects.filter(pk=id).first()
+        encabezado = {
+            'id': compra.id,
+            'proveedor': compra.proveedores,
+            'subTotal': compra.sub_total,
+            'descuento': compra.descuento,
+            'total': compra.total
+        }
+
+        detalle_orden = Detalle_orden.objects.filter(compra=compra)
+
+        context = {
+            "compra": encabezado,
+            "detallecompra": detalle_orden,
+            "proveedores": proveedores,
+            "productos": productos,
+        }
+
+        return render(request, template_name, context)
+
+    return render(request, template_name, {'proveedores': proveedores, 'productos': productos})
+
+
+def ver_orden_compra(request, id):
+    compra = Compras.objects.get(pk=id)
+    detalles = Detalle_orden.objects.filter(compra=compra)
+    context = {'compra': compra, 'detalles': detalles}
+    return render(request, 'proveedores/ver_orden_compra.html', context) 
+
+def eliminar_orden_compra(request,id):
+    compra = Compras.objects.get(pk=id)
+    compra.delete()
+    return redirect("/proveedores/prueba/")
+def listar_orden_compra(request):
+    datos_all = Detalle_orden.objects.all()
+    context = {"detalles": datos_all}
+    return render(request,'proveedores/listar_orden_compra.html', context)
 
 def proveedores_lista(request):
     q = request.GET.get('q')
