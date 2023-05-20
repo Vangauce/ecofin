@@ -1,36 +1,205 @@
-{% load static %}
-{% block title %}{% endblock %}
-{% block content %}
-<style>.errorlist{color:red;}</style>
-<section>
-    {% if 'register' in request.GET %}
-        <p style="color: green">Usuario registrado correctamente</p>
-    {% endif%}
-    <form action="" method="post">
-        {% csrf_token %}
-        <h4 class="mb-3 text-blue text-center">SOLUCIONES PARA PYME</h4>
-        {% if form.non_field_errors %}
-            <p style="color:red">Usuario o contraseña incorrectos, prueba de nuevo.</p>
-        {% endif %}
-        <div class="mb-3">
-            <label for="user" class="form-label">Usuario</label>
-            <input type="text" name="username" class="form-control"/>
-            <span class="feedback body-small text-regular"></span>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input type="password" name="password" class="form-control" id="password"/>
-            <span class="feedback body-small text-regular"></span>
-        </div>
-        <div class="d-flex justify-content-end mb-3">
-            <a class="body-normal text-blue text-decoration-underline cursor-pointer">Olvidé mi contraseña</a>
-        </div>
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="button">
-                <span>Iniciar Sesión</span>
-            </button>
-        </div>
-    </form>
-</section>
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">
 
-{% endblock %}
+
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+}
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+}
+
+form{
+    height: 480px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    margin-top: 20%;
+    margin-left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 0px 35px;
+}
+form *{
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+form h3{
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
+form a {
+    
+    font-size: 15px;
+    text-decoration: none;
+    line-height: 42px;
+}
+
+label{
+    display: block;
+    margin-top: 25px;
+    font-size: 16px;
+    font-weight: 500;
+}
+input{
+    display: block;
+    height: 40px;
+    width: 95%;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+::placeholder{
+    color: #333333a2;
+}
+button{
+    margin-top: 50px;
+    width: 100%;
+    background-color: #333333;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+ 
+.navbar {
+    display: flex;
+    margin-right: 10px;
+}
+
+.logo {
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.logo {
+    max-width: 150px;
+}
+
+.navbar a {
+    display:block;
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 23px;
+}
+
+.navbar a:hover {
+    background-color: #155528;
+    
+}
+.head {
+    font-family: 'Poppins',sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 63px;
+    background: #4d8066;
+    width: 100%;
+    z-index: 100;
+}
+.messages {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: auto; 
+    width: auto; 
+    padding: 10px;
+    margin: 0;
+    z-index: 9999;
+}
+
+.messages li {
+    display: block;
+    margin: 5px 0;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+.messages li.error {
+    background-color: #ffcccc;
+    color: #990000;
+}
+
+.messages li.success {
+    background-color: #ccffcc;
+    color: #009900;
+}
+
+
+</style>
+</head>
+{% csrf_token %}
+{% load static %}
+<body>
+    <div class="head">
+        <div class="logo">
+            <img class="logo" src="{% static "assets/img/logo3.png" %}" alt="EcoFacil">
+        </div>
+        <nav class="navbar">
+            <a href="{% url 'home' %}">Inicio</a>
+            <a href="#">Productos</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </div>
+    
+        <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div>
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <form action="" method="post">
+        <h3>Iniciar sesión</h3>
+        {% csrf_token %}
+        <label for="user">Nombre de usuario</label>
+        <input type="text" placeholder="Ingresar nombre de usuario" name="username">
+        <label for="password">Contraseña</label>
+        <input type="password" placeholder="Ingresar contraseña" id="password" name="password">
+        <a href="">Olvidé mi contraseña</a>
+        <button type="submit">Iniciar sesión</button>
+        <a href="{% url 'signup' %}" >Crear una cuenta</a>
+    </form>
+</html>

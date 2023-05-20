@@ -1,10 +1,36 @@
-{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">   
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+    padding: 0 ;
+}
+.errorlist{color:red;}
 
-{% block content %}
-{% block extrahead %}
+th h3{
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 0.5px;
 
-{% endblock %}
-    <style>.errorlist{color:red;}
+}
+thead tr th{
+    font-size: 18px;
+    text-transform: uppercase;
+}
+tbody tr th{
+    color: #333;
+}
+th a{
+    text-decoration: none;
+    color: #000000;
+}
 
     </style>
     <main role="main">
@@ -46,13 +72,9 @@
                                 {% if profiles.group_id == 1 %}
                                     <th scope="row">
                                         {% if s.id != request.user.id %}
-                                            <a href="{% url 'user_activate' s.id  %}">
-                                                Activa Usuario
-                                            </a>
+                                            <a href="{% url 'user_activate' s.id  %}">Activar</a>
                                             &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <a href="{% url 'user_delete' s.id  %}">
-                                                Elimina Usuario
-                                            </a>
+                                            <a href="{% url 'user_delete' s.id  %}">Elimina Usuario</a>
                                         {% endif %}
                                     </th>   
                                 {% endif %}                            
@@ -94,4 +116,4 @@
             </div>
         </div>
     </main>
-{% endblock %}
+

@@ -1,18 +1,92 @@
-{% load static %}
-{% block content %}
-{% block extrahead %}
-{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">   
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+    padding: 0 ;
+}       
+input{
+    background-color: #ffffff;
+    margin: 15px;
+    width: 150px;
+    height: 22px;
+    font-size: 16px;
+}
+option{
+    background-color: #ffffff;
+    margin: 15px;
+    text-align: left;
+    width: 150px;
+    height: 22px;
+}
+main{
+    text-align: left;
+}
+h3{
+    font-size: 25px; 
+    text-align: left;
+}
+form div {
+    text-align: left;
+}
+.navbar {
+    display: flex;
+    margin: 0 ;
+
+
+}
+
+.navbar h3 {
+    margin: 0;
+    background-color: #4d8066;
+    display:block;
+    padding: 20px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 25px;
+    width: 100%;
+}
+label{
+    font-size: 18px;
+}
+button{
+    background-color: #333333;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 50px;
+    width: 220px;
+}
+a{
+    text-decoration: none;
+    padding-top: 10px;
+    font-size: 20px;
+    color: #000000;
+}
+</style> 
+    <body>
+        <nav class="navbar">
+            <h3>Editar Usuario</h3> 
+          </nav> 
     <main role="main">
-        <div class="container col-12 mt-3">
             <div class="col-12  mt-3 border">
-                <h3>Nuevo Usuario</h3> 
                 <form action="" method="post">
                     {% csrf_token %}
                     <input type="hidden" value="{{ user_data.id }}" name="user_id" id="user_id">
                     <input type="hidden" value="{{ groups.id }}" name="grupo" id="grupo">
                     <div class="row"> 
                         <div class="col-12 col-sm-8 mb-3">
-                            <label for="rut">Rut</label>
+                            <label for="rut">Nombre de usuario</label>
                             <input type="text" name="rut" id="id_rut"  value="{{user_data.username}}" class="form-control border border-danger" readonly/>
                         </div>  
                         <div class="col-12 col-sm-4 mb-3">
@@ -20,9 +94,9 @@
                             <select name="group" id="group" class="form-control border border-danger" required>
                                 <option value="">Seleccione un perfil</option>
                                 {% for p in profile_list %}
-                                    <option value="{{p.id}}" {% if p.id == groups.id %} selected {% endif %}>{{p.name}}</option>
+                                  <option value="{{p.id}}" {% if p.id == profile_data.group_id %} selected {% endif %}>{{p.name}}</option>
                                 {% endfor %}
-                            </select>
+                              </select>
                         </div>  
                     </div>    
                     <div class="row">                       
@@ -43,7 +117,7 @@
                     </div>
                     <div class="row"> 
                         <div class="col-12 col-sm-6 mb-3">
-                            <input type="submit" value="Editar Usuario" class="btn btn-danger form-control">
+                            <button type="submit">Editar usuario</button>
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
                             <a href="{% url 'list_user_active' groups.id %}" class="btn btn-danger form-control">Volver</a>
@@ -51,6 +125,6 @@
                     </div>
                 </form>
             </div>
-        </div>
     </main>
-{% endblock %}
+</body>
+</html>

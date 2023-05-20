@@ -4,7 +4,7 @@ import random
 from turtle import home
 import pandas as pd
 from datetime import datetime, time, timedelta
-
+from django.shortcuts import render, redirect
 
 from django import forms
 from django.contrib import messages
@@ -16,9 +16,18 @@ from django.db.models import Avg, Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.http import HttpResponse
+import pandas as pd
+import xlwt
 
 from registration.models import Profile
-
+@login_required
+def view_user(request, user_id):
+    user_data = User.objects.get(pk=user_id)
+    profile_data = Profile.objects.get(user_id=user_id)
+    groups = Group.objects.get(pk=profile_data.group_id) 
+    template_name = 'administrator/view_user.html'
+    return render(request, template_name, {'user_data': user_data, 'profile_data': profile_data, 'groups': groups})
 
 @login_required
 def admin_main(request):
@@ -77,7 +86,7 @@ def new_user(request):
                 messages.add_message(request, messages.INFO, 'El correo que esta tratando de ingresar, ya existe en nuestros registros')                             
         else:
             messages.add_message(request, messages.INFO, 'El rut que esta tratando de ingresar, ya existe en nuestros registros')                         
-    groups = Group.objects.all().exclude(pk=0).order_by('id')
+    groups = Group.objects.all().order_by('id')
     template_name = 'administrator/new_user.html'
     return render(request,template_name,{'groups':groups})
 
@@ -231,4 +240,75 @@ def user_delete(request,user_id):
         return redirect('list_user_block',profile_data.group_id)        
     else:
         messages.add_message(request, messages.INFO, 'Hubo un error al eliminar el Usuario '+user_data.first_name +' '+user_data.last_name)
-        return redirect('list_user_block',profile_data.group_id)        
+        return redirect('list_user_block',profile_data.group_id)     
+#CARGA MASIVA
+@login_required
+def carga_masiva_users(request):
+    profiles = Profile.objects.get(user_id = request.user.id)
+    if profiles.group_id != 1:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
+        return redirect('check_group_main')
+    template_name = 'administrator/carga_masiva_users.html'
+    return render(request,template_name,{'profiles':profiles})
+
+
+@login_required
+def import_file_users(request):
+    profiles = Profile.objects.get(user_id=request.user.id)
+    if profiles.group_id != 1:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
+        return redirect('check_group_main')
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="archivo_importacion.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('carga_masiva')
+    row_num = 0
+    columns = ['Nombre', 'Correo', 'Grupo']
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+    font_style = xlwt.XFStyle()
+    date_format = xlwt.XFStyle()
+    date_format.num_format_str = 'dd/MM/yyyy'
+    for row in range(1):
+        row_num += 1
+        for col_num in range(3):
+            if col_num == 0:
+                ws.write(row_num, col_num, 'ej: Andres', font_style)
+            elif col_num == 1:
+                ws.write(row_num, col_num, 'Andres@gmail.com', font_style)
+            elif col_num == 2:
+                ws.write(row_num, col_num, 'Nombre del Grupo', font_style)
+    wb.save(response)
+    return response
+
+
+@login_required
+def carga_masiva_users_save(request):
+    profiles = Profile.objects.get(user_id=request.user.id)
+    if profiles.group_id != 1:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
+        return redirect('check_group_main')
+
+    if request.method == 'POST':
+        data = pd.read_excel(request.FILES['myfile'])
+        df = pd.DataFrame(data)
+        acc = 0
+        for item in df.itertuples():
+            nombre = str(item[1])
+            correo = str(item[2])
+            nombre_grupo = str(item[3])
+            try:
+                grupo = Group.objects.get(name=nombre_grupo)
+            except Group.DoesNotExist:
+                messages.add_message(request, messages.ERROR, f'El grupo "{nombre_grupo}" no existe')
+                continue
+            user = User.objects.create_user(
+                username=nombre,
+                email=correo,
+            )
+            profile = Profile.objects.create(user=user, group=grupo)
+            acc += 1
+        messages.add_message(request, messages.INFO, f'Carga masiva finalizada, se importaron {acc} registros')
+        return redirect('carga_masiva_users')

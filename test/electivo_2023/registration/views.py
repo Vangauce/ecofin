@@ -6,11 +6,12 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.shortcuts import render,redirect,get_object_or_404, render_to_response
+from django.shortcuts import render
 from django import forms
 from .models import Profile
+from django.contrib.auth import login
 
-# Create your views here.
+
 class SignUpView(CreateView):
     form_class = UserCreationFormWithEmail
     template_name = 'registration/signup.html'
@@ -20,12 +21,19 @@ class SignUpView(CreateView):
     
     def get_form(self, form_class=None):
         form = super(SignUpView,self).get_form()
-        #modificamos en tiempo real
+
         form.fields['username'].widget = forms.TextInput(attrs={'class':'form-control mb-2','placeholder':'Nombre de usuario'})
         form.fields['email'].widget = forms.EmailInput(attrs={'class':'form-control mb-2','placeholder':'Dirección de correo'})
         form.fields['password1'].widget = forms.PasswordInput(attrs={'class':'form-control mb-2','placeholder':'Ingrese su contraseña'})
-        form.fields['password2'].widget = forms.PasswordInput(attrs={'class':'form-control mb-2','placeholder':'Re ingrese su contraseña'})    
+        form.fields['password2'].widget = forms.PasswordInput(attrs={'class':'form-control mb-2','placeholder':'Re ingrese su contraseña'})  
         return form
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        profile = Profile(user=self.object)
+        profile.save()
+        login(self.request, self.object)
+        messages.success(self.request, '¡Registro exitoso! Ahora puede iniciar sesión.')
+        return response
 
 @method_decorator(login_required, name='dispatch')
 class ProfileUpdate(UpdateView):
@@ -34,7 +42,7 @@ class ProfileUpdate(UpdateView):
     template_name = 'registration/profiles_form.html'
 
     def get_object(self):
-        #recuperasmo el objeto a editar
+
         profile, created = Profile.objects.get_or_create(user=self.request.user)
         return profile
 
@@ -45,12 +53,12 @@ class EmailUpdate(UpdateView):
     template_name = 'registration/profile_email_form.html'
 
     def get_object(self):
-        #recuperasmo el objeto a editar
+
         return self.request.user
     
     def get_form(self, form_class=None):
         form = super(EmailUpdate,self).get_form()
-        #modificamos en tiempo real
+
         form.fields['email'].widget = forms.EmailInput(attrs={'class':'form-control mb-2','placeholder':'Dirección de correo'})
         return form
 @login_required

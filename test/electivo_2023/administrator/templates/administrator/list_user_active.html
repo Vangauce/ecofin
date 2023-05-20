@@ -1,11 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>EcoFácil</title>
+     
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    </head>
+        <style media="screen">   
+body{
+    background-color: #4d8066;
+    font-family: 'Poppins',sans-serif;
+    padding: 0 ;
+}
+.errorlist{color:red;}
 
-{% load static %}
+th h3{
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 0.5px;
 
-{% block content %}
-{% block extrahead %}
-
-{% endblock %}
-    <style>.errorlist{color:red;}
+}
+thead tr th{
+    font-size: 18px;
+    text-transform: uppercase;
+}
+tbody tr th{
+    color: #333;
+}
+th a{
+    text-decoration: none;
+    color: #000000;
+}
 
     </style>
     <main role="main">
@@ -34,7 +59,7 @@
                             <th width="450" scope="col">Nombre Completo</th>
                             <th width="300" scope="col">Correo</th>
                             {% if profiles.group_id == 1 %}
-                                <th width="250" scope="col">Funciones</th>
+                                <th width="300" scope="col">Funciones</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -47,14 +72,13 @@
                                 {% if profiles.group_id == 1 %}
                                     <th scope="row">
                                         {% if s.id != request.user.id %}
-                                            <a href="{% url 'edit_user' s.id %}">
-                                                Edita Usuario
-                                            </a>
+                                            <a href="{% url 'edit_user' s.id %}">Editar</a>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="{% url 'view_user' s.id %}">Ver</a>
                                             {% if s.id != request.user.id %}
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a href="{% url 'user_block' s.id  %}" data-toggle="modal" data-target="#userBlock" data-u_id="{{s.id}}" data-u_name="{{s.name}}"  data-page="{{page}}">
-                                                    Bloquea Usuario
-                                                </a>
+                                                    Bloquear</a>
                                             {% endif %}
                                         {% endif %}
                                     </th>   
@@ -97,4 +121,4 @@
             </div>
         </div>
     </main>
-{% endblock %}
+
