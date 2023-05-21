@@ -10,6 +10,7 @@
       <h2 colspan="2">Orden de compra</h2>
       <button class="btn btn-info" type="submit">Añadir</button>
       <a href="{% url 'generar_pdf1' %}"class="btn btn-success" target="_factura">Reporte</a>
+      <a href="{% url 'listar_orden_compra' %}"class="btn btn-success">Listar</a>
       <a href="{% url 'admin_main' %}" class="btn btn-danger">Cancelar</a>
     </div>
     <div class="card-body">
@@ -88,7 +89,6 @@
               <td>
                 <a href="{% url 'ver_orden_compra' detalle.id %}">Ver</a>
                 <a href="{% url 'eliminar_orden_compra' compra.id %}">Eliminar</a>
-                <a href="{% url 'listar_orden_compra' %}">Lista</a>
                 
             </td>
             </tr>

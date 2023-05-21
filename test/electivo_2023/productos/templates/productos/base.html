@@ -1,96 +1,44 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="es">
+  <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+<title>EcoFácil</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+<link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %} ">
+<link rel="stylesheet" href="{% static 'lib/AdminLTE-3.2.0/css/adminlte.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %} ">
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %} ">
+<link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %} ">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+</head>
 <style>
 .bg-mi-color{
     background-color: #4d8066 ;
     font-family:'Poppins',sans-serif;
 }
 .jumbotron{
+    margin-left: 60px;
     background-color: #92bba6 !important;
     font-family:'Poppins',sans-serif;
 }
-.btn-buscar {
-      background-color: #28a745 !important; 
-      border-color: #28a745 !important; 
-      color: #fff !important;
-    }
-/* Estilos para la barra lateral */
 
-.offcanvas {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1050;
-  display: flex;
-  flex-direction: column;
-  width: 280px;
-  padding: 1rem;
-  background-color: #92bba6;
-  transition: transform 0.3s ease-in-out;
-  transform: translateX(-100%);
-}
 
-.offcanvas-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid #ced4da;
-}
-
-.offcanvas-title {
-  margin-bottom: 0;
-  line-height: 1.5;
-  font-size: 1.25rem;
-}
-
-.offcanvas-body {
-  flex: 1 1 auto;
-  padding: 1rem;
-}
-
-.offcanvas.show {
-  transform: translateX(0);
-}
-
-.btn-toggle {
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-  .offcanvas {
-    width: 320px;
-  }
-}
-
-.btn-close {
-  font-size: 1.5rem;
-  line-height: 1;
-  color: #000;
-  opacity: 0.5;
-  background-color: #f8d7da;
-  border: 2px solid #f5c6cb;
-}
-
-.btn-close:hover {
-  color: #000;
-  opacity: 0.75;
-  background-color: #f5c6cb;
-  border-color: #f5c6cb;
-}
-.list-group-item {
-    color: #000 !important;
-    background-color: #92bba6 !important;
-}
 
 
 </style>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -102,34 +50,83 @@
 </head>
 
 <body class="bg-mi-color">
-    <button class="btn btn-secondary btn-lg btn-toggle" type="button" data-toggle="offcanvas">
-        <i class="fa fa-bars"></i> 
-      </button>    
-      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menú Productos</h5>
-          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="offcanvas">
-            <span aria-hidden="true">&times;</span>
-          </button>
+  <aside class="main-sidebar sidebar-light-primary elevation-4">
+    <a href="#" class="brand-link">
+        <img src="{% static "/assets/img/logo3.png" %}"
+             alt="Logo"
+             class="brand-image"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">ECOFÁCIL</span>
+    </a>
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="info">
+                <a href="#" class="d-block">{{ request.user.username }} </a>
+            </div>
         </div>
-        <div class="offcanvas-body">
-          <a href="{% url 'productos_main' %}" class="list-group-item list-group-item-action">
-            <i class="fa fa-tachometer-alt"></i> Dashboard
-          </a>    
-          <a href="{% url 'productos_insert' %}" class="list-group-item list-group-item-action">
-            <i class="fa fa-plus mr-2"></i> Crear producto
-          </a>
-          <a href="{% url 'productos_list' %}" class="list-group-item list-group-item-action">
-            <i class="fa fa-th-list mr-2"></i> Listado productos
-          </a>
-          <a href="{% url 'carga_masiva_productos' %}" class="list-group-item list-group-item-action">
-            <i class="fa fa-file-upload mr-2"></i> Carga masiva
-          </a>
-          <a href="{% url 'reporte_pdf' %}" class="list-group-item list-group-item-action">
-            <i class="fa fa-file-pdf mr-2"></i> Reporte en PDF
-          </a>
-        </div>
-      </div>
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">Menú Principal</li>
+                <li class="nav-item">
+                  <a href="{% url 'users_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>
+                        Usuarios
+                    </p>
+                </a>
+              </li>
+                <li class="nav-item">
+                    <a href="{% url 'productos_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>
+                            Productos
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'categorias_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-boxes"></i>
+                        <p>
+                            Categorías
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'insumos_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-boxes"></i>
+                        <p>
+                            Insumos
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'proveedores_main' %}" class="nav-link">
+                      <i class="nav-icon fas fa-truck"></i>
+                      <p>
+                          Proveedores
+                      </p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'prueba' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice"></i>
+                    <p>
+                        Orden de compra
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'clientes_main' %}" class="nav-link">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>
+                      Clientes
+                  </p>
+              </a>
+          </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
   <div class="main-content">
     <div class="container">
         {% if messages %}
@@ -144,8 +141,8 @@
             {% endfor %}
         </div>
     {% endif %}
-        <div class="col-md-10 offset-md-1">
-            <div class="jumbotron" style="margin-bottom: 0;">
+        <div class="col-md-12 offset-md-1">
+            <div class="jumbotron" style="margin-bottom: 0; margin-top: 25px;">
                 <h1 class="display-5">Gestión de productos</h1>
                 <hr class="my-4">
                 {% block content %}
@@ -164,20 +161,9 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 
-<!-- Enlace a Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function () {
-      $('.btn-toggle').click(function() {
-        $('.offcanvas').toggleClass('show');
-      });
 
-      $('[data-bs-dismiss="offcanvas"]').click(function () {
-        $('.offcanvas').removeClass('show');
-      });
-    });
-  </script>
 </body>
 </html>

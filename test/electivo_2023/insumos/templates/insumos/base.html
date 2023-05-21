@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="es">
 <style>
 .bg-mi-color{
@@ -6,6 +7,7 @@
     font-family:'Poppins',sans-serif;
 }
 .jumbotron{
+    margin-left: 60px;
     background-color: #92bba6 !important;
     font-family:'Poppins',sans-serif;
     
@@ -20,12 +22,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>EcoFácil</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+<link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %} ">
+<link rel="stylesheet" href="{% static 'lib/AdminLTE-3.2.0/css/adminlte.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %} ">
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %} ">
+<link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %} ">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body class="bg-mi-color">
+    <aside class="main-sidebar sidebar-light-primary elevation-4">
+        <a href="#" class="brand-link">
+            <img src="{% static "/assets/img/logo3.png" %}"
+                 alt="Logo"
+                 class="brand-image"
+                 style="opacity: .8">
+            <span class="brand-text font-weight-light">ECOFÁCIL</span>
+        </a>
+        <div class="sidebar">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="info">
+                    <a href="#" class="d-block">{{ request.user.username }} </a>
+                </div>
+            </div>
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-header">Menú Principal</li>
+                    <li class="nav-item">
+                      <a href="{% url 'users_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Usuarios
+                        </p>
+                    </a>
+                  </li>
+                    <li class="nav-item">
+                        <a href="{% url 'productos_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-box"></i>
+                            <p>
+                                Productos
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'categorias_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <p>
+                                Categorías
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'insumos_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <p>
+                                Insumos
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{% url 'proveedores_main' %}" class="nav-link">
+                          <i class="nav-icon fas fa-truck"></i>
+                          <p>
+                              Proveedores
+                          </p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'prueba' %}" class="nav-link">
+                        <i class="nav-icon fas fa-file-invoice"></i>
+                        <p>
+                            Orden de compra
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'clientes_main' %}" class="nav-link">
+                      <i class="nav-icon fas fa-users"></i>
+                      <p>
+                          Clientes
+                      </p>
+                  </a>
+              </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
     <div class="container">
         {% if messages %}
     <div class="container">
@@ -40,10 +131,9 @@
     </div>
 {% endif %}
 
-        <div class="col-md-10 offset-md-1 mt-5">
-            <div class="jumbotron">
-                <h1 class="display-4">Insumos</h1>
-                <p class="lead font-italic">Gestión de insumos</p>
+        <div class="col-md-12 offset-md-1 ">
+            <div class="jumbotron" style="margin-bottom: 0; margin-top: 25px;">
+                <h1 class="display-5">Gestión de insumos</h1>
                 <hr class="my-4">
                 {% block content %}
                 {% endblock content %}
