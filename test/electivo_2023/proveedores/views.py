@@ -19,8 +19,10 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 
+from itertools import groupby
+
 def generar_pdf1(request):
-    detalles_orden = Detalle_orden.objects.all()
+    detalles_orden = Detalle_orden.objects.select_related('compra').order_by('compra__id')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="reporte_compras.pdf"'
     pdf = canvas.Canvas(response, pagesize=letter)
@@ -30,22 +32,31 @@ def generar_pdf1(request):
     y = 700
     x = 50
 
-    pdf.setFont('Helvetica-Bold', font_size)
-    pdf.drawString(x, y, "Reporte de Compras")
-    pdf.setFont('Helvetica', font_size)
-    y -= font_size + 10
-
-    pdf.drawString(x, y, "Producto")
-    pdf.drawString(x + 100, y, "Cantidad")
-    pdf.drawString(x + 200, y, "Precio")
-    pdf.drawString(x + 300, y, "Subtotal")
-    pdf.drawString(x + 400, y, "Descuento")
-    pdf.drawString(x + 500, y, "Total")
-    y -= font_size + 10
-
     total_compras = 0
 
+    compra_actual = None
+
     for detalle in detalles_orden:
+        if compra_actual is None or compra_actual.id != detalle.compra.id:
+            compra_actual = detalle.compra
+
+            if y < 100:  # Si queda poco espacio en la página actual, crear una nueva página
+                pdf.showPage()
+                y = 700
+
+            pdf.setFont('Helvetica-Bold', font_size)
+            pdf.drawString(x, y, "ID de Compra: {}".format(compra_actual.id))
+            pdf.setFont('Helvetica', font_size)
+            y -= font_size + 10
+
+            pdf.drawString(x, y, "Producto")
+            pdf.drawString(x + 100, y, "Cantidad")
+            pdf.drawString(x + 200, y, "Precio")
+            pdf.drawString(x + 300, y, "Subtotal")
+            pdf.drawString(x + 400, y, "Descuento")
+            pdf.drawString(x + 500, y, "Total")
+            y -= font_size + 10
+
         producto = detalle.producto.nombre
         cantidad = detalle.cantidad
         precio = detalle.precio
@@ -63,13 +74,15 @@ def generar_pdf1(request):
 
     pdf.setFont('Helvetica', 10)
 
-
     pdf.showPage()
     pdf.save()
 
     request.session['redirigir_despues_de_descargar'] = True
 
     return response
+
+
+
 
 
 
@@ -140,11 +153,16 @@ def import_file_proveedores(request):
 def proveedores_main(request):
     total_proveedores = Proveedores.total_proveedores()
     return render(request, 'proveedores/proveedores_main.html', {'total_proveedores': total_proveedores})
-def prueba(request, id=None):
+
+def orden_main(request):
+    total_ordenes = Compras.total_ordenes()
+    return render(request, 'proveedores/orden_main.html', {'total_ordenes': total_ordenes})
+
+def crear_orden(request, id=None):
     proveedores = Proveedores.objects.all()
     productos = Producto.objects.all()
 
-    template_name = 'proveedores/prueba.html'
+    template_name = 'proveedores/crear_orden.html'
     detalle_orden = {}
 
     if request.method == "GET":
@@ -232,7 +250,7 @@ def prueba(request, id=None):
             "productos": productos,
         }
 
-        return render(request, template_name, context)
+        return redirect('orden_edit', id=compra.id)
 
     return render(request, template_name, {'proveedores': proveedores, 'productos': productos})
 
@@ -243,14 +261,29 @@ def ver_orden_compra(request, id):
     context = {'compra': compra, 'detalles': detalles}
     return render(request, 'proveedores/ver_orden_compra.html', context) 
 
+
+
+def eliminar_detalle(request, id):
+    detalle = Detalle_orden.objects.get(pk=id)
+    detalle.delete()
+    return redirect('orden_edit', id=detalle.compra.id)
+
+
 def eliminar_orden_compra(request,id):
     compra = Compras.objects.get(pk=id)
     compra.delete()
-    return redirect("/proveedores/prueba/")
+    return redirect("/proveedores/crear_orden/")
+
 def listar_orden_compra(request):
-    datos_all = Detalle_orden.objects.all()
-    context = {"detalles": datos_all}
-    return render(request,'proveedores/listar_orden_compra.html', context)
+    compras = Compras.objects.all()
+    detalles = Detalle_orden.objects.all()
+    context = {
+        'compras': compras,
+        'detalles': detalles,
+    }
+    return render(request, 'proveedores/listar_orden_compra.html', context)
+
+
 
 def proveedores_lista(request):
     q = request.GET.get('q')

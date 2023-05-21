@@ -5,6 +5,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Proveedor</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
@@ -14,14 +15,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for detalle in detalles %}
+                {% for detalle in detalles  %}
                     <tr>
+                        <td>{{ detalle.compra.proveedores.nombre }}</td>
                         <td>{{ detalle.producto.nombre }}</td>
                         <td>{{ detalle.cantidad }}</td>
                         <td>{{ detalle.precio }}</td>
                         <td>{{ detalle.sub_total_detalle }}</td>
                         <td>{{ detalle.descuento_detalle }}</td>
                         <td>{{ detalle.total_detalle }}</td>
+                        
+
                     </tr>
                 {% endfor %}
             </tbody>

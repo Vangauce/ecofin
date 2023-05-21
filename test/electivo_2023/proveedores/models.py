@@ -13,6 +13,9 @@ class Compras(models.Model):
     sub_total = models.FloatField(default=0) 
     descuento = models.FloatField(default=0) 
     total = models.FloatField(default=0) 
+    @classmethod
+    def total_ordenes(cls):
+        return cls.objects.count()
 
 class Detalle_orden(models.Model):
     compra = models.ForeignKey(Compras, on_delete=models.CASCADE)

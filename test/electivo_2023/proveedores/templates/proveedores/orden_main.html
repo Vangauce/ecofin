@@ -142,14 +142,14 @@
             <div class="col-md-4">
                 <div style="background-color: #00c040;" class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title text-center"><a style="color: #fff;">Hay {{ total_categorias }} categorias creadas.</a></h5>
+                        <h5 class="card-title text-center"><a style="color: #fff;">Hay {{ total_ordenes }} ordenes creadas.</a></h5>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="background-color: #00c040;" class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title text-center"><a style="color: #fff;">Hay {{ total_categorias }} categorias creadas.</a></h5>
+                        <h5 class="card-title text-center"><a style="color: #fff;">Hay {{ total_ordenes }} ordenes creadas.</a></h5>
                     </div>
                 </div>
             </div>
@@ -165,26 +165,12 @@
                     <div style="background-color: #00c040; color: #fff;" class="small-box"> 
                     <div class="inner">
                 
-                    <h2>Crear categoría</h2>
+                    <h2>Crear orden</h2>
                     </div>
                     <div class="icon">
                     <i class="fas fa-plus"></i>
                     </div>
-                    <a href="{% url 'categorias_insert' %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-5 col-5">
-                
-                    <div style="background-color: #00c040; color: #fff;" class="small-box"> 
-                    <div class="inner">
-                    
-                    <h2>Carga masiva</h2>
-                    </div>
-                    <div class="icon">
-                    <i class="fa fa-file-excel"></i>
-                    </div>
-                    <a href="{% url 'carga_masiva_categorias' %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{% url 'crear_orden' %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
@@ -198,7 +184,7 @@
                     <div class="icon">
                     <i class="fa fa-list"></i>
                     </div>
-                    <a href="{% url 'categorias_list'  %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{% url 'listar_orden_compra'  %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 
@@ -212,7 +198,7 @@
                     <div class="icon">
                     <i class="fa fa-file-pdf"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{% url 'generar_pdf1'  %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-5 col-12">

@@ -7,19 +7,20 @@
   {% csrf_token %}
   <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h2 colspan="2">Orden de compra</h2>
-      <button class="btn btn-info" type="submit">Añadir</button>
+      <button class="btn btn-info" type="submit">Añadir producto</button>
+      <a href="{% url 'crear_orden' %}"class="btn btn-success">Nueva orden</a>
       <a href="{% url 'generar_pdf1' %}"class="btn btn-success" target="_factura">Reporte</a>
-      <a href="{% url 'listar_orden_compra' %}"class="btn btn-success">Listar</a>
-      <a href="{% url 'admin_main' %}" class="btn btn-danger">Cancelar</a>
+      <a href="{% url 'listar_orden_compra' %}"class="btn btn-success">Listado</a>
+      <a href="{% url 'orden_main' %}" class="btn btn-danger">Cancelar</a>
     </div>
     <div class="card-body">
       <table class="table">
-        <tr>   
+        <!--<tr>   
  
           <th>Num. de orden</th>
           <td><input type="text" class="form-control" name="id" id="idCompras"></td>
         </tr>
+      -->
         <tr>
           <th>Proveedor:</th>
           <td>
@@ -87,9 +88,12 @@
               <td>{{ detalle.descuento_detalle }}</td>
               <td>{{ detalle.total_detalle }}</td>
               <td>
-                <a href="{% url 'ver_orden_compra' detalle.id %}">Ver</a>
-                <a href="{% url 'eliminar_orden_compra' compra.id %}">Eliminar</a>
-                
+                <a href="{% url 'eliminar_detalle' detalle.id %}" class="btn text-secondary px-0">
+                  <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+              </a>  
+                <a href="{% url 'ver_orden_compra' detalle.compra.id %}" class="btn text-secondary px-0">
+                  <i class="fas fa-info-circle fa-lg"></i>
+              </a>                      
             </td>
             </tr>
           {% endfor %}
@@ -100,6 +104,64 @@
 </div>
 </div>
 </form>
+<script>
+  // Obtener los elementos necesarios
+  const cantidadInput = document.getElementById("cantidad");
+  const precioInput = document.getElementById("precio");
+  const subtotalInput = document.getElementById("subTotal");
+  const descuentoInput = document.getElementById("descuento");
+  const totalInput = document.getElementById("total");
+
+  // Agregar eventos de cambio a los campos de cantidad, precio y descuento
+  cantidadInput.addEventListener("change", actualizarSubtotal);
+  precioInput.addEventListener("change", actualizarSubtotal);
+  descuentoInput.addEventListener("change", actualizarTotal);
+
+  // Función para calcular y actualizar el subtotal
+  function actualizarSubtotal() {
+    const cantidad = parseFloat(cantidadInput.value);
+    const precio = parseFloat(precioInput.value);
+    const subtotal = cantidad * precio;
+
+    // Actualizar el valor del campo subtotal sin formateo
+    subtotalInput.value = subtotal;
+
+    // Actualizar el total después de cambiar el subtotal
+    actualizarTotal();
+  }
+
+  // Función para calcular y actualizar el total después de aplicar el descuento
+  function actualizarTotal() {
+    const subtotal = parseFloat(subtotalInput.value);
+    const descuento = parseFloat(descuentoInput.value);
+
+    // Calcular el descuento en porcentaje
+    const descuentoPorcentaje = subtotal * (descuento / 100);
+
+    // Calcular el total después de aplicar el descuento
+    const total = subtotal - descuentoPorcentaje;
+
+    // Formatear el total con punto como separador de miles y sin decimales
+    const totalFormateado = formatearNumero(total);
+
+    // Actualizar el valor del campo total
+    totalInput.value = totalFormateado;
+  }
+
+  // Función para formatear el número con punto como separador de miles y sin decimales
+  function formatearNumero(numero) {
+    return numero.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+      useGrouping: true,
+    });
+  }
+</script>
+
+
+
+
+
 {% endblock %}
 
 
