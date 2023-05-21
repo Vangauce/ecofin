@@ -69,6 +69,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
+              {% if profile.group_id == 1 %}
+                <li class="nav-item active">
+                    <a style="color: white;"class="nav-link" href="{% url 'admin_main' %}">Menú Admin</a>
+                </li>
+              {% endif %}
                 <li class="nav-item active">
                     <a style="color: white;"class="nav-link" href="{% url 'home' %}">Inicio</a>
                 </li>

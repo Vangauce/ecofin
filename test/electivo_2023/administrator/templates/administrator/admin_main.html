@@ -54,7 +54,7 @@
                 ¡Bienvenido {{request.user.first_name}} {{request.user.last_name}}!</a></li>  
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a style="color: #fff;" href="#"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+            <li><a style="color: #fff;" href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
         </ul>
       </div>
   </nav>
