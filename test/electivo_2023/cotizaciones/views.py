@@ -9,6 +9,9 @@ from django.http import HttpResponse
 from openpyxl import Workbook
 from django.http import HttpResponse
 
+def cotizaciones_main(request):
+    return render(request, 'cotizaciones_main.html')
+
 def crear_cotizacion(request):
     if request.method == 'POST':
         cliente_id = request.POST.get('cliente')

@@ -8,7 +8,7 @@ from productos.models import Producto
 
 def orden_venta_main(request):
     total_ordenes = Ventas.total_ordenes()
-    return render(request, 'ventas/orden_ventas_main.html', {'total_ordenes': total_ordenes})
+    return render(request, 'ventas/orden_venta_main.html', {'total_ordenes': total_ordenes})
 
 def crear_orden_venta(request, id=None):
     clientes = Clientes.objects.all()

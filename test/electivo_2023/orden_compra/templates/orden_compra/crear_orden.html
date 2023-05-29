@@ -1,4 +1,4 @@
-{% extends 'proveedores/base1.html' %}
+{% extends 'orden_compra/base1.html' %}
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,7 +11,7 @@
       <a href="{% url 'crear_orden' %}"class="btn btn-success">Nueva orden</a>
       <a href="{% url 'generar_pdf1' %}"class="btn btn-success" target="_factura">Reporte</a>
       <a href="{% url 'listar_orden_compra' %}"class="btn btn-success">Listado</a>
-      <a href="{% url 'orden_main' %}" class="btn btn-danger">Cancelar</a>
+      <a href="{% url 'orden_compra_main' %}" class="btn btn-danger">Cancelar</a>
     </div>
     <div class="card-body">
       <table class="table">

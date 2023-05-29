@@ -100,7 +100,7 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
                       </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{% url 'orden_main' %}" class="nav-link">
+                    <a href="{% url 'orden_compra_main' %}" class="nav-link">
                         <i class="nav-icon fas fa-file-invoice"></i>
                         <p>
                             Orden de compra
@@ -115,6 +115,30 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
                       </p>
                   </a>
               </li>
+              <li class="nav-item">
+                <a href="{% url 'cotizaciones_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>
+                        Cotizaciones
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'orden_trabajo_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice"></i>
+                    <p>
+                        Orden de trabajo
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'orden_venta_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-cash-register"></i>
+                    <p>
+                        Ventas
+                    </p>
+                </a>
+            </li>
                 </ul>
             </nav>
         </div>

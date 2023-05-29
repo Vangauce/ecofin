@@ -6,6 +6,7 @@ urlpatterns = [
     path('crear_orden_venta/',views.crear_orden_venta,name="crear_orden_venta"),
     path('ver_orden_venta/<int:id>/',views.ver_orden_venta,name="ver_orden_venta"),
     path('listar_orden_venta/',views.listar_orden_venta,name="listar_orden_venta"),
+    path('',views.orden_venta_main,name='orden_venta_main'),
     
     
 ]

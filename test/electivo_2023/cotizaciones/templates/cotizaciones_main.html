@@ -166,7 +166,7 @@
             <div class="col-md-4">
                 <div style="background-color: #1ea5ba;" class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title text-center"><a style="color: #fff;">Hay {{ total_clientes }} clientes creados.</a></h5>
+                        <h5 class="card-title text-center"><a style="color: #fff;">Hay  cotizaciones creadas.</a></h5>
                     </div>
                 </div>
             </div>
@@ -180,21 +180,21 @@
             <div class="row">
                 <div class="col-lg-5 col-12">
                 
-                    <div style="background-color: #00c040; color: #fff;" class="small-box bg-primary"> 
+                    <div style=" background-color: #00c040;  color: #fff;"  class="small-box bg-primary"> 
                     <div class="inner">
                 
-                    <h2>Crear cliente</h2>
+                    <h2>Crear cotización</h2>
                     </div>
                     <div class="icon">
                     <i class="fas fa-plus"></i>
                     </div>
-                    <a href="{% url 'clientes_insert' %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{% url 'crear_cotizacion' %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 
                 <div class="col-lg-5 col-5">
                 
-                    <div style="background-color: #00c040; color: #fff;" class="small-box bg-warning"> 
+                    <div style=" background-color: #00c040;  color: #fff;"   class="small-box bg-warning ">
                     <div class="inner">
                     
                     <h2>Carga masiva</h2>
@@ -202,13 +202,13 @@
                     <div class="icon">
                     <i class="fa fa-file-excel"></i>
                     </div>
-                    <a href="{% url 'carga_masiva_clientes' %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
                 <div class="col-lg-5 col-12">
                 
-                    <div style="background-color: #00c040; color: #fff;" class="small-box bg-success"> 
+                    <div style=" background-color: #00c040;  color: #fff;"   class="small-box bg-success ">
                     <div class="inner">
                     
                     <h2>Listado</h2>
@@ -216,26 +216,26 @@
                     <div class="icon">
                     <i class="fa fa-list"></i>
                     </div>
-                    <a href="{% url 'clientes_list'  %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{% url 'listado_cotizacion'  %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 
                 <div class="col-lg-5 col-5">
                 
-                    <div style="background-color: #00c040; color: #fff;" class="small-box bg-danger"> 
+                    <div style=" background-color: #00c040;  color: #fff;"   class="small-box bg-danger ">
                     <div class="inner">
                     
-                    <h2>Reporte en PDF </h2>
+                    <h2>Reporte en EXCEL </h2>
                     </div>
                     <div class="icon">
-                    <i class="fa fa-file-pdf"></i>
+                    <i class="fa fa-file-excel"></i>
                     </div>
-                    <a href="{% url 'generar_reporte_pdf' %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="{% url 'generar_reporte'  %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-5 col-12">
                 
-                    <div style="background-color: #00c040; color: #fff;" class="small-box bg-dark"> 
+                    <div style=" background-color: #00c040;  color: #fff;"   class="small-box bg-dark">
                     <div class="inner">
                     
                     <h2>Volver</h2>
