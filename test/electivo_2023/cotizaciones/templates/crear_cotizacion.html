@@ -1,0 +1,72 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<form method="post" id="formFactura">
+  {% csrf_token %}
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h2 colspan="2">Crear Cotización</h2>
+      <a href="{% url 'listado_cotizacion' %}" class="btn btn-primary">Listado</a>
+      <a href="{% url 'generar_reporte' %}" class="btn btn-primary">Reporte</a>
+      <button class="btn btn-info" type="submit">Crear Cotización</button>
+      
+      <a href="{% url 'admin_main' %}" class="btn btn-danger">Cancelar</a>
+    </div>
+    <div class="card-body">
+      <label for="cliente">Cliente:</label>
+      <select name="cliente" id="cliente" class="form-control">
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="table-responsive">
+      <table id="productos-table" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Nombre del producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="producto-row">
+            <td>
+              <select name="producto" class="form-control producto-select">
+                <option value="">Seleccione un producto</option>
+                {% for producto in productos %}
+                  <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td><input type="text" name="cantidad" class="form-control cantidad-input"></td>
+            <td><input type="text" name="precio" class="form-control precio-input"></td>
+            <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button type="button" class="btn btn-primary add-producto">Añadir Producto</button>
+  </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.add-producto').click(function() {
+      var productoRow = $('.producto-row').first().clone();
+      productoRow.find('select').val('');
+      productoRow.find('input').val('');
+      productoRow.find('.remove-producto').show();
+      $('#productos-table tbody').append(productoRow);
+    });
+
+    $(document).on('click', '.remove-producto', function() {
+      $(this).closest('tr').remove();
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<h1>Listado de Cotizaciones</h1>
+<a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Volver</a>
+
+{% for cotizacion_id, data in cotizaciones_dict.items %}
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h2>Cotización ID: {{ cotizacion_id }}</h2>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cotizacion in data.cotizaciones %}
+              <tr>
+                <td>{{ cotizacion.cliente.nombre }}</td>
+                <td>
+                  {% for detalle in cotizacion.detallecotizacion_set.all %}
+                    <p>{{ detalle.producto.nombre }}</p>
+                  {% empty %}
+                    <p>Sin productos</p>
+                  {% endfor %}
+                </td>
+                <td>
+                  {% for detalle in cotizacion.detallecotizacion_set.all %}
+                    <p>{{ detalle.cantidad }}</p>
+                  {% empty %}
+                    <p>-</p>
+                  {% endfor %}
+                </td>
+                <td>
+                  {% for detalle in cotizacion.detallecotizacion_set.all %}
+                    <p>{{ detalle.precio }}</p>
+                  {% empty %}
+                    <p>-</p>
+                  {% endfor %}
+                </td>
+                <td>
+                  <form action="{% url 'borrar_cotizacion' cotizacion.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Borrar</button>
+                  </form>
+                  <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="btn btn-primary">Editar</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

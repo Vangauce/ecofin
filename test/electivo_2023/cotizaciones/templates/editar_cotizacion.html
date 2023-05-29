@@ -1,0 +1,60 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<form method="POST" action="{% url 'editar_cotizacion' cotizacion.id %}">
+  {% csrf_token %}
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h2>Editar Cotización</h2>
+      <button class="btn btn-info" type="submit">Guardar cambios</button>
+    </div>
+    <div class="card-body">
+      <label for="cliente">Cliente:</label>
+      <input type="text" id="cliente" name="cliente" value="{{ cotizacion.cliente.nombre }}" readonly class="form-control">
+    </div>
+    <div class="table-responsive">
+      <table id="productos-table" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detalle in cotizacion.detallecotizacion_set.all %}
+            <tr>
+              <td>
+                <select name="producto" class="form-control">
+                  {% for producto in productos_disponibles %}
+                    <option value="{{ producto.id }}" {% if detalle.producto.id == producto.id %}selected{% endif %}>{{ producto.nombre }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td><input type="text" name="cantidad" value="{{ detalle.cantidad }}" class="form-control"></td>
+              <td><input type="text" name="precio" value="{{ detalle.precio }}" class="form-control"></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button type="button" id="agregar-producto" class="btn btn-primary">Añadir producto</button>
+  </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#agregar-producto').click(function() {
+      var productoRow = $('.table tbody tr').first().clone();
+      productoRow.find('select').val('');
+      productoRow.find('input').val('');
+      $('.table tbody').append(productoRow);
+    });
+  });
+</script>
+{% endblock %}

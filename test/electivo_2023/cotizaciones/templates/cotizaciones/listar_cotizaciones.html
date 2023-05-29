@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listar Cotizaciones</title>
+</head>
+<body>
+    <h1>Listar Cotizaciones</h1>
+    <ul>
+        {% for cotizacion in cotizaciones %}
+            <li><a href="{% url 'detalle_cotizacion' cotizacion_id=cotizacion.id %}">Cotización {{ cotizacion.id }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

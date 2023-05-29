@@ -1,0 +1,12 @@
+<h1>Cotización creada</h1>
+
+<p>Cliente: {{ cotizacion.cliente.nombre }}</p>
+
+<p>Productos:</p>
+<ul>
+  {% for producto in cotizacion.productos.all %}
+    <li>{{ producto.nombre }} - Precio: {{ producto.cotizacion.precio }}</li>
+  {% endfor %}
+</ul>
+
+<p>Fecha: {{ cotizacion.fecha }}</p>

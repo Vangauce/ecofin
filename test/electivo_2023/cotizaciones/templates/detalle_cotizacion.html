@@ -1,0 +1,35 @@
+{% extends "proveedores/base1.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<h1>Detalle Cotización</h1>
+<a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Volver</a>
+<h2>Cotización: {{ cotizacion.id }}</h2>
+<h3>Cliente: {{ cotizacion.cliente.nombre }}</h3>
+
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre del producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detalle in cotizacion.detallecotizacion_set.all %}
+        <tr>
+          <td>{{ detalle.producto.nombre }}</td>
+          <td>{{ detalle.cantidad }}</td>
+          <td>{{ detalle.precio }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+
