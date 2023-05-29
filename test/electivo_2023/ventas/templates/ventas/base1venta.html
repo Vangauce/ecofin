@@ -1,36 +1,13 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="es">
-    <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <title>EcoFácil</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
-        <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
-        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-        <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
-        <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %} ">
-        <link rel="stylesheet" href="{% static 'lib/AdminLTE-3.2.0/css/adminlte.min.css' %}">
-        <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %} ">
-        <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %} ">
-        <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %} ">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
-        </head>    
 <style>
 .bg-mi-color{
     background-color: #ffffff ;
     font-family:'Poppins',sans-serif;
 }
 .jumbotron{
-    margin-left: 60px;
+    margin-left: 130px;
     background-color: #92bba6 !important;
     font-family:'Poppins',sans-serif;
     
@@ -51,6 +28,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'lib/AdminLTE-3.2.0/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %} ">
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %} ">
 </head>
 
 <body class="bg-mi-color">
@@ -145,7 +134,7 @@
           </ul>
         </div>
     </nav>
-    <div class="container">
+    <div class="container col-md-12">
         {% if messages %}
         <div class="container">
             {% for message in messages %}
@@ -158,16 +147,15 @@
             {% endfor %}
         </div>
     {% endif %}
-        <div class="col-md-12 offset-md-1">
-            <div class="jumbotron"  style="margin-bottom: 0; margin-top: 25px; ">
-                <h1 class="display-5">Gestión de clientes</h1>
+        <div class="col-md-11 offset-md-1">
+            <div class="jumbotron" style="margin-bottom: 0; margin-top: 25px;">
+                <h1 class="display-5">Gestión de ordenes de venta</h1>
                 <hr class="my-4">
                 {% block content %}
                 {% endblock content %}
             </div>
         </div>
     </div>
-
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

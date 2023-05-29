@@ -1,16 +1,16 @@
-{% extends 'proveedores/base1.html' %}
+{% extends 'ventas/base1venta.html' %}
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<form method="post" id="formFactura">
+<form method="post" id="formFactura"> 
   {% csrf_token %}
   <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
       <button class="btn btn-info" type="submit">Añadir producto</button>
       <a href="{% url 'crear_orden' %}"class="btn btn-success">Nueva orden</a>
       <a href="{% url 'generar_pdf1' %}"class="btn btn-success" target="_factura">Reporte</a>
-      <a href="{% url 'listar_orden_venta' %}"class="btn btn-success">Listado</a>
+      <a href="{% url 'listar_orden_compra' %}"class="btn btn-success">Listado</a>
       <a href="{% url 'orden_main' %}" class="btn btn-danger">Cancelar</a>
     </div>
     <div class="card-body">
@@ -22,12 +22,12 @@
         </tr>
       -->
         <tr>
-          <th>Proveedor:</th>
+          <th>Cliente:</th>
           <td>
-            <select name="proveedor" id="proveedor" class="form-control">
-              <option value="0">Seleccione el proveedor</option>
-              {% for proveedor in proveedores %}
-                <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+            <select name="cliente" id="cliente" class="form-control">
+              <option value="0">Seleccione el cliente</option>
+              {% for cliente in clientes %}
+                <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
               {% endfor %}
             </select>
           </td>    
@@ -79,7 +79,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for detalle in detallecompra %}
+          {% for detalle in detalleventa %}
             <tr>
               <td>{{ detalle.producto.nombre }}</td>
               <td>{{ detalle.cantidad }}</td>
@@ -164,8 +164,3 @@
 
 {% endblock %}
 
-
-
-
-
-  

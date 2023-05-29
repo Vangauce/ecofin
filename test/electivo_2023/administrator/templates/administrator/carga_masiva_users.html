@@ -1,19 +1,61 @@
+
 <!DOCTYPE html>
+{% load static %}
 <html lang="es">
     <head>
-        <title>EcoFácil</title>
-     
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    </head>
+      <title>EcoFácil</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+      <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+      <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+      <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+      <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %} ">
+      <link rel="stylesheet" href="{% static 'lib/AdminLTE-3.2.0/css/adminlte.min.css' %}">
+      <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %} ">
+      <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %} ">
+      <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %} ">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    
+</head>
         <style media="screen">   
 body{
     background-color: #4d8066;
     font-family: 'Poppins',sans-serif;
     padding: 0 ;
+    margin: 0;
+}
+.square-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
 }
 
-a {
+.square {
+  background-color: #333;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 150px;
+  margin: 50px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+.square:hover {
+  transform: translateY(-20px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+b {
   color: #fff;
   font-size: 24px;
   text-decoration: none;
@@ -22,82 +64,169 @@ a {
 h3{
     font-size: 25px; 
     text-align: center;
-
 }
 
-.navbar {
-    display: flex;
-    margin: 0 ;
-
-
-}
 
 .navbar h3 {
     margin: 0;
-    background-color: #4d8066;
+    background-color: #00c040;
     display:block;
     padding: 20px 20px;
-    color: #333;
+    color: #ffffff;
     text-decoration: none;
     font-size: 25px;
     width: 100%;
 }
-
-input[type=file].form-control {
-    background-color: #4d8066;
-    color: #ffffff;
-    padding: 15px 0;
-    font-size: 23px;
-    border-radius: 5px;
-    width: 100%;
-    color: #333;
-
+.main-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: #f4f6f9;
 }
-.row{
-    text-align: left;
-
+.bg-mi-color{
+    background-color: #e9e9e9 ;
+    font-family:'Poppins',sans-serif;
 }
-.row div a {
-    font-size: 23px ;
-    text-decoration:underline;
-    color: #333;
-
-}
-.col-12.col-sm-3 button {
-    width: 200px;
-    background-color: #fffefe;
-    color: #333;
-    padding: 5px 0;
-    font-size: 23px;
-    font-weight: 600;
-    cursor: pointer;
+.container{
+  margin-left: 280px;
+} 
+.navbar-default {
+  background-color: #00c040;
+  margin-left: 250px;
 }
 
         </style>          
-<body>
+<body class="bg-mi-color">
+  <aside class="main-sidebar sidebar-light-primary elevation-4">
+    <a href="#" class="brand-link">
+        <img src="{% static "/assets/img/logo3.png" %}"
+             alt="Logo"
+             class="brand-image"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">ECOFÁCIL</span>
+    </a>
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="info">
+                <a href="#" class="d-block">{{ request.user.username }} </a>
+            </div>
+        </div>
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">Menú Principal</li>
+                <li class="nav-item">
+                  <a href="{% url 'users_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>
+                        Usuarios
+                    </p>
+                </a>
+              </li>
+                <li class="nav-item">
+                    <a href="{% url 'productos_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>
+                            Productos
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'categorias_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-boxes"></i>
+                        <p>
+                            Categorías
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'insumos_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-boxes"></i>
+                        <p>
+                            Insumos
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'proveedores_main' %}" class="nav-link">
+                      <i class="nav-icon fas fa-truck"></i>
+                      <p>
+                          Proveedores
+                      </p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'orden_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice"></i>
+                    <p>
+                        Orden de compra
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'clientes_main' %}" class="nav-link">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>
+                      Clientes
+                  </p>
+              </a>
+          </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+
+
   <nav class="navbar">
-    <h3>Carga Masiva de usuarios</h3> 
+    <h3>Carga masiva {{group.name}}</h3> 
   </nav>  
-  {%if profiles.group_id == 1 %}
-  <div class="col-12">
+  <div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col">
+        {%if profiles.group_id == 1 %}
+  <div class="col">
       <form action="{% url 'carga_masiva_users_save' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <div class="row">  
+          <div class="col">  
               <div class="col-12 col-sm-6 mb-3">
                   <a href="{% url 'import_file_users' %}">Descarga archivo de importación</a>
               </div>   
               <div class="col-12 col-sm-6 mb-3">
                   <input type="file" name="myfile" class="form-control border border-danger" required>
               </div>   
-              <div class="col-12 col-sm-3">
-                  <button class="btn btn btn-danger form-control mt-2" type="submit">Cargar</button>
-              </div>
-              <div class="col-12 col-sm-3">
-                  <a href="{% url 'users_main' %}" class="btn btn btn-danger form-control mt-2">Volver</a>
-              </div>
+
+              
+
+              <div class="col-lg-5 col-12">
+                
+                <div style=" background-color: #00c040;  color: #fff;" class="small-box bg-dark">
+                
+                
+                <button class="btn btn btn-danger form-control mt-2" type="submit">Cargar</button>
+                </div>
+                </div>
+
+
+
+
+              
           </div>
       </form>
   </div>
 {% endif %}
+        
+
+        <div class="container my-5">
+            <div class="col-10">
+                <a href="{% url 'users_main' %}" class="btn btn-dark form-control">Volver</a>
+           </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+        
+      
 </body>
 </html>   

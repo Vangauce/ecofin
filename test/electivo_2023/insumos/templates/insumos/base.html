@@ -3,7 +3,7 @@
 <html lang="es">
 <style>
 .bg-mi-color{
-    background-color: #4d8066 ;
+    background-color: #fdfdfd ;
     font-family:'Poppins',sans-serif;
 }
 .jumbotron{
@@ -11,6 +11,10 @@
     background-color: #92bba6 !important;
     font-family:'Poppins',sans-serif;
     
+}
+.navbar-default {
+  background-color: #00c040;
+  margin-left: 250px;
 }
 
 
@@ -117,6 +121,20 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
             </nav>
         </div>
     </aside>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a style="color: #fff;" class="navbar-brand" href="#">EcoFácil</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a style="color: #fff; font-size: 23px;" href="#"><span class="glyphicon glyphicon-user"></span> 
+                  ¡Bienvenido {{request.user.first_name}} {{request.user.last_name}}!</a></li>  
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a style="color: #fff;" href="#"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+          </ul>
+        </div>
+    </nav>
     <div class="container">
         {% if messages %}
     <div class="container">
