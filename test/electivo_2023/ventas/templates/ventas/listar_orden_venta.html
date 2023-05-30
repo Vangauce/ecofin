@@ -25,13 +25,13 @@
                         <td>${{ detalle.descuento_detalle }}</td>
                         <td>${{ detalle.total_detalle }}</td>
                         <td>
-                            <a href="{% url 'orden_edit' detalle.compra.id %}" class="btn text-secondary px-0">
+                            <a href="{% url 'orden_venta_edit' detalle.venta.id %}" class="btn text-secondary px-0">
                                 <i class="far fa-edit fa-lg"></i>
                             </a>
-                            <a href="{% url 'ver_orden_compra' detalle.compra.id %}" class="btn text-secondary px-0">
+                            <a href="{% url 'ver_orden_venta' detalle.venta.id %}" class="btn text-secondary px-0">
                                 <i class="fas fa-info-circle fa-lg"></i>
                             </a>                      
-                            <form action="{% url 'eliminar_orden_compra' detalle.compra.id %}" method="post" class="d-inline">
+                            <form action="{% url 'eliminar_orden_venta' detalle.venta.id %}" method="post" class="d-inline">
                                 {% csrf_token %}
                                 <button type="submit" class="btn">
                                     <i class="far fa-trash-alt fa-lg text-danger float-right"></i>

@@ -100,83 +100,107 @@ h3{
 
         </style>          
 <body class="bg-mi-color">
-  <aside class="main-sidebar sidebar-light-primary elevation-4">
-    <a href="#" class="brand-link">
-        <img src="{% static "/assets/img/logo3.png" %}"
-             alt="Logo"
-             class="brand-image"
-             style="opacity: .8">
-        <span class="brand-text font-weight-light">ECOFÁCIL</span>
-    </a>
-    <div class="sidebar">
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="info">
-                <a href="#" class="d-block">{{ request.user.username }} </a>
+    <aside class="main-sidebar sidebar-light-primary elevation-4">
+        <a href="#" class="brand-link">
+            <img src="{% static "/assets/img/logo3.png" %}"
+                 alt="Logo"
+                 class="brand-image"
+                 style="opacity: .8">
+            <span class="brand-text font-weight-light">ECOFÁCIL</span>
+        </a>
+        <div class="sidebar">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="info">
+                    <a href="#" class="d-block">{{ request.user.username }} </a>
+                </div>
             </div>
-        </div>
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-header">Menú Principal</li>
-                <li class="nav-item">
-                  <a href="{% url 'users_main' %}" class="nav-link">
-                    <i class="nav-icon fas fa-users"></i>
-                    <p>
-                        Usuarios
-                    </p>
-                </a>
-              </li>
-                <li class="nav-item">
-                    <a href="{% url 'productos_main' %}" class="nav-link">
-                        <i class="nav-icon fas fa-box"></i>
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-header">Menú Principal</li>
+                    <li class="nav-item">
+                      <a href="{% url 'users_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
                         <p>
-                            Productos
+                            Usuarios
+                        </p>
+                    </a>
+                  </li>
+                    <li class="nav-item">
+                        <a href="{% url 'productos_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-box"></i>
+                            <p>
+                                Productos
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'categorias_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <p>
+                                Categorías
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'insumos_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <p>
+                                Insumos
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{% url 'proveedores_main' %}" class="nav-link">
+                          <i class="nav-icon fas fa-truck"></i>
+                          <p>
+                              Proveedores
+                          </p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'orden_compra_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-file-invoice"></i>
+                        <p>
+                            Orden de compra
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'categorias_main' %}" class="nav-link">
-                        <i class="nav-icon fas fa-boxes"></i>
-                        <p>
-                            Categorías
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'insumos_main' %}" class="nav-link">
-                        <i class="nav-icon fas fa-boxes"></i>
-                        <p>
-                            Insumos
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'proveedores_main' %}" class="nav-link">
-                      <i class="nav-icon fas fa-truck"></i>
+                  <a href="{% url 'clientes_main' %}" class="nav-link">
+                      <i class="nav-icon fas fa-users"></i>
                       <p>
-                          Proveedores
+                          Clientes
                       </p>
                   </a>
               </li>
               <li class="nav-item">
-                <a href="{% url 'orden_main' %}" class="nav-link">
-                    <i class="nav-icon fas fa-file-invoice"></i>
+                <a href="{% url 'cotizaciones_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
                     <p>
-                        Orden de compra
+                        Cotizaciones
                     </p>
                 </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'clientes_main' %}" class="nav-link">
-                  <i class="nav-icon fas fa-users"></i>
-                  <p>
-                      Clientes
-                  </p>
-              </a>
-          </li>
-            </ul>
-        </nav>
-    </div>
-</aside>
+                <a href="{% url 'orden_trabajo_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice"></i>
+                    <p>
+                        Orden de trabajo
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'orden_venta_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-cash-register"></i>
+                    <p>
+                        Ventas
+                    </p>
+                </a>
+            </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
   <nav class="navbar">
     <h3>Editar Usuario {{group.name}}</h3> 
   </nav>  

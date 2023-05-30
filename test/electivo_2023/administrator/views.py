@@ -19,6 +19,10 @@ from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 import pandas as pd
 import xlwt
+from clientes.models import Clientes
+from ventas.models import Ventas
+from orden_compra.models import Compras
+from insumos.models import Insumos
 
 from registration.models import Profile
 @login_required
@@ -36,7 +40,11 @@ def admin_main(request):
         messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
         return redirect('check_group_main')
     template_name = 'administrator/admin_main.html'
-    return render(request,template_name,{'profiles':profiles})
+    total_clientes = Clientes.total_clientes()
+    total_ordenes_venta = Ventas.total_ordenes()
+    total_insumos = Insumos.total_insumos()
+    total_ordenes = Compras.total_ordenes()
+    return render(request,template_name,{'profiles':profiles,'total_clientes': total_clientes,'total_ordenes_venta': total_ordenes_venta,'total_insumos': total_insumos,'total_ordenes': total_ordenes})
 
 #Flujo usuarios
 @login_required

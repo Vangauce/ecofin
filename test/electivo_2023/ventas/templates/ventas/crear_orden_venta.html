@@ -8,10 +8,10 @@
   <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
       <button class="btn btn-info" type="submit">Añadir producto</button>
-      <a href="{% url 'crear_orden' %}"class="btn btn-success">Nueva orden</a>
-      <a href="{% url 'generar_pdf1' %}"class="btn btn-success" target="_factura">Reporte</a>
-      <a href="{% url 'listar_orden_compra' %}"class="btn btn-success">Listado</a>
-      <a href="{% url 'orden_main' %}" class="btn btn-danger">Cancelar</a>
+      <a href="{% url 'crear_orden_venta' %}"class="btn btn-success">Nueva orden</a>
+      <a href="{% url 'generar_pdfventa' %}"class="btn btn-success" target="_factura">Reporte</a>
+      <a href="{% url 'listar_orden_venta' %}"class="btn btn-success">Listado</a>
+      <a href="{% url 'orden_venta_main' %}" class="btn btn-danger">Cancelar</a>
     </div>
     <div class="card-body">
       <table class="table">
@@ -88,10 +88,10 @@
               <td>{{ detalle.descuento_detalle }}</td>
               <td>{{ detalle.total_detalle }}</td>
               <td>
-                <a href="{% url 'eliminar_detalle' detalle.id %}" class="btn text-secondary px-0">
+                <a href="{% url 'eliminar_detalle_venta' detalle.id %}" class="btn text-secondary px-0">
                   <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
               </a>  
-                <a href="{% url 'ver_orden_compra' detalle.compra.id %}" class="btn text-secondary px-0">
+                <a href="{% url 'ver_orden_venta' detalle.venta.id %}" class="btn text-secondary px-0">
                   <i class="fas fa-info-circle fa-lg"></i>
               </a>                      
             </td>

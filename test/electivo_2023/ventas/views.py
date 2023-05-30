@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 from .models import Detalle_orden_venta,Ventas
 from clientes.models import Clientes
 from productos.models import Producto
+from productos.models import Producto
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
 
 
 # Create your views here.
@@ -131,3 +136,64 @@ def listar_orden_venta(request):
         'detalles': detalles,
     }
     return render(request, 'ventas/listar_orden_venta.html', context)
+
+
+def generar_pdfventa(request):
+    detalles_orden = Detalle_orden_venta.objects.select_related('venta').order_by('venta__id')
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_venta.pdf"'
+    pdf = canvas.Canvas(response, pagesize=letter)
+    pdf.setTitle("Reporte de Ventas")
+
+    font_size = 12
+    y = 700
+    x = 50
+
+    total_ventas = 0
+
+    venta_actual = None
+
+    for detalle in detalles_orden:
+        if venta_actual is None or venta_actual.id != detalle.venta.id:
+            venta_actual = detalle.venta
+
+            if y < 100:  # Si queda poco espacio en la página actual, crear una nueva página
+                pdf.showPage()
+                y = 700
+
+            pdf.setFont('Helvetica-Bold', font_size)
+            pdf.drawString(x, y, "ID de Venta: {}".format(venta_actual.id))
+            pdf.setFont('Helvetica', font_size)
+            y -= font_size + 10
+
+            pdf.drawString(x, y, "Producto")
+            pdf.drawString(x + 100, y, "Cantidad")
+            pdf.drawString(x + 200, y, "Precio")
+            pdf.drawString(x + 300, y, "Subtotal")
+            pdf.drawString(x + 400, y, "Descuento")
+            pdf.drawString(x + 500, y, "Total")
+            y -= font_size + 10
+
+        producto = detalle.producto.nombre
+        cantidad = detalle.cantidad
+        precio = detalle.precio
+        sub_total = detalle.sub_total_detalle
+        descuento = detalle.descuento_detalle
+        total = detalle.total_detalle
+
+        pdf.drawString(x, y, str(producto))
+        pdf.drawString(x + 100, y, str(cantidad))
+        pdf.drawString(x + 200, y, str(precio))
+        pdf.drawString(x + 300, y, str(sub_total))
+        pdf.drawString(x + 400, y, str(descuento))
+        pdf.drawString(x + 500, y, str(total))
+        y -= font_size + 2
+
+    pdf.setFont('Helvetica', 10)
+
+    pdf.showPage()
+    pdf.save()
+
+    request.session['redirigir_despues_de_descargar'] = True
+
+    return response
