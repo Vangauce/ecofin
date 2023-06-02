@@ -8,6 +8,8 @@ class Ventas(models.Model):
     sub_total = models.FloatField(default=0) 
     descuento = models.FloatField(default=0) 
     total = models.FloatField(default=0) 
+    estado = models.CharField(max_length=50, default='Pendiente')
+
     @classmethod
     def total_ordenes(cls):
         return cls.objects.count()

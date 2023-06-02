@@ -1,0 +1,13 @@
+{% extends 'orden_trabajo/base.html' %}
+
+{% block content %}
+    <h2>Cambiar Estado de Venta</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_nuevo_estado">Nuevo Estado:</label>
+            <input type="text" id="id_nuevo_estado" name="nuevo_estado" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+{% endblock %}
