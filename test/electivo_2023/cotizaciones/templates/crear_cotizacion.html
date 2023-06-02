@@ -8,11 +8,10 @@
   <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
       <h2 colspan="2">Crear Cotización</h2>
+      <button class="btn btn-info" type="submit">Crear Cotización</button>
       <a href="{% url 'listado_cotizacion' %}" class="btn btn-primary">Listado</a>
       <a href="{% url 'generar_reporte' %}" class="btn btn-primary">Reporte</a>
-      <button class="btn btn-info" type="submit">Crear Cotización</button>
-      
-      <a href="{% url 'admin_main' %}" class="btn btn-danger">Cancelar</a>
+      <a href="{% url 'admin_main' %}" class="btn btn-danger">Volver</a>
     </div>
     <div class="card-body">
       <label for="cliente">Cliente:</label>
@@ -35,21 +34,23 @@
         <tbody>
           <tr class="producto-row">
             <td>
-              <select name="producto" class="form-control producto-select">
+              <select name="producto" class="form-control producto-select" required>
                 <option value="">Seleccione un producto</option>
                 {% for producto in productos %}
                   <option value="{{ producto.id }}">{{ producto.nombre }}</option>
                 {% endfor %}
               </select>
             </td>
-            <td><input type="text" name="cantidad" class="form-control cantidad-input"></td>
-            <td><input type="text" name="precio" class="form-control precio-input"></td>
+            <td><input type="number" name="cantidad" class="form-control cantidad-input" required></td>
+            <td><input type="number" name="precio" class="form-control precio-input" required></td>
             <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
           </tr>
         </tbody>
       </table>
     </div>
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
     <button type="button" class="btn btn-primary add-producto">Añadir Producto</button>
+  </div>
   </div>
 </form>
 
