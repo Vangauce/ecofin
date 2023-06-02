@@ -21,6 +21,7 @@ class DetalleCotizacion(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     precio = models.IntegerField()
+    fecha = models.DateField
 
 
 

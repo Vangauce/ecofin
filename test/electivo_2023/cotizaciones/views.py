@@ -5,9 +5,15 @@ from .models import Cotizacion, DetalleCotizacion
 from clientes.models import Clientes
 from productos.models import Producto
 from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from django.views import View
+from django.template.loader import get_template
 
 from openpyxl import Workbook
 from django.http import HttpResponse
+
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 def cotizaciones_main(request):
     return render(request, 'cotizaciones_main.html')
@@ -40,10 +46,17 @@ def crear_cotizacion(request):
         productos = Producto.objects.all()
         return render(request, 'crear_cotizacion.html', {'clientes': clientes, 'productos': productos})
 
+from datetime import date
+
 def detalle_cotizacion(request, cotizacion_id):
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id)
     detalles = DetalleCotizacion.objects.filter(cotizacion=cotizacion)
+    
+    # fecha modificacion
+    cotizacion.fecha = date.today()
+    
     return render(request, 'detalle_cotizacion.html', {'cotizacion': cotizacion, 'detalles': detalles})
+
 
 def listado_cotizacion(request):
     cotizaciones = Cotizacion.objects.all()
@@ -120,7 +133,6 @@ def editar_cotizacion(request, cotizacion_id):
     return render(request, 'editar_cotizacion.html', context)
 
 
-
 def generar_reporte(request):
     cotizaciones_dict = obtener_datos_listado_cotizaciones()
 
@@ -129,26 +141,50 @@ def generar_reporte(request):
     sheet = workbook.active
 
     # Escribir encabezados
-    sheet['A1'] = 'ID de Cotización'  # Nueva columna agregada
+    sheet['H1'] = 'Fecha'
+    sheet['A1'] = 'ID de Cotización'
     sheet['B1'] = 'Cliente'
     sheet['C1'] = 'Producto'
     sheet['D1'] = 'Cantidad'
     sheet['E1'] = 'Precio'
+    sheet['F1'] = 'Subtotal'
+    sheet['G1'] = 'Total'
+
+    # Aplicar formato de negrita a la fila 1
+    for cell in sheet[1]:
+        cell.font = cell.font.copy(bold=True)
 
     # Escribir datos de cotizaciones
     row = 2  # Comenzar desde la fila 2
+    id_anterior = None
     for cotizacion_id, data in cotizaciones_dict.items():
         cotizaciones = data['cotizaciones']
         cliente = data['cliente']
 
+        total = 0  # Variable para almacenar el total de la cotización
+
         for cotizacion in cotizaciones:
+            if cotizacion.id != id_anterior:
+                row += 1
+                total = 0  # Reiniciar el total para el nuevo ID de cotización
+            id_anterior = cotizacion.id
+
             for detalle in cotizacion.detallecotizacion_set.all():
-                sheet[f'A{row}'] = cotizacion.id  # Nueva columna agregada
+                sheet[f'H{row}'] = cotizacion.fecha
+                sheet[f'A{row}'] = cotizacion.id
                 sheet[f'B{row}'] = cliente.nombre
                 sheet[f'C{row}'] = detalle.producto.nombre
                 sheet[f'D{row}'] = detalle.cantidad
                 sheet[f'E{row}'] = detalle.precio
+
+                subtotal = detalle.cantidad * detalle.precio
+                sheet[f'F{row}'] = subtotal
+
+                total += subtotal  # Acumular el subtotal en el total de la cotización
+
                 row += 1
+
+            sheet[f'G{row - 1}'] = total  # Escribir el total en la última fila de la cotización
 
     # Guardar el archivo de Excel en la respuesta HTTP
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

@@ -1,15 +1,30 @@
-{% extends "proveedores/base1.html" %}
+{% extends "base1.html" %}
 
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-<h1>Detalle Cotización</h1>
-<a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Volver</a>
-<h2>Cotización: {{ cotizacion.id }}</h2>
-<h3>Cliente: {{ cotizacion.cliente.nombre }}</h3>
+<div style="display: flex; align-items: center;">
+  <h1 style="flex: 1;">Detalle Cotización</h1>
+  <div>
+    <a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Nueva Cotización</a>
+    <a href="{% url 'listado_cotizacion' %}" class="btn btn-primary">Ver Listado</a>
+  </div>
+</div>
 
+<div class="card shadow mb-4">
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div>
+      <h3>Cliente: {{ cotizacion.cliente.nombre }}</h3>
+      <h5>E-mail: {{ cotizacion.cliente.correo }}</h5>
+      <h5>Direccion: {{ cotizacion.cliente.direccion }}</h5>
+      <h5>Telefono: {{ cotizacion.cliente.telefono }}</h5>
+      <h5>Fecha: {{ cotizacion.fecha }}</h5>
+    </div>
+    <h2>Cotización ID: {{ cotizacion.id }}</h2>
+  </div>
+  
 <div class="table-responsive">
   <table class="table">
     <thead>
@@ -25,10 +40,12 @@
           <td>{{ detalle.producto.nombre }}</td>
           <td>{{ detalle.cantidad }}</td>
           <td>{{ detalle.precio }}</td>
+          
         </tr>
       {% endfor %}
     </tbody>
   </table>
+</div>
 </div>
 {% endblock %}
 

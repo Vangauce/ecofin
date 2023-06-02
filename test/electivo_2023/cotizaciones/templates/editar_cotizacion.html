@@ -23,6 +23,7 @@
             <th>Producto</th>
             <th>Cantidad</th>
             <th>Precio</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -37,12 +38,15 @@
               </td>
               <td><input type="text" name="cantidad" value="{{ detalle.cantidad }}" class="form-control"></td>
               <td><input type="text" name="precio" value="{{ detalle.precio }}" class="form-control"></td>
+              <td><button type="button" class="btn btn-danger btn-eliminar">Eliminar</button></td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
     <button type="button" id="agregar-producto" class="btn btn-primary">Añadir producto</button>
+  </div>
   </div>
 </form>
 
@@ -54,6 +58,9 @@
       productoRow.find('select').val('');
       productoRow.find('input').val('');
       $('.table tbody').append(productoRow);
+    });
+    $('.table').on('click', '.btn-eliminar', function() {
+      $(this).closest('tr').remove();
     });
   });
 </script>

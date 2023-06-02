@@ -5,8 +5,11 @@
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-<h1>Listado de Cotizaciones</h1>
-<a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Volver</a>
+<div style="display: flex; align-items: center;">
+  <h1 style="flex: 1;">Listado de Cotizaciones</h1>
+  <a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Volver</a>
+</div>
+
 
 {% for cotizacion_id, data in cotizaciones_dict.items %}
   <div class="card shadow mb-4">
@@ -51,12 +54,19 @@
                   {% endfor %}
                 </td>
                 <td>
-                  <form action="{% url 'borrar_cotizacion' cotizacion.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Borrar</button>
+                  <div class="btn-group" role="group" aria-label="Acciones">
+                    <form action="{% url 'borrar_cotizacion' cotizacion.id %}" method="POST">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                    
+                    <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="btn btn-primary btn-sm">Editar</a>
+                    <!--<a href="{% url 'reporte_pdf' %}" class="btn btn-dark btn-sm">PDF</a> -->
+                    <a href="{% url 'detalle_cotizacion' cotizacion.id %}" class="btn btn-outline-dark btn-sm">Ver</a> 
                   </form>
-                  <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="btn btn-primary">Editar</a>
+                  </div>
                 </td>
+                
+                
               </tr>
             {% endfor %}
           </tbody>
