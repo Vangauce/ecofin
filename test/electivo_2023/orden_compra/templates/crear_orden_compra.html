@@ -1,0 +1,81 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<form method="post" id="formOrdenCompra">
+  {% csrf_token %}
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h2 colspan="2">Crear Orden de Compra</h2>
+      <button class="btn btn-info" type="submit">Crear Orden de Compra</button>
+      <a href="{% url 'listado_ordenes_compra' %}" class="btn btn-primary">Listado</a>
+      <a href="{% url 'generar_reporte' %}" class="btn btn-primary">Reporte</a>
+      <a href="{% url 'admin_main' %}" class="btn btn-danger">Volver</a>
+    </div>
+    <div class="card-body">
+      <label for="proveedor">Proveedor:</label>
+      <select name="proveedor" id="proveedor" class="form-control">
+        {% for proveedor in proveedores %}
+          <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="table-responsive">
+      <table id="insumos-table" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Nombre del insumo</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Descuento (%)</th>  <!-- Agregar columna para el descuento -->
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="insumo-row">
+            <td>
+              <select name="insumo" class="form-control insumo-select" required>
+                <option value="">Seleccione un insumo</option>
+                {% for insumo in insumos %}
+                  <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td><input type="number" name="cantidad" class="form-control cantidad-input" required></td>
+            <td><input type="number" name="precio" class="form-control precio-input" required></td>
+            <td><input type="number" name="descuento" class="form-control descuento-input" required></td>  <!-- Agregar input para el descuento -->
+            <td><button type="button" class="btn btn-danger remove-insumo">Eliminar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <button type="button" class="btn btn-primary add-insumo">Añadir Insumo</button>
+    </div>
+  </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.add-insumo').click(function() {
+      var insumoRow = $('.insumo-row').first().clone();
+      insumoRow.find('select').val('');
+      insumoRow.find('input').val('');
+      insumoRow.find('.remove-insumo').show();
+      $('#insumos-table tbody').append(insumoRow);
+    });
+
+    $(document).on('click', '.remove-insumo', function() {
+      $(this).closest('tr').remove();
+    });
+  });
+</script>
+{% endblock %}
+
+
+
+
+
+  

@@ -1,25 +1,30 @@
 from django.db import models
 from proveedores.models import Proveedores
-from productos.models import Producto
+from insumos.models import Insumos
 
+class OrdenCompra(models.Model):
+    proveedor = models.ForeignKey(Proveedores, on_delete=models.CASCADE)
+    insumos = models.ManyToManyField(Insumos)
+    fecha = models.DateField(auto_now_add=True)
 
-class Compras(models.Model):
-    proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE)
-    sub_total = models.FloatField(default=0) 
-    descuento = models.FloatField(default=0) 
-    total = models.FloatField(default=0) 
     @classmethod
-    def total_ordenes(cls):
+    def total_ordenes_compra(cls):
         return cls.objects.count()
 
-class Detalle_orden(models.Model):
-    compra = models.ForeignKey(Compras, on_delete=models.CASCADE)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad = models.IntegerField(default=1)
-    precio = models.FloatField(default=0)
-    sub_total_detalle = models.FloatField(default=0)
-    descuento_detalle = models.FloatField(default=0)
-    total_detalle = models.FloatField(default=0)
+    def total(self):
+        total = 0
+        for item in self.detalleordencompra_set.all():
+            total += item.subtotal()
+        return total
 
-    def __str__(self):
-        return '{}'.format(self.producto)
+class DetalleOrdenCompra(models.Model):
+    orden_compra = models.ForeignKey(OrdenCompra, on_delete=models.CASCADE)
+    insumo = models.ForeignKey(Insumos, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    precio = models.IntegerField()
+    descuento = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    total_compra = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    def subtotal(self):
+        return (self.cantidad * self.precio) - self.descuento
+

@@ -1,0 +1,69 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<form method="POST" action="{% url 'editar_orden_compra' orden_compra.id %}">
+  {% csrf_token %}
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h2>Editar Orden de Compra</h2>
+      <button class="btn btn-info" type="submit">Guardar cambios</button>
+    </div>
+    <div class="card-body">
+      <label for="proveedor">Proveedor:</label>
+      <input type="text" id="proveedor" name="proveedor" value="{{ orden_compra.proveedor.nombre }}" readonly class="form-control">
+    </div>
+    <div class="table-responsive">
+      <table id="insumos-table" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Insumo</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Descuento (%)</th> <!-- Agregar columna para el descuento -->
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detalle in orden_compra.detalleordencompra_set.all %}
+            <tr>
+              <td>
+                <select name="insumo" class="form-control">
+                  {% for insumo in insumos_disponibles %}
+                    <option value="{{ insumo.id }}" {% if detalle.insumo.id == insumo.id %}selected{% endif %}>{{ insumo.nombre }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td><input type="text" name="cantidad" value="{{ detalle.cantidad }}" class="form-control"></td>
+              <td><input type="text" name="precio" value="{{ detalle.precio }}" class="form-control"></td>
+              <td><input type="text" name="descuento" value="{{ detalle.descuento }}" class="form-control"></td> <!-- Agregar campo para el descuento -->
+              <td><button type="button" class="btn btn-danger btn-eliminar">Eliminar</button></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <button type="button" id="agregar-insumo" class="btn btn-primary">Añadir insumo</button>
+    </div>
+  </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#agregar-insumo').click(function() {
+      var insumoRow = $('.table tbody tr').first().clone();
+      insumoRow.find('select').val('');
+      insumoRow.find('input').val('');
+      $('.table tbody').append(insumoRow);
+    });
+    $('.table').on('click', '.btn-eliminar', function() {
+      $(this).closest('tr').remove();
+    });
+  });
+</script>
+{% endblock %}

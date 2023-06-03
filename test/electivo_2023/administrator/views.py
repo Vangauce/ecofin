@@ -21,7 +21,7 @@ import pandas as pd
 import xlwt
 from clientes.models import Clientes
 from ventas.models import Ventas
-from orden_compra.models import Compras
+from orden_compra.models import OrdenCompra
 from insumos.models import Insumos
 
 from registration.models import Profile
@@ -43,8 +43,8 @@ def admin_main(request):
     total_clientes = Clientes.total_clientes()
     total_ordenes_venta = Ventas.total_ordenes()
     total_insumos = Insumos.total_insumos()
-    total_ordenes = Compras.total_ordenes()
-    return render(request,template_name,{'profiles':profiles,'total_clientes': total_clientes,'total_ordenes_venta': total_ordenes_venta,'total_insumos': total_insumos,'total_ordenes': total_ordenes})
+    total_ordenes = OrdenCompra.total_ordenes()
+    return render(request,template_name,{'profiles':profiles,'total_clientes': total_clientes,'total_ordenes_venta': total_ordenes_venta,'total_insumos': total_insumos}) #,'total_ordenes': total_ordenes})
 
 #Flujo usuarios
 @login_required

@@ -1,0 +1,55 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<div style="display: flex; align-items: center;">
+  <h1 style="flex: 1;">Detalle Orden de Compra</h1>
+  <div>
+    <a href="{% url 'crear_orden_compra' %}" class="btn btn-primary">Nueva Orden de Compra</a>
+    <a href="{% url 'listado_ordenes_compra' %}" class="btn btn-primary">Ver Listado</a>
+  </div>
+</div>
+
+<div class="card shadow mb-4">
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div>
+      <h3>Proveedor: {{ orden_compra.proveedor.nombre }}</h3>
+      <h5>Email: {{ orden_compra.proveedor.correo }}</h5>
+      <h5>Dirección: {{ orden_compra.proveedor.direccion }}</h5>
+      <h5>Teléfono: {{ orden_compra.proveedor.telefono }}</h5>
+      <h5>Fecha: {{ orden_compra.fecha }}</h5>
+    </div>
+    <h2>Orden de Compra ID: {{ orden_compra.id }}</h2>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Insumo</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Descuento (%)</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for detalle in orden_compra.detalleordencompra_set.all %}
+          <tr>
+            <td>{{ detalle.insumo.nombre }}</td>
+            <td>{{ detalle.cantidad }}</td>
+            <td>{{ detalle.precio }}</td>
+            <td>{{ detalle.descuento }}</td>
+            <td>{{ detalle.total_compra}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+

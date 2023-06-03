@@ -12,6 +12,7 @@ urlpatterns = [
     path('import_file_proveedores/',views.import_file_proveedores,name="import_file_proveedores"),
     path('carga_masiva_proveedores_save/',views.carga_masiva_proveedores_save,name="carga_masiva_proveedores_save"),
     path('generar_pdf/', views.generar_pdf, name='generar_pdf'),
+    
 
     
 ]
