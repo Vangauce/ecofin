@@ -16,7 +16,8 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
 def cotizaciones_main(request):
-    return render(request, 'cotizaciones_main.html')
+    total_cotizaciones = Cotizacion.total_cotizaciones()
+    return render(request, 'cotizaciones_main.html',{'total_cotizaciones': total_cotizaciones})
 
 def crear_cotizacion(request):
     if request.method == 'POST':

@@ -1,37 +1,57 @@
 from django.shortcuts import render, redirect
 from .models import Proveedores
 from .forms import ProveedoresForm
-from django.shortcuts import render, redirect
 import xlwt
 import pandas as pd
 from django.http import HttpResponse
 from registration.models import Profile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import render
 from datetime import date
 from productos.models import Producto
 from django.http import JsonResponse
-
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
-
 from itertools import groupby
 
+@login_required
 def carga_masiva_proveedores(request):
     profiles = Profile.objects.get(user_id=request.user.id)
     if profiles.group_id != 1:
-        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una área para la que no tiene permisos')
         return redirect('check_group_main')
+
     template_name = 'proveedores/carga_masiva_proveedores.html'
     return render(request, template_name, {'profiles': profiles})
+
+
+@login_required
+def import_file_proveedores(request):
+    profiles = Profile.objects.get(user_id=request.user.id)
+    if profiles.group_id != 1:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una área para la que no tiene permisos')
+        return redirect('check_group_main')
+
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="archivo_importacion.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('carga_masiva')
+    row_num = 0
+    columns = ['Nombre', 'Apellido', 'Correo', 'Dirección', 'Teléfono']
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+    wb.save(response)
+    return response
+
 
 @login_required
 def carga_masiva_proveedores_save(request):
     profiles = Profile.objects.get(user_id=request.user.id)
     if profiles.group_id != 1:
-        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una área para la que no tiene permisos')
         return redirect('check_group_main')
 
     if request.method == 'POST':
@@ -40,54 +60,27 @@ def carga_masiva_proveedores_save(request):
         except KeyError:
             messages.add_message(request, messages.ERROR, 'Debe seleccionar un archivo')
             return redirect('carga_masiva_proveedores')
-            
+
         df = pd.DataFrame(data)
         acc = 0
         for item in df.itertuples():
             nombre = str(item[1])
-            direccion = str(item[2])    
-            proveedor = Proveedores(nombre=nombre, direccion=direccion)
+            apellido = str(item[2])
+            correo = str(item[3])
+            direccion = str(item[4])
+            telefono = str(item[5])
+            proveedor = Proveedores(nombre=nombre, apellido=apellido, correo=correo, direccion=direccion, telefono=telefono)
             proveedor.save()
             acc += 1
         messages.add_message(request, messages.SUCCESS, f'Carga masiva finalizada, se importaron {acc} registros')
         return redirect('carga_masiva_proveedores')
 
-@login_required
-def import_file_proveedores(request):
-    profiles = Profile.objects.get(user_id=request.user.id)
-    if profiles.group_id != 1:
-        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
-        return redirect('check_group_main')
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="archivo_importacion.xls"'
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('carga_masiva')
-    row_num = 0
-    columns = ['Nombre', 'Direccion']
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
-    for col_num in range(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
-    font_style = xlwt.XFStyle()
-    date_format = xlwt.XFStyle()
-    date_format.num_format_str = 'dd/MM/yyyy'
-    for row in range(1):
-        row_num += 1
-        for col_num in range(2):
-            if col_num == 0:
-                ws.write(row_num, col_num, 'Nombre del producto', font_style)
-            elif col_num == 1:
-                ws.write(row_num, col_num, 'Direccion', font_style)
-    wb.save(response)
-    return response
+    return redirect('carga_masiva_proveedores')
+
 
 def proveedores_main(request):
     total_proveedores = Proveedores.total_proveedores()
     return render(request, 'proveedores/proveedores_main.html', {'total_proveedores': total_proveedores})
-
-
-
-
 
 def proveedores_lista(request):
     q = request.GET.get('q')
@@ -129,42 +122,49 @@ def proveedores_read(request, id):
 from reportlab.lib.pagesizes import letter
 
 
-def generar_pdf(request):
 
+from django.utils import timezone
+
+def generar_pdf(request):
     proveedores_lista = Proveedores.objects.all()
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="reporte_proveedores.pdf"'
     pdf = canvas.Canvas(response, pagesize=letter)
-    pdf.drawString(100, 750, "Reporte de Proveedores")
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(100, 750, "Reportes EcoFácil")
+    
+    fecha_actual = timezone.now().strftime("%d/%m/%Y %H:%M:%S")
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(380, 750, f"Fecha del reporte: {fecha_actual}")
 
-    pdf = canvas.Canvas(response, pagesize=letter)
-    pdf.setTitle("Reporte de proveedores")
-
-
-    font_size = 12
     y = 700
     x = 50
 
-    pdf.setFont('Helvetica-Bold', font_size)
+    pdf.setFont('Helvetica-Bold', 12)
     pdf.drawString(x, y, "Reporte de Proveedores")
-    pdf.setFont('Helvetica', font_size)
-    y -= font_size + 10
-
+    pdf.setFont('Helvetica', 12)
+    y -= 22
 
     pdf.drawString(x, y, "Nombre")
-    pdf.drawString(x + 150, y, "Dirección")
-    y -= font_size + 10
+    pdf.drawString(x + 90, y, "Apellido")
+    pdf.drawString(x + 170, y, "Correo")
+    pdf.drawString(x + 330, y, "Dirección")
+    pdf.drawString(x + 430, y, "Teléfono")
+    y -= 18
 
     for proveedor in proveedores_lista:
         pdf.drawString(x, y, proveedor.nombre)
-        pdf.drawString(x + 150, y, proveedor.direccion)
-        y -= font_size + 2
-
+        pdf.drawString(x + 90, y, proveedor.apellido)
+        pdf.drawString(x + 170, y, proveedor.correo)
+        pdf.drawString(x + 330, y, proveedor.direccion)
+        pdf.drawString(x + 430, y, proveedor.telefono)
+        y -= 14
 
     pdf.showPage()
     pdf.save()
 
-
     request.session['redirigir_despues_de_descargar'] = True
 
     return response
+
+

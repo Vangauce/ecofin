@@ -1,7 +1,9 @@
 {% extends "proveedores/base.html" %}
 
 {% block content %}
-    <h2>{{ proveedores.nombre }}</h2>
-    <p><strong>Dirección:</strong> {{ proveedores.direccion }}</p>
+<h2>{{ proveedores.nombre }} {{ proveedores.apellido }}</h2>
+<p><strong>Correo:</strong> {{ proveedores.correo }}</p>
+<p><strong>Dirección:</strong> {{ proveedores.direccion }}</p>
+<p><strong>Teléfono</strong> {{ proveedores.telefono }}</p>    
     <a href="{% url 'proveedores_list' %}" class="btn btn-secondary">Regresar al listado</a>
 {% endblock %}

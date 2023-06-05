@@ -31,7 +31,10 @@
         <thead class="border-bottom font-weight-bold">
             <tr>
                 <td>Nombre</td>
-                <td>Direccion</td>
+                <td>Apellido</td>
+                <td>Dirección</td>
+                <td>Correo</td>
+                <td>Teléfono</td>
                 <td></td>
             </tr>
         </thead>
@@ -39,7 +42,10 @@
             {% for Proveedores in proveedores_lista %}
                 <tr>
                     <td>{{Proveedores.nombre}}</td>
+                    <td>{{Proveedores.apellido}}</td>
                     <td>{{Proveedores.direccion}}</td>
+                    <td>{{Proveedores.correo}}</td>
+                    <td>{{Proveedores.telefono}}</td>
 
                     <td>
                         <a href="{% url 'proveedores_update' Proveedores.id %}" class="btn text-secondary px-0">

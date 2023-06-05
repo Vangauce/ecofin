@@ -16,7 +16,8 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
 def ordenes_compra_main(request):
-    return render(request, 'orden_compra_main.html')
+    total_ordenes_compra = OrdenCompra.total_ordenes_compra()
+    return render(request, 'orden_compra_main.html',{'total_ordenes_compra': total_ordenes_compra})
 
 def crear_orden_compra(request):
     if request.method == 'POST':
