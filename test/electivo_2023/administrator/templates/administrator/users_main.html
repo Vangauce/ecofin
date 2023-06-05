@@ -166,6 +166,20 @@ body {
         </ul>
       </div>
   </nav>
+  <div class="row justify-content-center">
+
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box mb-3">
+        <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-users"></i></span>
+        <div class="info-box-content">
+        <span class="info-box-text">Usuarios</span>
+        <span class="info-box-number">{{ user_count }}</span>
+        </div>
+        
+        </div>
+        
+    </div>
+</div>  
       <div class="container my-5">
         <div class="row justify-content-center">
             
@@ -200,13 +214,14 @@ body {
                     </div>
                 </div>
                 {% endif %}
+                
                 {% for g in groups %}
                 <div class="col-lg-5 col-12">
                 
                     <div style=" background-color: #00c040;  color: #fff;" class="small-box bg-success">
                     <div class="inner">
                     
-                    <h2>Listado</h2>
+                    <h2>Listado {{g.name}}</h2>
                     </div>
                     <div class="icon">
                     <i class="fa fa-list"></i>
@@ -214,7 +229,7 @@ body {
                     <a href="{% url 'list_main' g.id %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                
+                {% endfor %}
                 <div class="col-lg-5 col-5">
                 
                     <div style=" background-color: #00c040;  color: #fff;" class="small-box bg-danger">
@@ -228,7 +243,6 @@ body {
                     <a href="{% url 'edit_user' user.id %}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                {% endfor %}
                 <div class="col-lg-5 col-12">
                 
                     <div style=" background-color: #00c040; color: #fff;" class="small-box bg-dark ">

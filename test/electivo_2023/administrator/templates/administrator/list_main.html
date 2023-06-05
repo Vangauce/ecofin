@@ -199,17 +199,32 @@ h3{
         </nav>
     </div>
 </aside>
-  <nav class="navbar">
-    <h3>Listado Perfil {{group.name}}</h3> 
-  </nav>  
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a style="color: #fff;" class="navbar-brand" href="#">EcoFácil</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a style="color: #fff; font-size: 23px;" href="#"><span class="glyphicon glyphicon-user"></span> 
+              ¡Bienvenido {{request.user.first_name}} {{request.user.last_name}}!</a></li>  
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a style="color: #fff;" href="#"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+      </ul>
+    </div>
+</nav>
+
+    
+
   <div class="container my-5">
   <div class="row justify-content-center">
     <div class="col">
+
         {% if profiles.group_id == 1%}
         
 
       <div class="col-lg-5 col-12">
-                
+        <h2 class="text-center" style="font-size: 30px; font-weight: bold; margin-bottom: 30px;">Listado del perfil "{{group.name}}"</h2>
           <div style=" background-color: #00c040;  color: #fff;" class="small-box bg-info">
           <div class="inner">
       
