@@ -62,11 +62,33 @@ def users_main(request):
 
 
 @login_required
-def new_user(request):
-    profiles = Profile.objects.get(user_id = request.user.id)
-    if profiles.group_id != 1:
-        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
+def users_main(request):
+    profiles = Profile.objects.get(user_id=request.user.id)
+    if profiles.group_id != 1 and profiles.group_id != 2:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a un área para la que no tiene permisos')
         return redirect('check_group_main')
+    
+    groups = Group.objects.all().order_by('id')
+    user_count = User.objects.count() 
+    
+    template_name = 'administrator/users_main.html'
+    return render(request, template_name, {'groups': groups, 'profiles': profiles, 'user_count': user_count})
+
+
+from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+from django.contrib.auth.tokens import default_token_generator
+
+@login_required
+def new_user(request):
+    profiles = Profile.objects.get(user_id=request.user.id)
+    if profiles.group_id != 1:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una área para la que no tiene permisos')
+        return redirect('check_group_main')
+
     if request.method == 'POST':
         grupo = request.POST.get('grupo')
         rut = request.POST.get('rut')
@@ -74,33 +96,49 @@ def new_user(request):
         last_name = request.POST.get('last_name1')
         email = request.POST.get('email')
         mobile = request.POST.get('mobile')
-        #el metodo no contempla validacioens deberá realizarlas
+
         rut_exist = User.objects.filter(username=rut).count()
         mail_exist = User.objects.filter(email=email).count()
+        
         if rut_exist == 0:
             if mail_exist == 0:
                 user = User.objects.create_user(
-                    username= rut,
+                    username=rut,
                     email=email,
                     password=rut,
                     first_name=first_name,
                     last_name=last_name,
-                    )
+                )
+                
+                
+                current_site = get_current_site(request)
+                mail_subject = 'Confirmación de creación de cuenta'
+                message = render_to_string('emails/confirmation_email.html', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': default_token_generator.make_token(user),
+                })
+                send_mail(mail_subject, message, 'uautonomachatgpt@gmail.com', [email])
+                
                 profile_save = Profile(
-                    user_id = user.id,
-                    group_id = grupo,
-                    first_session = 'No',
-                    token_app_session = 'No',
+                    user_id=user.id,
+                    group_id=grupo,
+                    first_session='No',
+                    token_app_session='No',
                 )
                 profile_save.save()
-                messages.add_message(request, messages.INFO, 'Usuario creado con exito')                             
+                
+                messages.add_message(request, messages.INFO, 'Usuario creado con éxito y correo enviado al usuario')
             else:
-                messages.add_message(request, messages.INFO, 'El correo que esta tratando de ingresar, ya existe en nuestros registros')                             
+                messages.add_message(request, messages.INFO, 'El correo que está tratando de ingresar, ya existe en nuestros registros')
         else:
-            messages.add_message(request, messages.INFO, 'El rut que esta tratando de ingresar, ya existe en nuestros registros')                         
+            messages.add_message(request, messages.INFO, 'El nombre de usuario que está tratando de ingresar, ya existe en nuestros registros')
+
     groups = Group.objects.all().order_by('id')
     template_name = 'administrator/new_user.html'
-    return render(request,template_name,{'groups':groups})
+    return render(request, template_name, {'groups': groups})
+
 
 @login_required
 def list_main(request,group_id):
@@ -142,7 +180,8 @@ def edit_user(request,user_id):
             return redirect('list_user_active',grupo)
         else:
             messages.add_message(request, messages.INFO, 'Hubo un error al editar el Usuario '+user_data.first_name +' '+user_data.last_name)
-            return redirect('list_user_active',profile_data.group_id)    
+            return redirect('list_user_active',profile_data.group_id)   
+         
     user_data = User.objects.get(pk=user_id)
     profile_data = Profile.objects.get(user_id=user_id)
     groups = Group.objects.get(pk=profile_data.group_id) 

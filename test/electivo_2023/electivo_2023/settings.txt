@@ -151,6 +151,7 @@ MEDIA_ROOT =  os.path.join(BASE_DIR, 'core', 'static', 'core')
 LOGIN_REDIRECT_URL = 'check_profile'
 LOGOUT_REDIRECT_URL = 'login'
 
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -158,3 +159,11 @@ REST_FRAMEWORK = {
     'rest_framework.permissions.IsAuthenticated'
     ]
 }
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "uautonomachatgpt@gmail.com"
+EMAIL_HOST_PASSWORD = "iqcncaqvghqqbimc"
