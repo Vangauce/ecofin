@@ -118,38 +118,46 @@ def carga_masiva_clientes_save(request):
 
 
 
+from reportlab.lib.pagesizes import letter
+from django.conf import settings
+from django.utils import timezone
+from pytz import timezone as pytz_timezone
+
 @login_required
 def generar_reporte_pdf(request):
     profiles = Profile.objects.get(user_id=request.user.id)
     if profiles.group_id != 1:
         messages.add_message(request, messages.INFO, 'Intenta ingresar a una área para la que no tiene permisos')
         return redirect('check_group_main')
-
+    time_zone = pytz_timezone(settings.TIME_ZONE) 
     clientes_lista = Clientes.objects.all()
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="reporte_clientes.pdf"'
-
-    # Ajusta el ancho de página
-    pdf = canvas.Canvas(response, pagesize=(800, 800))
-
-    pdf.drawString(50, 750, "Reporte de Clientes")
-    pdf.drawString(50, 700, "NOMBRE:")
-    pdf.drawString(200, 700, "APELLIDO:")
-    pdf.drawString(350, 700, "CORREO:")
-    pdf.drawString(500, 700, "DIRECCIÓN:")
-    pdf.drawString(650, 700, "TELÉFONO:")
-    
-    y = 680
-    font_size = 12
-    pdf.setFontSize(font_size)
-    
+    pdf = canvas.Canvas(response, pagesize=letter)
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(100, 750, "Reportes EcoFácil")
+    fecha_actual = timezone.now().astimezone(time_zone).strftime("%d/%m/%Y %H:%M:%S")
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(380, 750, f"Fecha del reporte: {fecha_actual}")
+    y = 700
+    x = 50
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(x, y, "Reporte de Clientes")
+    pdf.setFont('Helvetica', 12)
+    y -= 22
+    pdf.drawString(x,y, "Nombre:")
+    pdf.drawString(x + 90, y, "Apellido:")
+    pdf.drawString(x + 190, y, "Correo:")
+    pdf.drawString(x + 350, y, "Dirección:")
+    pdf.drawString(x + 450, y, "Teléfono:")
+    y -= 18
     for cliente in clientes_lista:
-        pdf.drawString(50, y, cliente.nombre)
-        pdf.drawString(200, y, cliente.apellido)
-        pdf.drawString(350, y, cliente.correo)
-        pdf.drawString(500, y, cliente.direccion)
-        pdf.drawString(650, y, cliente.telefono)
-        y -= font_size + 2
+        pdf.drawString(x, y, cliente.nombre)
+        pdf.drawString(x + 90, y, cliente.apellido)
+        pdf.drawString(x + 190, y, cliente.correo)
+        pdf.drawString(x + 350, y, cliente.direccion)
+        pdf.drawString(x + 450, y, cliente.telefono)
+        y -= 14
     
     pdf.showPage()
     pdf.save()
@@ -157,4 +165,3 @@ def generar_reporte_pdf(request):
     request.session['redirigir_despues_de_descargar'] = True
     
     return response
-

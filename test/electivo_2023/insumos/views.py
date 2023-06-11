@@ -119,43 +119,41 @@ def insumos_read(request, id):
     context = {'insumos': insumos}
     return render(request, "insumos/insumos_read.html", context)
 
-from django.http import HttpResponse
-from reportlab.pdfgen import canvas
-from io import BytesIO
-from django.utils.translation import gettext as _
+from reportlab.lib.pagesizes import letter
+from django.conf import settings
+from django.utils import timezone
+from pytz import timezone as pytz_timezone
 
 def generar_reporte_insumos(request):
-
+    time_zone = pytz_timezone(settings.TIME_ZONE) 
     insumos_lista = Insumos.objects.all()
-
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="reporte_insumos.pdf"'
-
-    buffer = BytesIO()
-
-    pdf = canvas.Canvas(buffer)
-
-    # Encabezado del reporte
-    pdf.drawString(100, 750, _("Reporte de Insumos"))
-
-    # Encabezados de la tabla
-    pdf.drawString(100, 700, _("Nombre"))
-    pdf.drawString(250, 700, _("Cantidad"))
-    pdf.drawString(400, 700, _("Material"))
-
-    y = 680
+    pdf = canvas.Canvas(response, pagesize=letter)
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(100, 750, "Reportes EcoFácil")
+    fecha_actual = timezone.now().astimezone(time_zone).strftime("%d/%m/%Y %H:%M:%S")
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(380, 750, f"Fecha del reporte: {fecha_actual}")
+    y = 700
+    x = 50
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(x, y, "Reporte de Insumos")
+    pdf.setFont('Helvetica', 12)
+    y -= 22
+    pdf.drawString(x, y, ("Nombre"))
+    pdf.drawString(x + 140, y, ("Cantidad"))
+    pdf.drawString(x + 270, y, ("Precio"))
+    pdf.drawString(x + 400, y, ("Material"))
+    y -= 18
     for insumo in insumos_lista:
-        pdf.drawString(100, y, insumo.nombre)
-        pdf.drawString(250, y, str(insumo.cantidad))
-        pdf.drawString(400, y, insumo.material)
-        y -= 20
+        pdf.drawString(x, y, insumo.nombre)
+        pdf.drawString(x + 140, y, str(insumo.cantidad))
+        pdf.drawString(x + 270, y, insumo.precio)
+        pdf.drawString(x + 400, y, insumo.material)
+        y -= 14
 
     pdf.showPage()
     pdf.save()
-
-    pdf = buffer.getvalue()
-    buffer.close()
-
-    response.write(pdf)
-
+    request.session['redirigir_despues_de_descargar'] = True
     return response

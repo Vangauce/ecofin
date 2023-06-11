@@ -15,6 +15,8 @@ from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import Context
+from reportlab.lib.pagesizes import letter
+
 
 
 def carga_masiva_productos(request):
@@ -134,27 +136,45 @@ def productos_read(request, id):
     context = {'producto': producto}
     return render(request, "productos/productos_read.html", context)
 
-def generar_reporte_pdf(request):
+from django.conf import settings
+from django.utils import timezone
+from pytz import timezone as pytz_timezone
 
+def generar_reporte_pdf(request):
+    time_zone = pytz_timezone(settings.TIME_ZONE)  # Obtiene el objeto de zona horaria
     productos_lista = Producto.objects.all()
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="reporte_productos.pdf"'
-    pdf = canvas.Canvas(response)
-    pdf.drawString(100, 750, "Reporte de Productos")
-    pdf.drawString(100, 700, "NOMBRE:")
-    pdf.drawString(250, 700, "MATERIAL:")
-    pdf.drawString(400, 700, "CATEGORÍA:")
-    y = 680
-    font_size = 12
-    pdf.setFontSize(font_size)
+    pdf = canvas.Canvas(response, pagesize=letter)
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(100, 750, "Reportes EcoFácil")
+    fecha_actual = timezone.now().astimezone(time_zone).strftime("%d/%m/%Y %H:%M:%S")
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(380, 750, f"Fecha del reporte: {fecha_actual}")
+    y = 700
+    x = 50
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(x, y, "Reporte de Productos")
+    pdf.setFont('Helvetica', 12)
+    y -= 22
+    pdf.drawString(x, y, "Nombre:")
+    pdf.drawString(x + 90, y, "Material:")
+    pdf.drawString(x + 200, y, "Cantidad:")
+    pdf.drawString(x + 330, y, "Precio:")
+    pdf.drawString(x + 430, y, "Categoría:")
+    y -= 18
+
     for producto in productos_lista:
-        pdf.drawString(100, y, producto.nombre)
-        pdf.drawString(250, y, producto.material)
-        pdf.drawString(400, y, str(producto.categoria))
-        y -= font_size + 2
+        pdf.drawString(x, y, producto.nombre)
+        pdf.drawString(x + 90, y, producto.material)
+        pdf.drawString(x + 215, y, producto.cantidad)
+        pdf.drawString(x + 335, y, producto.precio)
+        pdf.drawString(x + 430, y, str(producto.categoria))
+        y -= 14
     pdf.showPage()
     pdf.save()
 
     request.session['redirigir_despues_de_descargar'] = True
     
     return response
+

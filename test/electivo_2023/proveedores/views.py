@@ -119,13 +119,18 @@ def proveedores_read(request, id):
     proveedores = Proveedores.objects.get(pk=id)
     context = {'proveedores': proveedores}
     return render(request, "proveedores/proveedores_read.html", context)
+
+
+
+
+
 from reportlab.lib.pagesizes import letter
-
-
-
+from django.conf import settings
 from django.utils import timezone
+from pytz import timezone as pytz_timezone
 
 def generar_pdf(request):
+    time_zone = pytz_timezone(settings.TIME_ZONE)  # Obtiene el objeto de zona horaria
     proveedores_lista = Proveedores.objects.all()
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="reporte_proveedores.pdf"'
@@ -133,7 +138,7 @@ def generar_pdf(request):
     pdf.setFont('Helvetica-Bold', 12)
     pdf.drawString(100, 750, "Reportes EcoFácil")
     
-    fecha_actual = timezone.now().strftime("%d/%m/%Y %H:%M:%S")
+    fecha_actual = timezone.now().astimezone(time_zone).strftime("%d/%m/%Y %H:%M:%S")
     pdf.setFont('Helvetica', 10)
     pdf.drawString(380, 750, f"Fecha del reporte: {fecha_actual}")
 
@@ -166,5 +171,6 @@ def generar_pdf(request):
     request.session['redirigir_despues_de_descargar'] = True
 
     return response
+
 
 

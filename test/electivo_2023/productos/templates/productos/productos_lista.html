@@ -32,6 +32,8 @@
             <tr>
                 <td>Nombre</td>
                 <td>Material</td>
+                <td>Cantidad</td>
+                <td>Precio</td>
                 <td>Categoría</td>
                 <td></td>
             </tr>
@@ -41,6 +43,8 @@
                 <tr>
                     <td>{{Producto.nombre}}</td>
                     <td>{{Producto.material}}</td>
+                    <td>{{Producto.cantidad}}</td>
+                    <td>{{Producto.precio}}</td>
                     <td>{{Producto.categoria}}</td>
                     <td>
                         <a href="{% url 'productos_update' Producto.id %}" class="btn text-secondary px-0">

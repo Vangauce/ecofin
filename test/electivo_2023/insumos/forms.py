@@ -7,10 +7,11 @@ class InsumosForm(forms.ModelForm):
 
     class Meta:
         model = Insumos  
-        fields = ('nombre','material','cantidad',)
+        fields = ('nombre','material','cantidad','precio')
         labels = {
             'nombre':'Nombre',
-            'cantidad':'n. cantidad'
+            'cantidad':'n. cantidad',
+            'precio':'Precio'    
         }
 
     #def __init__(self, *args, **kwargs):

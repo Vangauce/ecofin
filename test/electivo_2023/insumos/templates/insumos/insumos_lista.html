@@ -32,6 +32,7 @@
             <tr>
                 <td>Nombre</td>
                 <td>Cantidad</td>
+                <td>Precio</td>
                 <td>Material</td>
                 <td></td>
             </tr>
@@ -41,6 +42,7 @@
                 <tr>
                     <td>{{Insumos.nombre}}</td>
                     <td>{{Insumos.cantidad}}</td>
+                    <td>{{Insumos.precio}}</td>
                     <td>{{Insumos.material}}</td>
                     <td>
                         <a href="{% url 'insumos_update' Insumos.id %}" class="btn text-secondary px-0">
