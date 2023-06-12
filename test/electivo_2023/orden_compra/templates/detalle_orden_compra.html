@@ -41,9 +41,9 @@
           <tr>
             <td>{{ detalle.insumo.nombre }}</td>
             <td>{{ detalle.cantidad }}</td>
-            <td>{{ detalle.precio }}</td>
-            <td>{{ detalle.descuento }}</td>
-            <td>{{ detalle.total_compra}}</td>
+            <td>{{ detalle.formatted_precio }}</td>
+            <td>{{ detalle.descuento }}%</td>
+            <td>{{ detalle.formatted_total_compra}}</td>
           </tr>
         {% endfor %}
       </tbody>

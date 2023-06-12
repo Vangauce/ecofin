@@ -55,28 +55,29 @@ from datetime import date
 def detalle_orden_compra(request, orden_compra_id):
     orden_compra = OrdenCompra.objects.get(pk=orden_compra_id)
     detalles = DetalleOrdenCompra.objects.filter(orden_compra=orden_compra)
+
     # fecha modificacion
     orden_compra.fecha = date.today()
-    
     return render(request, 'detalle_orden_compra.html', {'orden_compra': orden_compra, 'detalles': detalles})
 
 
+
+
 def listado_orden_compra(request):
+    q = request.GET.get('q')
     ordenes_compra = OrdenCompra.objects.all()
-    ordenes_compra_dict = {}
-    for orden_compra in ordenes_compra:
-        orden_compra_id = orden_compra.id
-        if orden_compra_id in ordenes_compra_dict:
-            ordenes_compra_dict[orden_compra_id]['ordenes_compra'].append(orden_compra)
-        else:
-            ordenes_compra_dict[orden_compra_id] = {'ordenes_compra': [orden_compra]}
-    borrar_url = reverse('borrar_orden_compra', kwargs={'orden_compra_id': 0})  # URL de borrado de orden de compra
-    return render(request, 'listado_orden_compra.html', {'ordenes_compra_dict': ordenes_compra_dict, 'borrar_url': borrar_url})
+    
+    if q:
+        ordenes_compra = ordenes_compra.filter(proveedor__nombre__icontains=q)
+        
+    return render(request, 'listado_orden_compra.html', {'ordenes_compra': ordenes_compra})
+
 
 def borrar_orden_compra(request, orden_compra_id):
-    orden_compra = get_object_or_404(OrdenCompra, id=orden_compra_id)
+    orden_compra = OrdenCompra.objects.get(pk=orden_compra_id)
     orden_compra.delete()
-    return redirect('listado_orden_compra')
+    return redirect('listado_ordenes_compra')
+
 
 def obtener_datos_listado_ordenes_compra():
     ordenes_compra_dict = {}
@@ -96,42 +97,51 @@ def obtener_datos_listado_ordenes_compra():
 
     return ordenes_compra_dict
 
-
 def editar_orden_compra(request, orden_compra_id):
     orden_compra = get_object_or_404(OrdenCompra, id=orden_compra_id)
-    
+
     if request.method == 'POST':
-        # Procesar los insumos modificados en la orden de compra
+        proveedor_id = request.POST.get('proveedor')
+        proveedor = get_object_or_404(Proveedores, id=proveedor_id)
+        orden_compra.proveedor = proveedor
+        orden_compra.save()
+
         insumos = request.POST.getlist('insumo')
         cantidades = request.POST.getlist('cantidad')
         precios = request.POST.getlist('precio')
-        
-        # Eliminar todos los detalles de la orden de compra existentes
+        descuentos = request.POST.getlist('descuento')
+
         orden_compra.detalleordencompra_set.all().delete()
-        
-        # Agregar los nuevos detalles a la orden de compra
+
         for i in range(len(insumos)):
             insumo = get_object_or_404(Insumos, id=insumos[i])
-            cantidad = cantidades[i]
-            precio = precios[i]
-            
+            cantidad = int(cantidades[i])
+            precio = int(precios[i])
+            descuento = int(descuentos[i])
+            total_compra = cantidad * precio * (1 - descuento / 100)
+
             DetalleOrdenCompra.objects.create(
                 orden_compra=orden_compra,
                 insumo=insumo,
                 cantidad=cantidad,
-                precio=precio
+                precio=precio,
+                descuento=descuento,
+                total_compra=total_compra
             )
-        
-        # Redirigir a la página de listado de órdenes de compra
+
         return redirect('listado_ordenes_compra')
-    
-    # Si es una solicitud GET, renderizar la plantilla de edición de orden de compra
-    insumos_disponibles = Insumos.objects.all()
+
+    proveedores = Proveedores.objects.all()
+    insumos = Insumos.objects.all()
     context = {
         'orden_compra': orden_compra,
-        'insumos_disponibles': insumos_disponibles
+        'proveedores': proveedores,
+        'insumos': insumos
     }
     return render(request, 'editar_orden_compra.html', context)
+
+
+
 
 
 def generar_reporte(request):

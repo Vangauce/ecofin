@@ -1,83 +1,78 @@
 {% extends "base_compra.html" %}
 
 {% block content %}
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-<div style="display: flex; align-items: center;">
-  <h1 style="flex: 1;">Listado de Órdenes de Compra</h1>
-  <a href="{% url 'crear_orden_compra' %}" class="btn btn-primary">Volver</a>
+<div class="row">
+  <div class="col-12 col-lg-6 mb-2">
+      <form method="GET">
+          <div class="input-group">
+              <input type="text" name="q" class="form-control" placeholder="Buscar proveedor" value="{{ request.GET.q }}">
+              <div class="input-group-append">
+                  <button type="submit" class="btn btn-primary btn-buscar">
+                      <i class="fas fa-search"></i> Buscar
+                  </button>
+              </div>
+          </div>
+      </form>
+  </div>
+  <div class="col-12 col-lg-6 mb-2">
+      <a href="{% url 'listado_ordenes_compra' %}" class="btn btn-outline-dark">
+          <i class="fas fa-times"></i> Limpiar
+      </a>
+      <a href="{% url 'crear_orden_compra' %}" class="btn btn-outline-dark">
+          <i class="fas fa-plus"></i> Añadir 
+      </a>
+      <a href="{% url 'generar_reporte' %}" class="btn btn-outline-dark">
+          <i class="fas fa-file-excel"></i> Reporte
+      </a>       
+      <a href="{% url 'orden_compra_main' %}" class="btn btn-outline-dark">
+        <i class="fas fa-home"></i> Volver
+    </a>       
+  </div>
 </div>
 
-{% for orden_compra_id, data in ordenes_compra_dict.items %}
-  <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h2>Orden de Compra ID: {{ orden_compra_id }}</h2>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
+<div class="row">
+  <div class="col-12">
+      <table class="table table-borderless">
+          <thead class="border-bottom font-weight-bold">
             <tr>
-              <th>Proveedor</th>
-              <th>Insumo</th>
-              <th>Cantidad</th>
-              <th>Precio</th>
-              <th>Descuento</th> <!-- Agregar columna para el descuento -->
-              <th>Acciones</th>
-            </tr>
+              <td>Orden</td>
+              <td>Proveedor</td>
+              <td>Fecha</td>
+              <td>Dirección</td>
+              <td>Total</td>
+              <td>Acciones</td>
+          </tr>
           </thead>
           <tbody>
-            {% for orden_compra in data.ordenes_compra %}
+            {% for orden_compra in ordenes_compra %}
               <tr>
+                <td>{{ orden_compra.id }}</td>
                 <td>{{ orden_compra.proveedor.nombre }}</td>
-                <td>
-                  {% for detalle in orden_compra.detalleordencompra_set.all %}
-                    <p>{{ detalle.insumo.nombre }}</p>
-                  {% empty %}
-                    <p>Sin insumos</p>
-                  {% endfor %}
-                </td>
-                <td>
-                  {% for detalle in orden_compra.detalleordencompra_set.all %}
-                    <p>{{ detalle.cantidad }}</p>
-                  {% empty %}
-                    <p>-</p>
-                  {% endfor %}
-                </td>
-                <td>
-                  {% for detalle in orden_compra.detalleordencompra_set.all %}
-                    <p>{{ detalle.precio }}</p>
-                  {% empty %}
-                    <p>-</p>
-                  {% endfor %}
-                </td>
-                <td>
-                  {% for detalle in orden_compra.detalleordencompra_set.all %}
-                    <p>{{ detalle.descuento }}</p> <!-- Agregar campo para el descuento -->
-                  {% empty %}
-                    <p>-</p>
-                  {% endfor %}
-                </td>
+                <td>{{ orden_compra.fecha }}</td>
+                <td>{{ orden_compra.proveedor.direccion }}</td>
+                <td>{{ orden_compra.total }}</td>
                 <td>
                   <div class="btn-group" role="group" aria-label="Acciones">
-                    <form action="{% url 'borrar_orden_compra' orden_compra.id %}" method="POST">
+                    <a href="{% url 'detalle_orden_compra' orden_compra.id %}" class="btn text-secondary px-0">
+                      <i class="fas fa-info-circle fa-lg"></i>
+                    </a> 
+                    <a href="{% url 'editar_orden_compra' orden_compra.id %}" class="btn text-secondary px-0">
+                      <i class="far fa-edit fa-lg"></i>
+                    </a>
+                    <form method="POST" action="{% url 'borrar_orden_compra' orden_compra.id %}">
+
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                      <button type="submit" class="btn text-secondary px-0">
+                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                      </button>
                     </form>
-                    <a href="{% url 'editar_orden_compra' orden_compra.id %}" class="btn btn-primary btn-sm">Editar</a>
-                    <!--<a href="{% url 'reporte_pdf' %}" class="btn btn-dark btn-sm">PDF</a> -->
-                    <a href="{% url 'detalle_orden_compra' orden_compra.id %}" class="btn btn-outline-dark btn-sm">Ver</a> 
                   </div>
                 </td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
-      </div>
-    </div>
   </div>
-{% endfor %}
+</div>
 {% endblock %}
 

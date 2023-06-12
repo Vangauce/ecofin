@@ -29,7 +29,7 @@
             <th>Nombre del insumo</th>
             <th>Cantidad</th>
             <th>Precio</th>
-            <th>Descuento (%)</th>  <!-- Agregar columna para el descuento -->
+            <th>Descuento (%)</th>  
             <th>Opciones</th>
           </tr>
         </thead>
@@ -39,13 +39,13 @@
               <select name="insumo" class="form-control insumo-select" required>
                 <option value="">Seleccione un insumo</option>
                 {% for insumo in insumos %}
-                  <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
+                  <option value="{{ insumo.id }}" data-precio="{{ insumo.precio }}">{{ insumo.nombre }}</option>
                 {% endfor %}
               </select>
             </td>
             <td><input type="number" name="cantidad" class="form-control cantidad-input" required></td>
-            <td><input type="number" name="precio" class="form-control precio-input" required></td>
-            <td><input type="number" name="descuento" class="form-control descuento-input" required></td>  <!-- Agregar input para el descuento -->
+            <td><input type="number" name="precio" class="form-control precio-input" required readonly></td>
+            <td><input type="number" name="descuento" class="form-control descuento-input" required></td>  
             <td><button type="button" class="btn btn-danger remove-insumo">Eliminar</button></td>
           </tr>
         </tbody>
@@ -70,11 +70,16 @@
     $(document).on('click', '.remove-insumo', function() {
       $(this).closest('tr').remove();
     });
+
+    $(document).on('change', '.insumo-select', function() {
+      var selectedOption = $(this).find(':selected');
+      var precio = selectedOption.data('precio');
+      $(this).closest('.insumo-row').find('.precio-input').val(precio);
+    });
   });
 </script>
+
 {% endblock %}
-
-
 
 
 

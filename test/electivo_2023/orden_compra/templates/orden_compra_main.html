@@ -162,19 +162,20 @@
             </ul>
         </div>
     </nav>
-    <div class="container2 my-3">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div style="background-color: #1ea5ba;" class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title text-center"><a style="color: #fff;">Hay {{ total_ordenes_compra }} ordenes creadas.</a></h5>
-                    </div>
-                </div>
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3 mt-3">
+            <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-file-invoice"></i></span>
+            <div class="info-box-content">
+            <span class="info-box-text">Ordenes de compra</span>
+            <span class="info-box-number">{{ total_ordenes_compra }}</span>
             </div>
             
-
+            </div>
+            
         </div>
-    </div>
+    </div> 
       <div class="container my-5">
         <div class="row justify-content-center">
             
@@ -212,7 +213,7 @@
                     <div style="background-color: #00c040; color: #fff;" class="small-box bg-danger"> 
                     <div class="inner">
                     
-                    <h2>Reporte en PDF </h2>
+                    <h2>Reporte en EXCEL </h2>
                     </div>
                     <div class="icon">
                     <i class="fa fa-file-excel"></i>
