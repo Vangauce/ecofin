@@ -78,6 +78,26 @@ def crear_orden_venta(request, id=None):
         cantidad = request.POST.get("cantidad")
         precio = request.POST.get("precio")
         producto = Producto.objects.get(id=id_producto)
+
+
+        aa=producto.cantidad
+        aa=int(aa)
+        cantidad=int(cantidad)
+        newca=aa-cantidad
+
+        if newca<0:
+            template_name='ventas/error.html'
+            info = {
+            "error":'La cantidad ingresada supera lo almacenado en el inventario'
+            }
+            return render(request, template_name, info)
+
+        producto.cantidad=newca
+        producto.save()
+
+
+
+
         desc = request.POST.get("descuento")
 
         sub_total_detalle = float(cantidad) * float(precio)

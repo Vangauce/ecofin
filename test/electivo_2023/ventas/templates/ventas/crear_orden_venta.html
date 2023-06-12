@@ -42,7 +42,7 @@
             <select name="producto" id="producto" class="form-control">
               <option value="0">Seleccione el producto</option>
               {% for producto in productos %}
-                <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+                <option value="{{ producto.id }}">{{ producto.nombre }} // "La cantidad no puede ser superior a {{ producto.cantidad }} "</option>
               {% endfor %}
             </select>
           </td>  

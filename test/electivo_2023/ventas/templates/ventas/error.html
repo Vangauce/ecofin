@@ -1,0 +1,24 @@
+{% extends 'ventas/base1venta.html' %}
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<div class="alert alert-danger alert-dismissible">
+    
+    <h5><i class="icon fas fa-ban"> </i> Ha ocurrido el siguiente error: </h5>
+    <ul>
+        {{ error }} 
+
+    </ul>
+    
+</div>
+
+<a href="{% url 'crear_orden_venta' %}"class="btn btn-warning">Intentarlo nuevamente</a>
+
+
+
+
+
+{% endblock %}
+
