@@ -1,166 +1,97 @@
 {% extends 'ventas/base1venta.html' %}
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<style>
+  .stock-input {
+    width: 60px !important; 
+  }
+</style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <form method="post" id="formFactura"> 
   {% csrf_token %}
   <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <button class="btn btn-info" type="submit">Añadir producto</button>
-      <a href="{% url 'crear_orden_venta' %}"class="btn btn-success">Nueva orden</a>
-      <a href="{% url 'generar_pdfventa' %}"class="btn btn-success" target="_factura">Reporte</a>
-      <a href="{% url 'listar_orden_venta' %}"class="btn btn-success">Listado</a>
-      <a href="{% url 'orden_venta_main' %}" class="btn btn-danger">Cancelar</a>
+      <h2 colspan="2">Crear Orden de Venta</h2>
+      <button class="btn btn-info" type="submit">Crear Orden de Venta</button>
+      <a href="{% url 'listar_orden_venta' %}" class="btn btn-primary">Listado</a>
+      <a href="{% url 'generar_pdfventa' %}" class="btn btn-primary">Reporte</a>
+      <a href="{% url 'orden_venta_main' %}" class="btn btn-danger">Volver</a>
     </div>
     <div class="card-body">
-      <table class="table">
-        <!--<tr>   
- 
-          <th>Num. de orden</th>
-          <td><input type="text" class="form-control" name="id" id="idCompras"></td>
-        </tr>
-      -->
-        <tr>
-          <th>Cliente:</th>
-          <td>
-            <select name="cliente" id="cliente" class="form-control">
-              <option value="0">Seleccione el cliente</option>
-              {% for cliente in clientes %}
-                <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
-              {% endfor %}
-            </select>
-          </td>    
-          <th>Dirección:</th>
-          <td>
-            <input type="text" class="form-control" name="direccion" id="direccion" >
-          </td>
-        </tr>
-        <tr>
-          <th>Producto:</th>
-          <td>
-            <select name="producto" id="producto" class="form-control">
-              <option value="0">Seleccione el producto</option>
-              {% for producto in productos %}
-                <option value="{{ producto.id }}">{{ producto.nombre }} // "La cantidad no puede ser superior a {{ producto.cantidad }} "</option>
-              {% endfor %}
-            </select>
-          </td>  
-            <th>Subtotal:</th>
-            <td><input type="number" name="subTotal" id="subTotal" class="form-control text-right" value="0" readonly></td>
-  
-        </tr>
-        <tr>
-          <th>Cantidad</th>
-          <td><input type="number" name="cantidad" id="cantidad" class="form-control text-right" value="0"></td>
-          <th>Desc:</th>
-          <td><input type="number" name="descuento" id="descuento" class="form-control text-right" value="0" ></td>
-        </tr>
-        <tr>
-          <th>Precio</th>
-          <td><input type="number" name="precio" id="precio" class="form-control text-right" value="0"></td>
-          <th>Total:</th>
-          <td><input type="number" name="total" id="total" class="form-control text-right" value="0" disabled></td>
-          <td colspan="2"></td>
-        </tr>
-      </div>
+      <label for="cliente">Cliente:</label>
+      <select name="cliente" id="cliente" class="form-control">
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="table-responsive">
-      <table class="table table-bordered">
+      <table id="productos-table" class="table table-bordered">
         <thead>
           <tr>
-            <th>Producto</th>
+            <th>Nombre del producto</th>
+            <th>Stock</th>
             <th>Cantidad</th>
             <th>Precio</th>
-            <th>Subtotal</th>
-            <th>Descuento</th>
-            <th>Total</th>
+            <th>Descuento (%)</th>  
             <th>Opciones</th>
           </tr>
         </thead>
         <tbody>
-          {% for detalle in detalleventa %}
-            <tr>
-              <td>{{ detalle.producto.nombre }}</td>
-              <td>{{ detalle.cantidad }}</td>
-              <td>{{ detalle.precio }}</td>
-              <td>{{ detalle.sub_total_detalle }}</td>
-              <td>{{ detalle.descuento_detalle }}</td>
-              <td>{{ detalle.total_detalle }}</td>
-              <td>
-                <a href="{% url 'eliminar_detalle_venta' detalle.id %}" class="btn text-secondary px-0">
-                  <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
-              </a>  
-                <a href="{% url 'ver_orden_venta' detalle.venta.id %}" class="btn text-secondary px-0">
-                  <i class="fas fa-info-circle fa-lg"></i>
-              </a>                      
+          <tr class="producto-row">
+            <td>
+              <select name="producto" class="form-control producto-select" required>
+                <option value="">Seleccione un producto</option>
+                {% for producto in productos %}
+                  <option value="{{ producto.id }}" data-precio="{{ producto.precio }}" data-stock="{{ producto.cantidad }}">{{ producto.nombre }}</option>
+                {% endfor %}
+              </select>
             </td>
-            </tr>
-          {% endfor %}
+            <td><input type="text" name="stock" class="form-control stock-input" required readonly></td>
+            <td><input type="number" name="cantidad" class="form-control cantidad-input" required></td>
+            <td><input type="number" name="precio" class="form-control precio-input" required readonly></td>
+            <td><input type="number" name="descuento" class="form-control descuento-input" required></td>  
+            <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
+          </tr>
         </tbody>
       </table>
     </div>
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <button type="button" class="btn btn-primary add-producto">Añadir Producto</button>
+    </div>
   </div>
-</div>
-</div>
 </form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  // Obtener los elementos necesarios
-  const cantidadInput = document.getElementById("cantidad");
-  const precioInput = document.getElementById("precio");
-  const subtotalInput = document.getElementById("subTotal");
-  const descuentoInput = document.getElementById("descuento");
-  const totalInput = document.getElementById("total");
-
-  // Agregar eventos de cambio a los campos de cantidad, precio y descuento
-  cantidadInput.addEventListener("change", actualizarSubtotal);
-  precioInput.addEventListener("change", actualizarSubtotal);
-  descuentoInput.addEventListener("change", actualizarTotal);
-
-  // Función para calcular y actualizar el subtotal
-  function actualizarSubtotal() {
-    const cantidad = parseFloat(cantidadInput.value);
-    const precio = parseFloat(precioInput.value);
-    const subtotal = cantidad * precio;
-
-    // Actualizar el valor del campo subtotal sin formateo
-    subtotalInput.value = subtotal;
-
-    // Actualizar el total después de cambiar el subtotal
-    actualizarTotal();
-  }
-
-  // Función para calcular y actualizar el total después de aplicar el descuento
-  function actualizarTotal() {
-    const subtotal = parseFloat(subtotalInput.value);
-    const descuento = parseFloat(descuentoInput.value);
-
-    // Calcular el descuento en porcentaje
-    const descuentoPorcentaje = subtotal * (descuento / 100);
-
-    // Calcular el total después de aplicar el descuento
-    const total = subtotal - descuentoPorcentaje;
-
-    // Formatear el total con punto como separador de miles y sin decimales
-    const totalFormateado = formatearNumero(total);
-
-    // Actualizar el valor del campo total
-    totalInput.value = totalFormateado;
-  }
-
-  // Función para formatear el número con punto como separador de miles y sin decimales
-  function formatearNumero(numero) {
-    return numero.toLocaleString(undefined, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-      useGrouping: true,
+  $(document).ready(function() {
+    $('.add-producto').click(function() {
+      var productoRow = $('.producto-row').first().clone();
+      productoRow.find('select').val('');
+      productoRow.find('input').val('');
+      productoRow.find('.remove-producto').show();
+      $('#productos-table tbody').append(productoRow);
     });
-  }
+
+    $(document).on('click', '.remove-producto', function() {
+      $(this).closest('tr').remove();
+    });
+
+    $(document).on('change', '.producto-select', function() {
+      var selectedOption = $(this).find(':selected');
+      var precio = selectedOption.data('precio');
+      var stock = selectedOption.data('stock');
+      var cantidadInput = $(this).closest('.producto-row').find('.cantidad-input');
+      var stockInput = $(this).closest('.producto-row').find('.stock-input');
+      
+      $(this).closest('.producto-row').find('.precio-input').val(precio);
+      stockInput.val(stock);
+      
+      cantidadInput.attr('max', stock);
+      
+      if (parseInt(cantidadInput.val()) > stock) {
+        cantidadInput.val('');
+      }
+    });
+  });
 </script>
-
-
-
-
-
 {% endblock %}
-

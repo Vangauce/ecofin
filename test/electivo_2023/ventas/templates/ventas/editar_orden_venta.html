@@ -1,59 +1,57 @@
-{% extends "base_compra.html" %}
+{% extends "ventas/base1venta.html" %}
 
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-<form method="POST" action="{% url 'editar_orden_compra' orden_compra.id %}">
+<form method="POST" action="{% url 'editar_orden_venta' orden_venta.id %}">
   {% csrf_token %}
   <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h2>Editar Orden de Compra</h2>
+      <h2>Editar Orden de venta</h2>
       <button class="btn btn-info" type="submit">Guardar cambios</button>
     </div>
     <div class="card-body">
-      <label for="proveedor">Proveedor:</label>
-      <select id="proveedor" name="proveedor" class="form-control">
-        {% for proveedor in proveedores %}
-          <option value="{{ proveedor.id }}" {% if proveedor.id == orden_compra.proveedor.id %}selected{% endif %}>{{ proveedor.nombre }}</option>
+      <label for="cliente">Cliente:</label>
+      <select id="cliente" name="cliente" class="form-control">
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}" {% if cliente.id == orden_venta.cliente.id %}selected{% endif %}>{{ cliente.nombre }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="table-responsive">
-      <table id="insumos-table" class="table table-bordered">
+      <table id="productos-table" class="table table-bordered">
         <thead>
           <tr>
-            <th>Nombre del insumo</th>
+            <th>Nombre del producto</th>
             <th>Cantidad</th>
             <th>Precio</th>
             <th>Descuento (%)</th>
           </tr>
         </thead>
 <tbody>
-  {% for detalle in orden_compra.detalleordencompra_set.all %}
-    <tr class="insumo-row">
+  {% for detalle in orden_venta.detalle_orden_venta_set.all %}
+    <tr class="productos-row">
       <td>
-        <select name="insumo" class="form-control insumo-select" required>
-          <option value="">Seleccione un insumo</option>
-          {% for insumo in insumos %}
-            <option value="{{ insumo.id }}" {% if insumo.id == detalle.insumo.id %}selected{% endif %} data-precio="{{ insumo.precio }}">{{ insumo.nombre }}</option>
+        <select name="producto" class="form-control producto-select" required>
+          <option value="">Seleccione un producto</option>
+          {% for producto in productos %}
+            <option value="{{ producto.id }}" {% if producto.id == detalle.producto.id %}selected{% endif %} data-precio="{{ producto.precio }}">{{ producto.nombre }}</option>
           {% endfor %}
         </select>
       </td>
       <td><input type="number" name="cantidad" class="form-control cantidad-input" value="{{ detalle.cantidad }}" required></td>
       <td><input type="number" name="precio" class="form-control precio-input" value="{{ detalle.precio }}" required readonly></td>
       <td><input type="number" name="descuento" class="form-control descuento-input" value="{{ detalle.descuento }}" required></td>
-      <td><button type="button" class="btn btn-danger remove-insumo">Eliminar</button></td>
+      <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
     </tr>
   {% endfor %}
 </tbody>
-<!-- ... -->
-
       </table>
     </div>
     <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-      <button type="button" class="btn btn-primary add-insumo">Añadir Insumo</button>
+      <button type="button" class="btn btn-primary add-producto">Añadir producto</button>
     </div>
   </div>
 </form>
@@ -61,29 +59,29 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function() {
-    $('.add-insumo').click(function() {
-      var insumoRow = $('.insumo-row').first().clone();
-      insumoRow.find('select').val('');
-      insumoRow.find('input').val('');
-      insumoRow.find('.remove-insumo').show();
-      $('#insumos-table tbody').append(insumoRow);
+    $('.add-producto').click(function() {
+      var productoRow = $('.productos-row').first().clone();
+      productoRow.find('select').val('');
+      productoRow.find('input').val('');
+      productoRow.find('.remove-producto').show();
+      $('#productos-table tbody').append(productoRow);
     });
 
-    $(document).on('click', '.remove-insumo', function() {
+    $(document).on('click', '.remove-producto', function() {
       $(this).closest('tr').remove();
     });
 
-    $(document).on('change', '.insumo-select', function() {
+    $(document).on('change', '.producto-select', function() {
       var selectedOption = $(this).find(':selected');
       var precio = selectedOption.data('precio');
-      $(this).closest('.insumo-row').find('.precio-input').val(precio);
+      $(this).closest('.productos-row').find('.precio-input').val(precio);
     });
 
     // Actualizar los precios al cargar la página
-    $('.insumo-select').each(function() {
+    $('.producto-select').each(function() {
       var selectedOption = $(this).find(':selected');
       var precio = selectedOption.data('precio');
-      $(this).closest('.insumo-row').find('.precio-input').val(precio);
+      $(this).closest('.producto-row').find('.precio-input').val(precio);
     });
   });
 </script>

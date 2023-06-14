@@ -1,47 +1,78 @@
 {% extends 'ventas/baseventa.html' %}
-
 {% block content %}
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Subtotal</th>
-                    <th>Descuento</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for detalle in detalles %}
-                    <tr>
-                        <td>{{ detalle.venta.id }}</td>
-                        <td>{{ detalle.producto.nombre }}</td>
-                        <td>{{ detalle.cantidad }}</td>
-                        <td>${{ detalle.precio }}</td>
-                        <td>${{ detalle.sub_total_detalle }}</td>
-                        <td>${{ detalle.descuento_detalle }}</td>
-                        <td>${{ detalle.total_detalle }}</td>
-                        <td>
-                            <a href="{% url 'orden_venta_edit' detalle.venta.id %}" class="btn text-secondary px-0">
-                                <i class="far fa-edit fa-lg"></i>
-                            </a>
-                            <a href="{% url 'ver_orden_venta' detalle.venta.id %}" class="btn text-secondary px-0">
-                                <i class="fas fa-info-circle fa-lg"></i>
-                            </a>                      
-                            <form action="{% url 'eliminar_orden_venta' detalle.venta.id %}" method="post" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn">
-                                    <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-            
+<div class="row">
+  <div class="col-12 col-lg-6 mb-2">
+    <form method="GET">
+      <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar cliente" value="{{ request.GET.q }}">
+          <input type="date" name="fecha" class="form-control" value="{{ request.GET.fecha }}">
+          <div class="input-group-append">
+              <button type="submit" class="btn btn-primary btn-buscar">
+                  <i class="fas fa-search"></i> Buscar
+              </button>
+          </div>
+      </div>
+  </form>
+  
+  </div>
+  <div class="col-12 col-lg-6 mb-2">
+      <a href="{% url 'listar_orden_venta' %}" class="btn btn-outline-dark">
+          <i class="fas fa-times"></i> Limpiar
+      </a>
+      <a href="{% url 'crear_orden_venta' %}" class="btn btn-outline-dark">
+          <i class="fas fa-plus"></i> Añadir 
+      </a>
+      <a href="{% url 'generar_pdfventa' %}" class="btn btn-outline-dark">
+          <i class="fas fa-file-excel"></i> Reporte
+      </a>       
+      <a href="{% url 'orden_venta_main' %}" class="btn btn-outline-dark">
+        <i class="fas fa-home"></i> Volver
+    </a>       
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+      <table class="table table-borderless">
+          <thead class="border-bottom font-weight-bold">
+            <tr>
+              <td>Orden</td>
+              <td>Cliente</td>
+              <td>Fecha</td>
+              <td>Dirección</td>
+              <td>Total</td>
+              <td>Acciones</td>
+          </tr>
+          </thead>
+          <tbody>
+            {% for orden_venta in ordenes_venta %}
+              <tr>
+                <td>{{ orden_venta.id }}</td>
+                <td>{{ orden_venta.clientes.nombre }}</td>
+                <td>{{ orden_venta.fecha }}</td>
+                <td>{{ orden_venta.clientes.direccion }}</td>
+                <td>{{ orden_venta.total }}</td>
+                <td>
+                  <div class="btn-group" role="group" aria-label="Acciones">
+                    <a href="{% url 'detalle_orden_venta' orden_venta.id %}" class="btn text-secondary px-0">
+                      <i class="fas fa-info-circle fa-lg"></i>
+                    </a> 
+                    <a href="{% url 'editar_orden_venta' orden_venta.id %}" class="btn text-secondary px-0">
+                      <i class="far fa-edit fa-lg"></i>
+                    </a>
+                    <form method="POST" action="{% url 'borrar_orden_venta' orden_venta.id %}">
+
+                      {% csrf_token %}
+                      <button type="submit" class="btn text-secondary px-0">
+                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
         </table>
-    </div>
+  </div>
+</div>
 {% endblock %}

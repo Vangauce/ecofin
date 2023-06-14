@@ -1,0 +1,59 @@
+{% extends "ventas/base1venta.html" %}
+
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<div style="display: flex; align-items: center;">
+  <h2 style="flex: 1;">Detalle Orden de Venta</h2>
+  <div>
+    <a href="{% url 'crear_orden_venta' %}" class="btn btn-primary">Nueva Orden de Compra</a>
+    <a href="{% url 'listar_orden_venta' %}" class="btn btn-primary">Ver Listado</a>
+  </div>
+</div>
+
+<div class="card shadow mb-4">
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div>
+      <h3>Cliente: {{ orden_venta.clientes.nombre }}</h3>
+      <h5>Email: {{ orden_venta.clientes.correo }}</h5>
+      <h5>Dirección: {{ orden_venta.clientes.direccion }}</h5>
+      <h5>Teléfono: {{ orden_venta.clientes.telefono }}</h5>
+      <h5>Fecha: {{ orden_venta.fecha }}</h5>
+    </div>
+    <h2>Orden de Venta ID: {{ orden_venta.id }}</h2>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Descuento (%)</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for detalle in orden_venta.detalle_orden_venta_set.all %}
+          <tr>
+            <td>{{ detalle.producto.nombre }}</td>
+            <td>{{ detalle.cantidad }}</td>
+            <td>{{ detalle.formatted_precio }}</td>
+            <td>{{ detalle.descuento }}%</td>
+            <td>{{ detalle.total_venta}}</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="4" style="text-align: right;"><strong>Total Orden de Venta:</strong></td>
+          <td><strong>{{ orden_venta.total}}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+

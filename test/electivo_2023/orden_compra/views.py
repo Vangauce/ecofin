@@ -61,12 +61,9 @@ def detalle_orden_compra(request, orden_compra_id):
     return render(request, 'detalle_orden_compra.html', {'orden_compra': orden_compra, 'detalles': detalles})
 
 
-
-
 def listado_orden_compra(request):
     q = request.GET.get('q')
     ordenes_compra = OrdenCompra.objects.all()
-    
     if q:
         ordenes_compra = ordenes_compra.filter(proveedor__nombre__icontains=q)
         

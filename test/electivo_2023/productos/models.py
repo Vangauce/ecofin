@@ -4,7 +4,7 @@ from categorias.models import Categorias
 
 class Producto(models.Model):  
     nombre = models.CharField(max_length=100)  
-    cantidad = models.CharField(max_length=3)  
+    cantidad = models.IntegerField() 
     material= models.CharField(max_length=15)  
     precio = models.CharField(max_length=20)
     categoria= models.ForeignKey(Categorias,on_delete=models.CASCADE)  

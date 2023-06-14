@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Detalle_orden_venta,Ventas
 from clientes.models import Clientes
-from productos.models import Producto
 from productos.models import Producto
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
@@ -15,149 +14,149 @@ def orden_venta_main(request):
     total_ordenes = Ventas.total_ordenes()
     return render(request, 'ventas/orden_venta_main.html', {'total_ordenes': total_ordenes})
 
+from django.db.models import F
+
+from django.db.models import F
+from django.db.models.functions import Cast
+from django.db.models import IntegerField
+
 def crear_orden_venta(request, id=None):
-    clientes = Clientes.objects.all()
-    productos = Producto.objects.all()
+    if request.method == 'POST':
+        cliente_id = request.POST.get('cliente')
+        cliente = Clientes.objects.get(pk=cliente_id)
 
-    template_name = 'ventas/crear_orden_venta.html'
-    detalle_orden_venta = {}
+        orden_venta = Ventas(clientes=cliente)
+        orden_venta.save()
 
-    if request.method == "GET":
-        venta = Ventas.objects.filter(pk=id).first()
+        productos = request.POST.getlist('producto')
+        cantidades = request.POST.getlist('cantidad')
+        precios = request.POST.getlist('precio')
+        descuentos = request.POST.getlist('descuento')
 
-        if not venta:
-            encabezado = {
-                'id': 0,
-                'cliente': 0,
-                'subTotal': 0,
-                'descuento': 0,
-                'total': 0
-            }
+        for i in range(len(productos)):
+            producto_id = productos[i]
+            cantidad = int(cantidades[i])
+            precio = int(precios[i])
+            descuento = int(descuentos[i])
+            total_venta = cantidad * precio * (1 - descuento / 100)
+            producto = Producto.objects.get(pk=producto_id)
 
-            detalle_orden_venta = None
-        else:
-            encabezado = {
-                'id': venta.id,
-                'cliente': venta.clientes,
-                'subTotal': venta.sub_total,
-                'descuento': venta.descuento,
-                'total': venta.total
-            }
+            detalle = Detalle_orden_venta(
+                venta=orden_venta,
+                producto=producto,
+                cantidad=cantidad,
+                precio=precio,
+                descuento=descuento,
+                total_venta=total_venta
+            )
+            detalle.save()
 
-            detalle_orden_venta = Detalle_orden_venta.objects.filter(venta=venta)
+            Producto.objects.filter(pk=producto_id).update(cantidad=Cast(F('cantidad'), IntegerField()) - cantidad)
 
-        context = {
-            "venta": encabezado,
-            "detalleventa": detalle_orden_venta,
-            "clientes": clientes,
-            "productos": productos,
-        }
-
-        return render(request, template_name, context)
-
-    if request.method == "POST":
-        idCliente = request.POST.get("cliente")
-        cliente = Clientes.objects.get(pk=idCliente)
-
-        if not id:
-            venta = Ventas(clientes=cliente)
-
-            if venta:
-                venta.save()
-
-                id = venta.id
-        else:
-            venta = Ventas.objects.filter(pk=id).first()
-
-            if venta:
-                venta.clientes = cliente
-
-                venta.save()
-
-        id_producto= request.POST.get("producto")
-        cantidad = request.POST.get("cantidad")
-        precio = request.POST.get("precio")
-        producto = Producto.objects.get(id=id_producto)
+        return redirect('detalle_orden_venta', orden_venta_id=orden_venta.id)
+    else:
+        clientes = Clientes.objects.all()
+        productos = Producto.objects.all()
+        return render(request, 'ventas/crear_orden_venta.html', {'clientes': clientes, 'productos': productos})
 
 
-        aa=producto.cantidad
-        aa=int(aa)
-        cantidad=int(cantidad)
-        newca=aa-cantidad
-
-        if newca<0:
-            template_name='ventas/error.html'
-            info = {
-            "error":'La cantidad ingresada supera lo almacenado en el inventario'
-            }
-            return render(request, template_name, info)
-
-        producto.cantidad=newca
-        producto.save()
-
-
-
-
-        desc = request.POST.get("descuento")
-
-        sub_total_detalle = float(cantidad) * float(precio)
-        descuento_detalle = float(desc)
-        total_detalle = sub_total_detalle - descuento_detalle
-
-        detalle_orden_venta = Detalle_orden_venta(venta=venta, producto=producto, cantidad=cantidad, precio=precio, sub_total_detalle=sub_total_detalle, descuento_detalle=descuento_detalle, total_detalle=total_detalle)
-
-        if detalle_orden_venta:
-            detalle_orden_venta.save()
-
-        venta = Ventas.objects.filter(pk=id).first()
-        encabezado = {
-            'id': venta.id,
-            'cliente': venta.clientes,
-            'subTotal': venta.sub_total,
-            'descuento': venta.descuento,
-            'total': venta.total
-        }
-
-        detalle_orden_venta = Detalle_orden_venta.objects.filter(venta=venta)
-
-        context = {
-            "venta": encabezado,
-            "detalleventa": detalle_orden_venta,
-            "clientes": clientes,
-            "productos": productos,
-        }
-
-        return redirect('orden_venta_edit', id=venta.id)
-
-    return render(request, template_name, {'clientes': clientes, 'productos': productos})
-
-
-def ver_orden_venta(request, id):
-    venta = Ventas.objects.get(pk=id)
-    detalles = Detalle_orden_venta.objects.filter(venta=venta)
-    context = {'venta': venta, 'detalles': detalles}
-    return render(request, 'ventas/ver_orden_venta.html', context) 
 
 def eliminar_detalle_venta(request, id):
     detalle = Detalle_orden_venta.objects.get(pk=id)
     detalle.delete()
     return redirect('orden_venta_edit', id=detalle.venta.id)
 
-def eliminar_orden_venta(request,id):
-    venta = Ventas.objects.get(pk=id)
-    venta.delete()
-    return redirect("/ventas/crear_orden_venta/")
+def borrar_orden_venta(request, orden_venta_id):
+    orden_venta = Ventas.objects.get(pk=orden_venta_id)
+    orden_venta.delete()
+    return redirect('listar_orden_venta')
+from datetime import date
+
+def detalle_orden_venta(request, orden_venta_id):
+    orden_venta = Ventas.objects.get(pk=orden_venta_id)
+    detalles = Detalle_orden_venta.objects.filter(venta=orden_venta)
+    orden_venta.fecha = date.today()
+    return render(request, 'ventas/detalle_orden_venta.html', {'orden_venta': orden_venta, 'detalles': detalles})
+
+from django.db.models import Q
 
 def listar_orden_venta(request):
-    ventas = Ventas.objects.all()
-    detalles = Detalle_orden_venta.objects.all()
+    q = request.GET.get('q')
+    fecha = request.GET.get('fecha')
+    
+    ordenes_venta = Ventas.objects.all()
+    
+    if q:
+        ordenes_venta = ordenes_venta.filter(clientes__nombre__icontains=q)
+    
+    if fecha:
+        ordenes_venta = ordenes_venta.filter(fecha=fecha)
+    
     context = {
-        'ventas': ventas,
-        'detalles': detalles,
+        'ordenes_venta': ordenes_venta,
     }
+    
     return render(request, 'ventas/listar_orden_venta.html', context)
 
 
+
+def editar_orden_venta(request, orden_venta_id):
+    orden_venta = get_object_or_404(Ventas, id=orden_venta_id)
+
+    if request.method == 'POST':
+        cliente_id = request.POST.get('cliente')
+        cliente = get_object_or_404(Clientes, id=cliente_id)
+        orden_venta.cliente = cliente
+        orden_venta.save()
+
+        productos = request.POST.getlist('producto')
+        cantidades = request.POST.getlist('cantidad')
+        precios = request.POST.getlist('precio')
+        descuentos = request.POST.getlist('descuento')
+
+        # Restablecer la cantidad de productos al valor original
+        detalles_orden_venta = orden_venta.detalle_orden_venta_set.all()
+
+        for detalle in detalles_orden_venta:
+            producto = detalle.producto
+            producto.cantidad += detalle.cantidad
+            producto.save()
+
+        # Eliminar los detalles de la orden de venta existentes
+        detalles_orden_venta.delete()
+
+        for i in range(len(productos)):
+            producto = get_object_or_404(Producto, id=productos[i])
+            cantidad = int(cantidades[i])
+            precio = int(precios[i])
+            descuento = int(descuentos[i])
+            total_venta = cantidad * precio * (1 - descuento / 100)
+
+            Detalle_orden_venta.objects.create(
+                venta=orden_venta,
+                producto=producto,
+                cantidad=cantidad,
+                precio=precio,
+                descuento=descuento,
+                total_venta=total_venta
+            )
+
+            # Restar la cantidad de la venta a la cantidad del producto
+            producto.cantidad -= cantidad
+            producto.save()
+
+        return redirect('listar_orden_venta')
+
+    clientes = Clientes.objects.all()
+    productos = Producto.objects.all()
+    context = {
+        'orden_venta': orden_venta,
+        'clientes': clientes,
+        'productos': productos
+    }
+    return render(request, 'ventas/editar_orden_venta.html', context)
+
+    
 def generar_pdfventa(request):
     detalles_orden = Detalle_orden_venta.objects.select_related('venta').order_by('venta__id')
     response = HttpResponse(content_type='application/pdf')
