@@ -167,8 +167,8 @@ def generar_reporte_pdf(request):
     for producto in productos_lista:
         pdf.drawString(x, y, producto.nombre)
         pdf.drawString(x + 90, y, producto.material)
-        pdf.drawString(x + 215, y, producto.cantidad)
-        pdf.drawString(x + 335, y, producto.precio)
+        pdf.drawString(x + 215, y, str(producto.cantidad))
+        pdf.drawString(x + 335, y, str(producto.precio))
         pdf.drawString(x + 430, y, str(producto.categoria))
         y -= 14
     pdf.showPage()

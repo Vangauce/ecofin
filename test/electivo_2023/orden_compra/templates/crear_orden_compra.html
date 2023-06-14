@@ -2,7 +2,11 @@
 
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<style>
+  .stock-input {
+    width: 60px !important; 
+  }
+</style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <form method="post" id="formOrdenCompra">
   {% csrf_token %}
@@ -27,6 +31,7 @@
         <thead>
           <tr>
             <th>Nombre del insumo</th>
+            <th>Stock</th>
             <th>Cantidad</th>
             <th>Precio</th>
             <th>Descuento (%)</th>  
@@ -39,10 +44,12 @@
               <select name="insumo" class="form-control insumo-select" required>
                 <option value="">Seleccione un insumo</option>
                 {% for insumo in insumos %}
-                  <option value="{{ insumo.id }}" data-precio="{{ insumo.precio }}">{{ insumo.nombre }}</option>
-                {% endfor %}
+                <option value="{{ insumo.id }}" data-precio="{{ insumo.precio }}" data-stock="{{ insumo.cantidad }}">{{ insumo.nombre }}</option>
+              {% endfor %}
+              
               </select>
             </td>
+            <td><input type="text" name="stock" class="form-control stock-input" required readonly></td>
             <td><input type="number" name="cantidad" class="form-control cantidad-input" required></td>
             <td><input type="number" name="precio" class="form-control precio-input" required readonly></td>
             <td><input type="number" name="descuento" class="form-control descuento-input" required></td>  
@@ -74,8 +81,17 @@
     $(document).on('change', '.insumo-select', function() {
       var selectedOption = $(this).find(':selected');
       var precio = selectedOption.data('precio');
+      var stock = selectedOption.data('stock');
+      var cantidadInput = $(this).closest('.insumo-row').find('.cantidad-input');
+      var stockInput = $(this).closest('.insumo-row').find('.stock-input');
       $(this).closest('.insumo-row').find('.precio-input').val(precio);
+      stockInput.val(stock);
+      cantidadInput.attr('max', stock);
+      if (parseInt(cantidadInput.val()) > stock) {
+        cantidadInput.val('');
+      }
     });
+    
   });
 </script>
 

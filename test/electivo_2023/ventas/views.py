@@ -15,8 +15,6 @@ def orden_venta_main(request):
     return render(request, 'ventas/orden_venta_main.html', {'total_ordenes': total_ordenes})
 
 from django.db.models import F
-
-from django.db.models import F
 from django.db.models.functions import Cast
 from django.db.models import IntegerField
 

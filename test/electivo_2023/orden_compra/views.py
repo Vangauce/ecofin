@@ -8,7 +8,9 @@ from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from django.views import View
 from django.template.loader import get_template
-
+from django.db.models import F
+from django.db.models.functions import Cast
+from django.db.models import IntegerField
 from openpyxl import Workbook
 from django.http import HttpResponse
 
@@ -43,7 +45,7 @@ def crear_orden_compra(request):
 
             detalle = DetalleOrdenCompra(orden_compra=orden_compra, insumo=insumo, cantidad=cantidad, precio=precio, descuento=descuento,total_compra=total_compra)  # Agregar el descuento al crear el objeto DetalleOrdenCompra
             detalle.save()
-
+            Insumos.objects.filter(pk=insumo_id).update(cantidad=Cast(F('cantidad'), IntegerField()) + cantidad)
         return redirect('detalle_orden_compra', orden_compra_id=orden_compra.id)
     else:
         proveedores = Proveedores.objects.all()
@@ -76,23 +78,7 @@ def borrar_orden_compra(request, orden_compra_id):
     return redirect('listado_ordenes_compra')
 
 
-def obtener_datos_listado_ordenes_compra():
-    ordenes_compra_dict = {}
 
-    # Obtener todas las órdenes de compra de la base de datos
-    ordenes_compra = OrdenCompra.objects.all()
-
-    # Organizar las órdenes de compra por orden_compra_id y proveedor
-    for orden_compra in ordenes_compra:
-        orden_compra_id = orden_compra.id
-        proveedor = orden_compra.proveedor
-
-        if orden_compra_id not in ordenes_compra_dict:
-            ordenes_compra_dict[orden_compra_id] = {'proveedor': proveedor, 'ordenes_compra': []}
-
-        ordenes_compra_dict[orden_compra_id]['ordenes_compra'].append(orden_compra)
-
-    return ordenes_compra_dict
 
 def editar_orden_compra(request, orden_compra_id):
     orden_compra = get_object_or_404(OrdenCompra, id=orden_compra_id)
@@ -108,7 +94,15 @@ def editar_orden_compra(request, orden_compra_id):
         precios = request.POST.getlist('precio')
         descuentos = request.POST.getlist('descuento')
 
-        orden_compra.detalleordencompra_set.all().delete()
+        # Restablecer la cantidad de insumos al valor original
+        detalles_orden_compra = orden_compra.detalleordencompra_set.all()
+
+        for detalle in detalles_orden_compra:
+            insumo = detalle.insumo
+            insumo.cantidad -= detalle.cantidad
+            insumo.save()
+
+        detalles_orden_compra.delete()
 
         for i in range(len(insumos)):
             insumo = get_object_or_404(Insumos, id=insumos[i])
@@ -126,6 +120,10 @@ def editar_orden_compra(request, orden_compra_id):
                 total_compra=total_compra
             )
 
+            # Reducir la cantidad de insumos según la compra realizada
+            insumo.cantidad += cantidad
+            insumo.save()
+
         return redirect('listado_ordenes_compra')
 
     proveedores = Proveedores.objects.all()
@@ -138,65 +136,73 @@ def editar_orden_compra(request, orden_compra_id):
     return render(request, 'editar_orden_compra.html', context)
 
 
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from django.utils import timezone
+from pytz import timezone as pytz_timezone
+import pytz
 
-
-
-def generar_reporte(request):
-    ordenes_compra_dict = obtener_datos_listado_ordenes_compra()
-
-    # Crear el archivo de Excel
-    workbook = Workbook()
-    sheet = workbook.active
-
-    # Escribir encabezados
-    sheet['H1'] = 'Fecha'
-    sheet['A1'] = 'ID de Orden de Compra'
-    sheet['B1'] = 'Proveedor'
-    sheet['C1'] = 'Insumo'
-    sheet['D1'] = 'Cantidad'
-    sheet['E1'] = 'Precio'
-    sheet['F1'] = 'Subtotal'
-    sheet['G1'] = 'Total'
-
-    # Aplicar formato de negrita a la fila 1
-    for cell in sheet[1]:
-        cell.font = cell.font.copy(bold=True)
-
-    # Escribir datos de órdenes de compra
-    row = 2  # Comenzar desde la fila 2
-    id_anterior = None
-    for orden_compra_id, data in ordenes_compra_dict.items():
-        ordenes_compra = data['ordenes_compra']
-        proveedor = data['proveedor']
-
-        total = 0  # Variable para almacenar el total de la orden de compra
-
-        for orden_compra in ordenes_compra:
-            if orden_compra.id != id_anterior:
-                row += 1
-                total = 0  # Reiniciar el total para el nuevo ID de orden de compra
-            id_anterior = orden_compra.id
-
-            for detalle in orden_compra.detalleordencompra_set.all():
-                sheet[f'H{row}'] = orden_compra.fecha
-                sheet[f'A{row}'] = orden_compra.id
-                sheet[f'B{row}'] = proveedor.nombre
-                sheet[f'C{row}'] = detalle.insumo.nombre
-                sheet[f'D{row}'] = detalle.cantidad
-                sheet[f'E{row}'] = detalle.precio
-
-                subtotal = detalle.cantidad * detalle.precio
-                sheet[f'F{row}'] = subtotal
-
-                total += subtotal  # Acumular el subtotal en el total de la orden de compra
-
-                row += 1
-
-            sheet[f'G{row - 1}'] = total  # Escribir el total en la última fila de la orden de compra
-
-    # Guardar el archivo de Excel en la respuesta HTTP
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=reporte_ordenes_compra.xlsx'
-    workbook.save(response)
-
+def generar_reporte_orden_compra(request):
+    time_zone = pytz.timezone(settings.TIME_ZONE)
+    ordenes_compra = OrdenCompra.objects.all().select_related('proveedor').prefetch_related('insumos')
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=reporte_ordenes_compra.pdf'
+    
+    p = canvas.Canvas(response, pagesize=letter)
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(100, 750, "Reportes EcoFácil")
+    
+    fecha_actual = timezone.now().astimezone(time_zone).strftime("%d/%m/%Y %H:%M:%S")
+    p.setFont('Helvetica', 10)
+    p.drawString(380, 750, f"Fecha del reporte: {fecha_actual}")
+    
+    x = 50
+    y = 700
+    
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(x, y, "Reporte de órdenes de compra")
+    
+    p.setFont('Helvetica', 12)
+    y -= 22
+    
+    p.drawString(x, y, 'ID')
+    p.drawString(x + 70, y, 'Proveedor')
+    p.drawString(x + 140, y, 'Insumo')
+    p.drawString(x + 230, y, 'Cantidad')
+    p.drawString(x + 300, y, 'Precio')
+    p.drawString(x + 370, y, 'Subtotal')
+    p.drawString(x + 440, y, 'Total')
+    
+    y -= 18
+    
+    for orden_compra in ordenes_compra:
+        proveedor = orden_compra.proveedor.nombre
+        total = orden_compra.total()
+    
+        p.setFont("Helvetica", 12)
+        p.drawString(x, y, str(orden_compra.id))
+        p.drawString(x + 70, y, proveedor)
+    
+        for detalle in orden_compra.detalleordencompra_set.all():
+            insumo = detalle.insumo.nombre
+            cantidad = str(detalle.cantidad)
+            precio = detalle.formatted_precio()
+            subtotal = detalle.subtotal()
+    
+            p.drawString(x + 140, y, insumo)
+            p.drawString(x + 230, y, cantidad)
+            p.drawString(x + 300, y, precio)
+            p.drawString(x + 370, y, str(subtotal))
+    
+        #p.drawString(x + 650, y, total)
+        y -= 14
+    
+        if y <= 100:
+            p.showPage()
+            y = 720
+    
+    p.save()
+    
     return response

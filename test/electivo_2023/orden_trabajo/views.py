@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from ventas.models import Ventas, Detalle_orden_venta
-
+from .models import OrdenTrabajo
 
 def orden_trabajo_main(request):
-    return render(request, 'orden_trabajo/orden_trabajo_main.html')
+    total_ordenes_trabajo = OrdenTrabajo.total_ordenes_trabajo()
+    return render(request, 'orden_trabajo/orden_trabajo_main.html', {'total_ordenes_trabajo': total_ordenes_trabajo})
 
 
 def listar_ventas(request):
