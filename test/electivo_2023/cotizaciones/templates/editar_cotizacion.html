@@ -14,7 +14,11 @@
     </div>
     <div class="card-body">
       <label for="cliente">Cliente:</label>
-      <input type="text" id="cliente" name="cliente" value="{{ cotizacion.cliente.nombre }}" readonly class="form-control">
+      <select id="cliente" name="cliente" class="form-control">
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}" {% if cliente.id == orden_venta.cliente.id %}selected{% endif %}>{{ cliente.nombre }}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="table-responsive">
       <table id="productos-table" class="table table-bordered">
@@ -23,44 +27,62 @@
             <th>Producto</th>
             <th>Cantidad</th>
             <th>Precio</th>
+            <th>Descuento (%)</th> 
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {% for detalle in cotizacion.detallecotizacion_set.all %}
-            <tr>
+          <tr class="productos-row">
               <td>
-                <select name="producto" class="form-control">
+                <select name="producto" class="form-control producto-select" required>
+                  <option value="">Seleccione un producto</option>
                   {% for producto in productos_disponibles %}
-                    <option value="{{ producto.id }}" {% if detalle.producto.id == producto.id %}selected{% endif %}>{{ producto.nombre }}</option>
+                    <option value="{{ producto.id }}" {% if producto.id == detalle.producto.id %}selected{% endif %} data-precio="{{ producto.precio }}">{{ producto.nombre }}</option>
                   {% endfor %}
                 </select>
               </td>
-              <td><input type="text" name="cantidad" value="{{ detalle.cantidad }}" class="form-control"></td>
-              <td><input type="text" name="precio" value="{{ detalle.precio }}" class="form-control"></td>
-              <td><button type="button" class="btn btn-danger btn-eliminar">Eliminar</button></td>
+              <td><input type="number" name="cantidad" class="form-control cantidad-input" value="{{ detalle.cantidad }}" required></td>
+              <td><input type="number" name="precio" class="form-control precio-input" value="{{ detalle.precio }}" required readonly></td>
+              <td><input type="number" name="descuento" class="form-control descuento-input" value="{{ detalle.descuento }}" required></td>
+              <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
     <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-    <button type="button" id="agregar-producto" class="btn btn-primary">Añadir producto</button>
-  </div>
+      <button type="button" class="btn btn-primary add-producto">Añadir producto</button>
+    </div>
   </div>
 </form>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function() {
-    $('#agregar-producto').click(function() {
-      var productoRow = $('.table tbody tr').first().clone();
+    $('.add-producto').click(function() {
+      var productoRow = $('.productos-row').first().clone();
       productoRow.find('select').val('');
       productoRow.find('input').val('');
-      $('.table tbody').append(productoRow);
+      productoRow.find('.remove-producto').show();
+      $('#productos-table tbody').append(productoRow);
     });
-    $('.table').on('click', '.btn-eliminar', function() {
+
+    $(document).on('click', '.remove-producto', function() {
       $(this).closest('tr').remove();
+    });
+
+    $(document).on('change', '.producto-select', function() {
+      var selectedOption = $(this).find(':selected');
+      var precio = selectedOption.data('precio');
+      $(this).closest('.productos-row').find('.precio-input').val(precio);
+    });
+
+    // Actualizar los precios al cargar la página
+    $('.producto-select').each(function() {
+      var selectedOption = $(this).find(':selected');
+      var precio = selectedOption.data('precio');
+      $(this).closest('.producto-row').find('.precio-input').val(precio);
     });
   });
 </script>

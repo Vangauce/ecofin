@@ -14,7 +14,7 @@
     </div>
     <div class="card-body">
       <label for="cliente">Cliente:</label>
-      <select id="cliente" name="cliente" class="form-control">
+      <select id="cliente" name="cliente" class="form-control" readonly>
         {% for cliente in clientes %}
           <option value="{{ cliente.id }}" {% if cliente.id == orden_venta.cliente.id %}selected{% endif %}>{{ cliente.nombre }}</option>
         {% endfor %}

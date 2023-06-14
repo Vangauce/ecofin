@@ -2,6 +2,11 @@
 
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  .stock-input {
+    width: 60px !important; 
+  }
+</style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <form method="post" id="formFactura">
   {% csrf_token %}
@@ -11,7 +16,7 @@
       <button class="btn btn-info" type="submit">Crear Cotización</button>
       <a href="{% url 'listado_cotizacion' %}" class="btn btn-primary">Listado</a>
       <a href="{% url 'generar_reporte' %}" class="btn btn-primary">Reporte</a>
-      <a href="{% url 'admin_main' %}" class="btn btn-danger">Volver</a>
+      <a href="{% url 'cotizaciones_main' %}" class="btn btn-danger">Volver</a>
     </div>
     <div class="card-body">
       <label for="cliente">Cliente:</label>
@@ -26,8 +31,10 @@
         <thead>
           <tr>
             <th>Nombre del producto</th>
+            <th>Stock</th>
             <th>Cantidad</th>
             <th>Precio</th>
+            <th>Descuento (%)</th> 
             <th>Opciones</th>
           </tr>
         </thead>
@@ -37,12 +44,14 @@
               <select name="producto" class="form-control producto-select" required>
                 <option value="">Seleccione un producto</option>
                 {% for producto in productos %}
-                  <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+                  <option value="{{ producto.id }}"data-precio="{{ producto.precio }}" data-stock="{{ producto.cantidad }}">{{ producto.nombre }}</option>
                 {% endfor %}
               </select>
             </td>
-            <td><input type="number" name="cantidad" class="form-control cantidad-input" required></td>
-            <td><input type="number" name="precio" class="form-control precio-input" required></td>
+            <td><input type="text" name="stock" class="form-control stock-input" required readonly></td>
+            <td><input type="number" name="cantidad" class="form-control cantidad-input" required ></td>
+            <td><input type="number" name="precio" class="form-control precio-input" required readonly></td>
+            <td><input type="number" name="descuento" class="form-control descuento-input" required></td>  
             <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
           </tr>
         </tbody>
@@ -67,6 +76,23 @@
 
     $(document).on('click', '.remove-producto', function() {
       $(this).closest('tr').remove();
+    });
+
+    $(document).on('change', '.producto-select', function() {
+      var selectedOption = $(this).find(':selected');
+      var precio = selectedOption.data('precio');
+      var stock = selectedOption.data('stock');
+      var cantidadInput = $(this).closest('.producto-row').find('.cantidad-input');
+      var stockInput = $(this).closest('.producto-row').find('.stock-input');
+      
+      $(this).closest('.producto-row').find('.precio-input').val(precio);
+      stockInput.val(stock);
+      
+      cantidadInput.attr('max', stock);
+      
+      if (parseInt(cantidadInput.val()) > stock) {
+        cantidadInput.val('');
+      }
     });
   });
 </script>

@@ -5,74 +5,80 @@
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-<div style="display: flex; align-items: center;">
-  <h1 style="flex: 1;">Listado de Cotizaciones</h1>
-  <a href="{% url 'crear_cotizacion' %}" class="btn btn-primary">Volver</a>
+<div class="row">
+  <div class="col-12 col-lg-6 mb-2">
+    <form method="GET">
+      <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Buscar cliente" value="{{ request.GET.q }}">
+          <input type="date" name="fecha" class="form-control" value="{{ request.GET.fecha }}">
+          <div class="input-group-append">
+              <button type="submit" class="btn btn-primary btn-buscar">
+                  <i class="fas fa-search"></i> Buscar
+              </button>
+          </div>
+      </div>
+  </form>
 </div>
-
-
-{% for cotizacion_id, data in cotizaciones_dict.items %}
-  <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h2>Cotización ID: {{ cotizacion_id }}</h2>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
+<div class="col-12 col-lg-6 mb-2">
+    <a href="{% url 'listado_cotizacion' %}" class="btn btn-outline-dark">
+        <i class="fas fa-times"></i> Limpiar
+    </a>
+    <a href="{% url 'crear_cotizacion' %}" class="btn btn-outline-dark">
+        <i class="fas fa-plus"></i> Añadir 
+    </a>
+    <a href="#" class="btn btn-outline-dark">
+        <i class="fas fa-file-excel"></i> Reporte
+    </a>       
+    <a href="{% url 'cotizaciones_main' %}" class="btn btn-outline-dark">
+      <i class="fas fa-home"></i> Volver
+  </a>       
+</div>
+</div>
+<div class="row">
+  <div class="col-12">
+      <table class="table table-borderless">
+          <thead class="border-bottom font-weight-bold">
             <tr>
-              <th>Cliente</th>
-              <th>Producto</th>
-              <th>Cantidad</th>
-              <th>Precio</th>
-              <th>Acciones</th>
-            </tr>
+              <td>Orden</td>
+              <td>Cliente</td>
+              <td>Fecha</td>
+              <td>Dirección</td>
+              <td>Total</td>
+              <td>Acciones</td>
+          </tr>
           </thead>
           <tbody>
-            {% for cotizacion in data.cotizaciones %}
+            {% for cotizacion in cotizaciones %}
               <tr>
+                <td>{{ cotizacion.id }}</td>
                 <td>{{ cotizacion.cliente.nombre }}</td>
-                <td>
-                  {% for detalle in cotizacion.detallecotizacion_set.all %}
-                    <p>{{ detalle.producto.nombre }}</p>
-                  {% empty %}
-                    <p>Sin productos</p>
-                  {% endfor %}
-                </td>
-                <td>
-                  {% for detalle in cotizacion.detallecotizacion_set.all %}
-                    <p>{{ detalle.cantidad }}</p>
-                  {% empty %}
-                    <p>-</p>
-                  {% endfor %}
-                </td>
-                <td>
-                  {% for detalle in cotizacion.detallecotizacion_set.all %}
-                    <p>{{ detalle.precio }}</p>
-                  {% empty %}
-                    <p>-</p>
-                  {% endfor %}
-                </td>
+                <td>{{ cotizacion.fecha }}</td>
+                <td>{{ cotizacion.cliente.direccion }}</td>
+                <td>{{ cotizacion.total }}</td>
                 <td>
                   <div class="btn-group" role="group" aria-label="Acciones">
-                    <form action="{% url 'borrar_cotizacion' cotizacion.id %}" method="POST">
+                    <a href="{% url 'detalle_cotizacion' cotizacion.id %}" class="btn text-secondary px-0">
+                      <i class="fas fa-info-circle fa-lg"></i>
+                    </a> 
+                    <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="btn text-secondary px-0">
+                      <i class="far fa-edit fa-lg"></i>
+                    </a>
+                    <a href="{% url 'generar_reporte_pdf' cotizacion.id %}" class="btn text-secondary px-0">
+                      <i class="fas fa-file-pdf fa-lg"></i>
+                    </a>
+                    <form method="POST" action="{% url 'borrar_cotizacion' cotizacion.id %}">
+
                       {% csrf_token %}
-                      <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
-                    
-                    <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="btn btn-primary btn-sm">Editar</a>
-                    <!--<a href="{% url 'reporte_pdf' %}" class="btn btn-dark btn-sm">PDF</a> -->
-                    <a href="{% url 'detalle_cotizacion' cotizacion.id %}" class="btn btn-outline-dark btn-sm">Ver</a> 
-                  </form>
+                      <button type="submit" class="btn text-secondary px-0">
+                        <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                      </button>
+                    </form>
                   </div>
                 </td>
-                
-                
               </tr>
             {% endfor %}
           </tbody>
         </table>
-      </div>
-    </div>
   </div>
-{% endfor %}
+</div>
 {% endblock %}

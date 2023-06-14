@@ -19,7 +19,62 @@ def cotizaciones_main(request):
     total_cotizaciones = Cotizacion.total_cotizaciones()
     return render(request, 'cotizaciones_main.html',{'total_cotizaciones': total_cotizaciones})
 
+import io
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.text import slugify
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+from .models import Cotizacion, DetalleCotizacion, Clientes
+from .forms import CotizacionForm
+
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+
+def enviar_correo_cliente(cotizacion, pdf):
+    # Obtener la información del cliente
+    cliente = cotizacion.cliente
+    nombre_cliente = cliente.nombre
+    correo_cliente = cliente.correo
+    apellido_cliente = cliente.apellido
+    # Asunto y contenido del correo
+    asunto = 'Cotización Generada'
+    mensaje_html = render_to_string('emails/correo_cotizacion.html', {'nombre_cliente': nombre_cliente, 'apellido_cliente': apellido_cliente})
+    mensaje_texto = strip_tags(mensaje_html)
+
+    # Configurar el correo
+    correo = EmailMultiAlternatives(asunto, mensaje_texto, 'uautonomachatgpt@gmail.com', [correo_cliente])
+    correo.attach_alternative(mensaje_html, 'text/html')
+
+    # Adjuntar el PDF
+    archivo_pdf = f'{nombre_cliente}-cotizacion.pdf'
+    correo.attach(archivo_pdf, pdf.getvalue(), 'application/pdf')
+
+    # Enviar el correo
+    correo.send()
+
+@login_required
 def crear_cotizacion(request):
+    clientes = Clientes.objects.all()
+    productos = Producto.objects.all()
+
     if request.method == 'POST':
         cliente_id = request.POST.get('cliente')
         cliente = Clientes.objects.get(pk=cliente_id)
@@ -30,22 +85,34 @@ def crear_cotizacion(request):
         productos = request.POST.getlist('producto')
         cantidades = request.POST.getlist('cantidad')
         precios = request.POST.getlist('precio')
+        descuentos = request.POST.getlist('descuento')
 
         for i in range(len(productos)):
             producto_id = productos[i]
             cantidad = int(cantidades[i])
             precio = int(precios[i])
-
+            descuento = int(descuentos[i])
+            total_coti = cantidad * precio * (1 - descuento / 100)
             producto = Producto.objects.get(pk=producto_id)
 
-            detalle = DetalleCotizacion(cotizacion=cotizacion, producto=producto, cantidad=cantidad, precio=precio)
+            detalle = DetalleCotizacion(cotizacion=cotizacion, producto=producto, cantidad=cantidad, precio=precio, descuento=descuento, total_coti=total_coti)
             detalle.save()
 
-        return redirect('detalle_cotizacion', cotizacion_id=cotizacion.id)
+        # Generar el PDF
+        response = generar_reporte_pdf(request, cotizacion.id)
+
+        # Enviar el correo al cliente con el PDF adjunto
+        enviar_correo_cliente(cotizacion, response)
+        messages.success(request, 'La cotización se ha creado correctamente y se ha enviado al cliente.')
+        
+        return redirect('detalle_cotizacion', cotizacion_id=cotizacion.id)  
+ 
+
     else:
-        clientes = Clientes.objects.all()
-        productos = Producto.objects.all()
         return render(request, 'crear_cotizacion.html', {'clientes': clientes, 'productos': productos})
+
+
+
 
 from datetime import date
 
@@ -60,16 +127,22 @@ def detalle_cotizacion(request, cotizacion_id):
 
 
 def listado_cotizacion(request):
+    q = request.GET.get('q')
+    fecha = request.GET.get('fecha')
+    
     cotizaciones = Cotizacion.objects.all()
-    cotizaciones_dict = {}
-    for cotizacion in cotizaciones:
-        cotizacion_id = cotizacion.id
-        if cotizacion_id in cotizaciones_dict:
-            cotizaciones_dict[cotizacion_id]['cotizaciones'].append(cotizacion)
-        else:
-            cotizaciones_dict[cotizacion_id] = {'cotizaciones': [cotizacion]}
-    borrar_url = reverse('borrar_cotizacion', kwargs={'cotizacion_id': 0})  # URL de borrado de cotización
-    return render(request, 'listado_cotizaciones.html', {'cotizaciones_dict': cotizaciones_dict, 'borrar_url': borrar_url})
+    
+    if q:
+        cotizaciones = cotizaciones.filter(cliente__nombre__icontains=q)
+    
+    if fecha:
+        cotizaciones = cotizaciones.filter(fecha=fecha)
+    
+    context = {
+        'cotizaciones': cotizaciones,
+    }
+    
+    return render(request, 'listado_cotizaciones.html', context)
 
 def borrar_cotizacion(request, cotizacion_id):
     cotizacion = get_object_or_404(Cotizacion, id=cotizacion_id)
@@ -101,10 +174,15 @@ def editar_cotizacion(request, cotizacion_id):
     cotizacion = get_object_or_404(Cotizacion, id=cotizacion_id)
     
     if request.method == 'POST':
-        # Procesar los productos modificados en la cotización
+        cliente_id = request.POST.get('cliente')
+        cliente = get_object_or_404(Clientes, id=cliente_id)
+        cotizacion.cliente = cliente
+        cotizacion.save()
+
         productos = request.POST.getlist('producto')
         cantidades = request.POST.getlist('cantidad')
         precios = request.POST.getlist('precio')
+        descuentos = request.POST.getlist('descuento')
         
         # Eliminar todos los detalles de la cotización existentes
         cotizacion.detallecotizacion_set.all().delete()
@@ -112,23 +190,27 @@ def editar_cotizacion(request, cotizacion_id):
         # Agregar los nuevos detalles a la cotización
         for i in range(len(productos)):
             producto = get_object_or_404(Producto, id=productos[i])
-            cantidad = cantidades[i]
-            precio = precios[i]
-            
+            cantidad = int(cantidades[i])
+            precio = int(precios[i])
+            descuento = int(descuentos[i])
+            total_coti = cantidad * precio * (1 - descuento / 100)
             DetalleCotizacion.objects.create(
                 cotizacion=cotizacion,
                 producto=producto,
                 cantidad=cantidad,
-                precio=precio
+                precio=precio,
+                descuento=descuento,
+                total_coti=total_coti
             )
         
         # Redirigir a la página de listado de cotizaciones
         return redirect('listado_cotizacion')
     
-    # Si es una solicitud GET, renderizar la plantilla de edición de cotización
+    clientes = Clientes.objects.all()
     productos_disponibles = Producto.objects.all()
     context = {
         'cotizacion': cotizacion,
+        'clientes': clientes,
         'productos_disponibles': productos_disponibles
     }
     return render(request, 'editar_cotizacion.html', context)
@@ -194,5 +276,77 @@ def generar_reporte(request):
 
     return response
 
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+from reportlab.lib import colors
+from django.http import HttpResponse
+from django.utils.text import slugify
 
+def generar_reporte_pdf(request, cotizacion_id):
+    # Obtener la cotización específica
+    cotizacion = Cotizacion.objects.get(id=cotizacion_id)
 
+    # Crear el objeto PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{slugify(cotizacion.cliente.nombre)}-cotizacion.pdf"'
+
+    # Crear el documento PDF
+    pdf = SimpleDocTemplate(response, pagesize=letter)
+
+    # Lista de elementos del PDF
+    elements = []
+
+    # Estilos de la tabla
+    styles = getSampleStyleSheet()
+    estilo_cabecera = styles['Heading4']
+    estilo_normal = styles['Normal']
+
+    # Encabezado del PDF
+    encabezado = Paragraph("Detalle Cotización", estilo_cabecera)
+    elements.append(encabezado)
+
+    # Información del cliente
+    cliente_info = f"<b>Cliente:</b> {cotizacion.cliente.nombre}<br/>"
+    cliente_info += f"<b>E-mail:</b> {cotizacion.cliente.correo}<br/>"
+    cliente_info += f"<b>Dirección:</b> {cotizacion.cliente.direccion}<br/>"
+    cliente_info += f"<b>Teléfono:</b> {cotizacion.cliente.telefono}<br/>"
+    cliente_info += f"<b>Fecha:</b> {cotizacion.fecha}"
+    cliente_info_paragraph = Paragraph(cliente_info, estilo_normal)
+    elements.append(cliente_info_paragraph)
+
+    # Tabla de detalles de la cotización
+    detalles_table_data = []
+    detalles_table_data.append(["Producto", "Cantidad", "Precio", "Descuento (%)", "Total"])
+
+    for detalle in cotizacion.detallecotizacion_set.all():
+        detalles_table_data.append([
+            detalle.producto.nombre,
+            str(detalle.cantidad),
+            str(detalle.precio),
+            str(detalle.descuento),
+            str(detalle.subtotal())
+        ])
+
+    detalles_table = Table(detalles_table_data)
+    detalles_table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), estilo_cabecera.backColor),
+        ("TEXTCOLOR", (0, 0), (-1, 0), estilo_cabecera.textColor),
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("FONTNAME", (0, 0), (-1, 0), estilo_cabecera.fontName),
+        ("FONTSIZE", (0, 0), (-1, 0), estilo_cabecera.fontSize),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+        ("BACKGROUND", (0, 1), (-1, -1), colors.white),
+        ("GRID", (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    elements.append(detalles_table)
+
+    # Total de la cotización
+    total = f"<b>Total Orden de Venta:</b> {cotizacion.total()}"
+    total_paragraph = Paragraph(total, estilo_normal)
+    elements.append(total_paragraph)
+
+    # Construir el PDF
+    pdf.build(elements)
+
+    return response

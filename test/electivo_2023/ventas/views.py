@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
-
+from django.contrib import messages
 
 # Create your views here.
 
@@ -50,7 +50,7 @@ def crear_orden_venta(request, id=None):
             detalle.save()
 
             Producto.objects.filter(pk=producto_id).update(cantidad=Cast(F('cantidad'), IntegerField()) - cantidad)
-
+            messages.success(request, 'La orden de venta se ha creado correctamente.')
         return redirect('detalle_orden_venta', orden_venta_id=orden_venta.id)
     else:
         clientes = Clientes.objects.all()

@@ -29,9 +29,11 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Nombre del producto</th>
+        <th>Producto</th>
         <th>Cantidad</th>
         <th>Precio</th>
+        <th>Descuento (%)</th>
+        <th>Total</th>
       </tr>
     </thead>
     <tbody>
@@ -39,10 +41,16 @@
         <tr>
           <td>{{ detalle.producto.nombre }}</td>
           <td>{{ detalle.cantidad }}</td>
-          <td>{{ detalle.precio }}</td>
+          <td>{{ detalle.formatted_precio }}</td>
+          <td>{{ detalle.descuento }}%</td>
+          <td>{{ detalle.formatted_total_coti}}</td>
           
         </tr>
       {% endfor %}
+      <tr>
+        <td colspan="4" style="text-align: right;"><strong>Total Orden de Venta:</strong></td>
+        <td><strong>{{ cotizacion.total}}</strong></td>
+      </tr>
     </tbody>
   </table>
 </div>
