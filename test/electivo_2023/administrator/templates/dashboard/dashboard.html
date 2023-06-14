@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+  <title>EcoFácil</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %} ">
+  <link rel="stylesheet" href="{% static 'lib/AdminLTE-3.2.0/css/adminlte.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %} ">
+  <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %} ">
+  <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %} ">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    
+    
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    
+
+
+    <style>
+.navbar-default {
+  background-color: #00c040;
+}
+.bg-mi-color{
+    background-color: #e9e9e9 ;
+    font-family:'Poppins',sans-serif;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+}
+.table{
+    max-width: 800px;
+    width: 100%;
+}
+
+    </style>
+</head>
+<body class="bg-mi-color">
+
+    <aside class="main-sidebar sidebar-light-primary elevation-4">
+        <a href="#" class="brand-link">
+            <img src="{% static "/assets/img/logo3.png" %}"
+                 alt="Logo"
+                 class="brand-image"
+                 style="opacity: .8">
+            <span class="brand-text font-weight-light">ECOFÁCIL</span>
+        </a>
+        <div class="sidebar">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="info">
+                    <a href="#" class="d-block">{{ request.user.username }} </a>
+                </div>
+            </div>
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-header">Menú Principal</li>
+                    <li class="nav-item">
+                      <a href="{% url 'users_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Usuarios
+                        </p>
+                    </a>
+                  </li>
+                    <li class="nav-item">
+                        <a href="{% url 'productos_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-box"></i>
+                            <p>
+                                Productos
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'categorias_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <p>
+                                Categorías
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'insumos_main' %}" class="nav-link">
+                            <i class="nav-icon fas fa-boxes"></i>
+                            <p>
+                                Insumos
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{% url 'proveedores_main' %}" class="nav-link">
+                          <i class="nav-icon fas fa-truck"></i>
+                          <p>
+                              Proveedores
+                          </p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'orden_compra_main' %}" class="nav-link">
+                        <i class="nav-icon fas fa-file-invoice"></i>
+                        <p>
+                            Orden de compra
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'clientes_main' %}" class="nav-link">
+                      <i class="nav-icon fas fa-users"></i>
+                      <p>
+                          Clientes
+                      </p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'cotizaciones_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>
+                        Cotizaciones
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'orden_trabajo_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice"></i>
+                    <p>
+                        Orden de trabajo
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'orden_venta_main' %}" class="nav-link">
+                    <i class="nav-icon fas fa-cash-register"></i>
+                    <p>
+                        Ventas
+                    </p>
+                </a>
+            </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+    
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a style="color: #fff;" class="navbar-brand" href="#">EcoFácil</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a style="color: #fff; font-size: 23px;" href="#"><span class="glyphicon glyphicon-user"></span> 
+                  ¡Bienvenido {{request.user.first_name}} {{request.user.last_name}}!</a></li>  
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a style="color: #fff;" href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+          </ul>
+        </div>
+    </nav>
+  
+    
+
+    <div class="container">
+
+        
+    <div class="col">
+        <div class="row justify-content-center">
+            <div style="background-color: #00c040; color: #fff;"  class="small-box bg-primary"> 
+                <div class="inner">
+            
+                <p>Graficos de</p>
+                <h2>CATEGORIA</h2>
+                </div>
+                
+            </div>
+
+            <canvas id="myGrafica" style="width:100%;max-width:700px">
+            </canvas>
+            
+          
+
+            <canvas id="myGrafica2" style="width:100%;max-width:600px">
+            </canvas>
+
+        </div>
+
+      </div>
+
+
+      <div class="col">
+        <div class="row justify-content-center">
+
+
+            <div style="background-color: #00c040; color: #fff;"  class="small-box bg-primary"> 
+                <div class="inner">
+            
+                <p>Graficos de</p>
+                <h2>PRODUCTO</h2>
+                </div>
+                
+            </div>
+
+            <canvas id="myGrafica3" style="width:100%;max-width:700px">
+            </canvas>
+            
+          
+            <canvas id="myGrafica4" style="width:100%;max-width:600px">
+            </canvas>
+
+
+
+            
+        </div>
+
+        
+
+      </div>
+
+
+    </div>
+
+
+
+
+     
+
+
+      
+      
+      {% for cosas in cat %}
+      <ul>
+        <liaa style="display: none;"> {{ cosas.nombre }} </liaa>
+        <t style="display: none;"> {{ cosas.cantidad }} </t>
+      </ul>
+      {% endfor %}
+      
+
+      {% for ting in prod %}
+      <ul>
+        <lis style="display: none;"> {{ ting.nombre }} </lis>
+        <ta style="display: none;"> {{ ting.can_sol }} </ta>
+      </ul>
+      {% endfor %}
+      
+
+
+      
+
+
+
+
+      
+
+      
+
+
+     
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+</body>
+
+
+
+<script>
+
+//GRAFICO 1 DE CATEGORIA
+
+    var lista=document.getElementsByTagName("liaa");
+    var cos=[];
+    for (var i = 0; i < lista.length; i++) {
+        cos.push(lista[i].textContent);
+    
+    }
+
+    var lista2=document.getElementsByTagName("t");
+    var cantidad=[];
+    for (var i = 0; i < lista2.length; i++) {
+        cantidad.push(lista2[i].textContent);
+    
+    }
+
+    var barColors = ["#ca4221", "green","#2596be","orange","#8ed8e5","purple","fuchsia","lime"];
+    let miCanvas=document.getElementById("myGrafica").getContext("2d");
+    
+    var chart= new Chart(miCanvas,{
+        type:"pie",
+        data:{
+            
+            labels:cos,
+            
+            datasets:[
+                {
+                    label:"Grafico de categoria, pie",
+                    backgroundColor:barColors,
+                    data:cantidad
+
+                }
+            ]
+        }
+    })
+
+
+
+
+
+//GRAFICO 2 DE CATEGORIA
+
+
+    var lista=document.getElementsByTagName("liaa");
+    var cos=[];
+    for (var i = 0; i < lista.length; i++) {
+        cos.push(lista[i].textContent);
+    
+    }
+
+    var lista2=document.getElementsByTagName("t");
+    var cantidad=[];
+    for (var i = 0; i < lista2.length; i++) {
+        cantidad.push(lista2[i].textContent);
+    
+    }
+
+    var barColors = ["red", "green","aqua","orange","maroon","purple","fuchsia","lime"];
+    let miCanvas2=document.getElementById("myGrafica2").getContext("2d");
+    
+    var chart= new Chart(miCanvas2,{
+        type:"bar",
+        data:{
+            
+            labels:cos,
+            
+            datasets:[
+                {
+                    label:"Grafico de categoria",
+                    backgroundColor:barColors,
+                    data:cantidad
+
+                }
+            ]
+        }
+    })
+
+
+
+
+//GRAFICO 1 DE PRODUCTOS
+
+
+var lista=document.getElementsByTagName("lis");
+    var cos=[];
+    for (var i = 0; i < lista.length; i++) {
+        cos.push(lista[i].textContent);
+    
+    }
+
+    var lista2=document.getElementsByTagName("ta");
+    var cantidad=[];
+    for (var i = 0; i < lista2.length; i++) {
+        cantidad.push(lista2[i].textContent);
+    
+    }
+
+    var barColors = ["#ca4221", "green","#2596be","orange","#8ed8e5","purple","fuchsia","lime"];
+    let miCanvas3=document.getElementById("myGrafica3").getContext("2d");
+    
+    var chart= new Chart(miCanvas3,{
+        type:"pie",
+        data:{
+            
+            labels:cos,
+            
+            datasets:[
+                {
+                    label:"Grafico de productos",
+                    backgroundColor:barColors,
+                    data:cantidad
+
+                }
+            ]
+        }
+    })
+
+
+
+
+
+
+
+
+
+
+//GRAFICO 2 DE PRODUCTOS
+
+
+var lista=document.getElementsByTagName("lis");
+    var cos=[];
+    for (var i = 0; i < lista.length; i++) {
+        cos.push(lista[i].textContent);
+    
+    }
+
+    var lista2=document.getElementsByTagName("ta");
+    var cantidad=[];
+    for (var i = 0; i < lista2.length; i++) {
+        cantidad.push(lista2[i].textContent);
+    
+    }
+
+    var barColors = ["red", "green","aqua","orange","maroon","purple","fuchsia","lime"];
+    let miCanvas4=document.getElementById("myGrafica4").getContext("2d");
+    
+    var chart= new Chart(miCanvas4,{
+        type:"bar",
+        data:{
+            
+            labels:cos,
+            
+            datasets:[
+                {
+                    label:"Grafico de productos",
+                    backgroundColor:barColors,
+                    data:cantidad
+
+                }
+            ]
+        }
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</html>

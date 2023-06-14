@@ -22,4 +22,5 @@ administrator_patterns = [
     path('list_user_active/<group_id>/<page>/',views.list_user_active, name='list_user_active'),     
     path('list_user_block/<group_id>/',views.list_user_block, name='list_user_block'),     
     path('list_user_block/<group_id>/<page>/',views.list_user_block, name='list_user_block'),  
+    path('dashboard', views.dashbo,name="dashboard"),
     ]  

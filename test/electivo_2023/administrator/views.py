@@ -23,6 +23,9 @@ from clientes.models import Clientes
 from ventas.models import Ventas
 from orden_compra.models import OrdenCompra
 from insumos.models import Insumos
+from ventas.models import Detalle_orden_venta
+from categorias.models import Categorias
+from productos.models import Producto
 
 from registration.models import Profile
 @login_required
@@ -41,10 +44,55 @@ def admin_main(request):
         return redirect('check_group_main')
     template_name = 'administrator/admin_main.html'
     total_clientes = Clientes.total_clientes()
-    total_ordenes_venta = Ventas.total_ordenes()
+    total_ordenes_venta = Detalle_orden_venta.total_ordenes_venta()
     total_insumos = Insumos.total_insumos()
     total_ordenes_compra = OrdenCompra.total_ordenes_compra()
     return render(request, template_name, {'profiles': profiles, 'total_clientes': total_clientes, 'total_ordenes_venta': total_ordenes_venta, 'total_insumos': total_insumos, 'total_ordenes_compra': total_ordenes_compra})
+
+
+
+
+@login_required
+def dashbo(request):
+    profiles = Profile.objects.get(user_id = request.user.id)
+    if profiles.group_id != 1 and profiles.group_id != 2:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una area para la que no tiene permisos')
+        return redirect('check_group_main')
+    template_name = 'dashboard/dashboard.html'
+    
+
+    prod = Producto.objects.all()
+    cate = Categorias.objects.all()
+    ord=Detalle_orden_venta.objects.all()
+    
+    
+    for a in cate:
+        a.cantidad=0
+        for b in prod:
+            cat__del_prod=b.categoria
+            id_de_cat__del_prod=cat__del_prod.id
+            idcate=a.id
+            if id_de_cat__del_prod==idcate:
+
+                a.cantidad+=1
+                a.save()
+
+    for c in prod:
+        c.can_sol=0
+        for d in ord:
+            prod_de_orden=d.producto
+            id_de_prod_de_orden=prod_de_orden.id
+            idprod=c.id
+            if id_de_prod_de_orden==idprod:
+                ca=d.cantidad
+                c.can_sol+=ca
+                c.save()
+    
+    return render(request, template_name, {'profiles': profiles, 'prod':prod, 'cat':cate, 'ord':ord})
+
+
+
+
 
 
 @login_required

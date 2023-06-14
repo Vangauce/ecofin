@@ -39,3 +39,7 @@ class Detalle_orden_venta(models.Model):
         locale.setlocale(locale.LC_ALL, 'es_CL.UTF-8') 
         return locale.format_string('%d', self.total_venta, grouping=True)
     
+    @classmethod
+    def total_ordenes_venta(cls):
+        return cls.objects.count()
+    
