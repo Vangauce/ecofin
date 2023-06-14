@@ -21,6 +21,7 @@ def ver_estado_venta(request, id):
 
 def cambiar_estado_venta(request, id):
     venta = get_object_or_404(Ventas, pk=id)
+    estados = ['Pendiente', 'En bodega', 'En embalaje', 'En envío', 'Rechazado']
 
     if request.method == 'POST':
         nuevo_estado = request.POST.get('nuevo_estado')
@@ -28,6 +29,7 @@ def cambiar_estado_venta(request, id):
         venta.save()
         return redirect('listar_ventas') 
 
-    context = {'venta': venta}
+    context = {'venta': venta, 'estados': estados}
     return render(request, 'orden_trabajo/cambiar_estado_venta.html', context)
+
 
