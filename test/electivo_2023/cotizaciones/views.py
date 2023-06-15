@@ -385,19 +385,19 @@ def generar_reporte_general_pdf(request):
     pdf.setFont('Helvetica', 12)
     y -= 22
     pdf.drawString(x,y, "Orden:")
-    pdf.drawString(x + 50, y, "Cliente:")
-    pdf.drawString(x + 100, y, "Apellido:")
-    pdf.drawString(x + 180, y, "Fecha:")
-    pdf.drawString(x + 290, y, "Dirección:")
-    pdf.drawString(x + 420, y, "Total:")
+    pdf.drawString(x + 70, y, "Cliente:")
+    pdf.drawString(x + 150, y, "Apellido:")
+    pdf.drawString(x + 230, y, "Fecha:")
+    pdf.drawString(x + 340, y, "Dirección:")
+    pdf.drawString(x + 480, y, "Total:")
     y -= 18
     for cotizacion in listado_cotizaciones:
         pdf.drawString(x, y, str(cotizacion.id))
-        pdf.drawString(x + 50, y, cotizacion.cliente.nombre)
-        pdf.drawString(x + 100, y, cotizacion.cliente.apellido)
-        pdf.drawString(x + 180, y, str(cotizacion.fecha))
-        pdf.drawString(x + 290, y, cotizacion.cliente.direccion)
-        pdf.drawString(x + 420, y, str(cotizacion.total))
+        pdf.drawString(x + 70, y, cotizacion.cliente.nombre)
+        pdf.drawString(x + 150, y, cotizacion.cliente.apellido)
+        pdf.drawString(x + 230, y, str(cotizacion.fecha))
+        pdf.drawString(x + 340, y, cotizacion.cliente.direccion)
+        pdf.drawString(x + 480, y, cotizacion.total())
         y -= 14
     
     pdf.showPage()

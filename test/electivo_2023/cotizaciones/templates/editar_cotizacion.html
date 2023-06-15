@@ -28,6 +28,7 @@
             <th>Cantidad</th>
             <th>Precio</th>
             <th>Descuento (%)</th> 
+            <th>Total</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -45,6 +46,7 @@
               <td><input type="number" name="cantidad" class="form-control cantidad-input" value="{{ detalle.cantidad }}" required></td>
               <td><input type="number" name="precio" class="form-control precio-input" value="{{ detalle.precio }}" required readonly></td>
               <td><input type="number" name="descuento" class="form-control descuento-input" value="{{ detalle.descuento }}" required></td>
+              <td><input type="number" name="total" class="form-control total-input" readonly></td>
               <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
             </tr>
           {% endfor %}
@@ -72,18 +74,33 @@
       $(this).closest('tr').remove();
     });
 
+    $(document).on('change', '.cantidad-input, .descuento-input', function() {
+      var cantidadInput = $(this).closest('.productos-row').find('.cantidad-input');
+      var precio = parseFloat($(this).closest('.productos-row').find('.precio-input').val());
+      var descuentoInput = $(this).closest('.productos-row').find('.descuento-input');
+      var totalInput = $(this).closest('.productos-row').find('.total-input');
+      calcularTotal(cantidadInput, precio, descuentoInput, totalInput);
+    });
+
     $(document).on('change', '.producto-select', function() {
       var selectedOption = $(this).find(':selected');
-      var precio = selectedOption.data('precio');
+      var precio = parseFloat(selectedOption.data('precio'));
       $(this).closest('.productos-row').find('.precio-input').val(precio);
     });
 
-    // Actualizar los precios al cargar la página
+    function calcularTotal(cantidadInput, precio, descuentoInput, totalInput) {
+      var cantidad = parseFloat(cantidadInput.val()) || 0;
+      var descuento = parseFloat(descuentoInput.val()) || 0;
+      var total = cantidad * precio - (cantidad * precio * descuento / 100);
+      totalInput.val(Math.round(total));
+    }
+
     $('.producto-select').each(function() {
       var selectedOption = $(this).find(':selected');
-      var precio = selectedOption.data('precio');
-      $(this).closest('.producto-row').find('.precio-input').val(precio);
+      var precio = parseFloat(selectedOption.data('precio'));
+      $(this).closest('.productos-row').find('.precio-input').val(precio);
     });
   });
 </script>
 {% endblock %}
+
