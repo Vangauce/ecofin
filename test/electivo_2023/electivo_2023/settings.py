@@ -25,7 +25,7 @@ SECRET_KEY = '*x@(j@3=_b*s*^n60q#xp@^o&8l=#fwjndpfm@ozotx0hnq@x3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.15.170.37', 'tu_otro_host', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -95,9 +95,12 @@ DATABASES = {
     'default': {
         'HOST': 'localhost',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'onepiece',
-        'USER': 'postgres',
-        'PASSWORD': '1234'
+        'NAME': 'BASEFINAL',
+        'USER': 'angel',
+        'PASSWORD': '1234',
+        'OPTIONS': {
+            'options': '-c timezone=UTC',
+        }
     }
 }
 
