@@ -8,8 +8,9 @@
             <label for="id_nuevo_estado">Nuevo Estado:</label>
             <select id="id_nuevo_estado" name="nuevo_estado" class="form-control" required>
                 <option value="">Seleccionar estado</option>
-                {% for estado in estados %}
-                    <option value="{{ estado }}">{{ estado }}</option>
+
+                {% for estado in estados_ordenes %}
+                    <option value="{{ estado }}" {% if venta.estado == estado %}selected{% endif %}>{{ estado }}</option>
                 {% endfor %}
             </select>
         </div>

@@ -3,7 +3,14 @@ from ventas.models import Ventas
 
 
 class OrdenTrabajo(models.Model):
-    ventas = models.ForeignKey(Ventas, on_delete=models.CASCADE)
+    estado = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.estado
+
+
+    
+    ventas = models.ForeignKey(Ventas, on_delete=models.CASCADE, null = True)
 
     @classmethod
     def total_ordenes_trabajo(cls):

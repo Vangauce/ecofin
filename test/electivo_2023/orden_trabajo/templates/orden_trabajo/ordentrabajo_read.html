@@ -1,0 +1,6 @@
+{% extends "orden_trabajo/base.html" %}
+
+{% block content %}
+    <h2>{{ ordenes.estado }}</h2>
+    <a href="{% url 'listar_ventas' %}" class="btn btn-secondary">Regresar al listado</a>
+{% endblock %}
