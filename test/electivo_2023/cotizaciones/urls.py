@@ -11,6 +11,7 @@ urlpatterns = [
     path('editar/<int:cotizacion_id>/', editar_cotizacion, name='editar_cotizacion'),
     path('generar-reporte/', generar_reporte, name='generar_reporte'),
     path('',views.cotizaciones_main,name='cotizaciones_main'),
-    path('generar_reporte_pdf/<int:cotizacion_id>/', views.generar_reporte_pdf, name='generar_reporte_pdf')
+    path('generar_reporte_pdf/<int:cotizacion_id>/', views.generar_reporte_pdf, name='generar_reporte_pdf'),
+    path('ruta/', views.generar_reporte_general_pdf, name='generar_reporte_general_pdf'),
 
 ]

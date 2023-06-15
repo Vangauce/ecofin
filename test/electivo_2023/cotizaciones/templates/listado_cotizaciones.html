@@ -26,9 +26,9 @@
     <a href="{% url 'crear_cotizacion' %}" class="btn btn-outline-dark">
         <i class="fas fa-plus"></i> Añadir 
     </a>
-    <a href="#" class="btn btn-outline-dark">
-        <i class="fas fa-file-excel"></i> Reporte
-    </a>       
+    <a href="{% url 'generar_reporte_general_pdf' %}" class="btn btn-outline-dark">
+      <i class="far fa-file-pdf"></i> Reporte
+    </a>     
     <a href="{% url 'cotizaciones_main' %}" class="btn btn-outline-dark">
       <i class="fas fa-home"></i> Volver
   </a>       
@@ -41,6 +41,7 @@
             <tr>
               <td>Orden</td>
               <td>Cliente</td>
+              <td>Apellido</td>
               <td>Fecha</td>
               <td>Dirección</td>
               <td>Total</td>
@@ -52,6 +53,7 @@
               <tr>
                 <td>{{ cotizacion.id }}</td>
                 <td>{{ cotizacion.cliente.nombre }}</td>
+                <td>{{ cotizacion.cliente.apellido }}</td>
                 <td>{{ cotizacion.fecha }}</td>
                 <td>{{ cotizacion.cliente.direccion }}</td>
                 <td>{{ cotizacion.total }}</td>

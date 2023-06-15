@@ -35,6 +35,7 @@
             <th>Cantidad</th>
             <th>Precio</th>
             <th>Descuento (%)</th> 
+            <th>Total</th>
             <th>Opciones</th>
           </tr>
         </thead>
@@ -51,11 +52,15 @@
             <td><input type="text" name="stock" class="form-control stock-input" required readonly></td>
             <td><input type="number" name="cantidad" class="form-control cantidad-input" required ></td>
             <td><input type="number" name="precio" class="form-control precio-input" required readonly></td>
-            <td><input type="number" name="descuento" class="form-control descuento-input" required></td>  
+            <td><input type="number" name="descuento" class="form-control descuento-input" required value="0"></td>  
+            <td><input type="number" name="total" class="form-control total-input" readonly></td>
             <td><button type="button" class="btn btn-danger remove-producto">Eliminar</button></td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div id="total-final" class="d-flex justify-content-end mb-3">
+      <h4>Total Final: <span id="total-final-value">0</span></h4>
     </div>
     <div style="display: flex; justify-content: center; margin-bottom: 20px;">
     <button type="button" class="btn btn-primary add-producto">Añadir Producto</button>
@@ -69,13 +74,15 @@
     $('.add-producto').click(function() {
       var productoRow = $('.producto-row').first().clone();
       productoRow.find('select').val('');
-      productoRow.find('input').val('');
+      productoRow.find('input[name="cantidad"]').val('');
+      productoRow.find('input[name="descuento"]').val('0');
       productoRow.find('.remove-producto').show();
       $('#productos-table tbody').append(productoRow);
     });
 
     $(document).on('click', '.remove-producto', function() {
       $(this).closest('tr').remove();
+      calcularTotalFinal();
     });
 
     $(document).on('change', '.producto-select', function() {
@@ -84,6 +91,8 @@
       var stock = selectedOption.data('stock');
       var cantidadInput = $(this).closest('.producto-row').find('.cantidad-input');
       var stockInput = $(this).closest('.producto-row').find('.stock-input');
+      var descuentoInput = $(this).closest('.producto-row').find('.descuento-input');
+      var totalInput = $(this).closest('.producto-row').find('.total-input');
       
       $(this).closest('.producto-row').find('.precio-input').val(precio);
       stockInput.val(stock);
@@ -93,7 +102,77 @@
       if (parseInt(cantidadInput.val()) > stock) {
         cantidadInput.val('');
       }
+
+      calcularTotal(cantidadInput, precio, descuentoInput, totalInput);
+      calcularTotalFinal();
     });
+
+    
+    $(document).on('input', '.cantidad-input', function() {
+      var cantidadInput = $(this);
+      var stock = cantidadInput.closest('.producto-row').find('.stock-input').val();
+      var precio = cantidadInput.closest('.producto-row').find('.precio-input').val();
+      var descuentoInput = cantidadInput.closest('.producto-row').find('.descuento-input');
+      var totalInput = cantidadInput.closest('.producto-row').find('.total-input');
+      if (parseInt(cantidadInput.val()) > stock) {
+        cantidadInput.val('');
+      }
+      calcularTotal(cantidadInput, precio, descuentoInput, totalInput);
+      calcularTotalFinal();
+    });
+    $(document).on('input', '.descuento-input', function() {
+      var descuentoInput = $(this);
+      var cantidadInput = descuentoInput.closest('.producto-row').find('.cantidad-input');
+      var precio = descuentoInput.closest('.producto-row').find('.precio-input').val();
+      var totalInput = descuentoInput.closest('.producto-row').find('.total-input');
+      calcularTotal(cantidadInput, precio, descuentoInput, totalInput);
+      calcularTotalFinal();
+    });
+    function calcularTotal(cantidadInput, precio, descuentoInput, totalInput) {
+      var cantidad = parseInt(cantidadInput.val()) || 0;
+      var descuento = parseInt(descuentoInput.val()) || 0;
+      var total = cantidad * precio - (cantidad * precio * descuento / 100);
+      totalInput.val(Math.round(total));
+    }
+    function calcularTotalFinal() {
+      var totalFinal = 0;
+      $('.total-input').each(function() {
+        var total = parseFloat($(this).val()) || 0;
+        totalFinal += total;
+      });
+      $('#total-final-value').text(Math.round(totalFinal));
+    }
+    
+    $(document).on('input', '.descuento-input', function() {
+      var descuentoInput = $(this);
+      var cantidadInput = descuentoInput.closest('.producto-row').find('.cantidad-input');
+      var precio = descuentoInput.closest('.producto-row').find('.precio-input').val();
+      var totalInput = descuentoInput.closest('.producto-row').find('.total-input');
+      var descuento = parseInt(descuentoInput.val()) || 0;
+      if (descuento < 0) {
+        descuentoInput.val(0);
+      } else if (descuento > 100) {
+        descuentoInput.val(100);
+      }
+    calcularTotal(cantidadInput, precio, descuentoInput, totalInput);
+  });
+
   });
 </script>
+<style>
+  #total-final {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+  }
+  #total-final h4 {
+    margin: 0;
+  }
+  #total-final span {
+    font-weight: bold;
+    margin-left: 5px;
+  }
+</style>
+
 {% endblock %}

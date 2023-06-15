@@ -224,14 +224,16 @@ def generar_reporte(request):
     sheet = workbook.active
 
     # Escribir encabezados
-    sheet['H1'] = 'Fecha'
+    sheet['J1'] = 'Fecha'
     sheet['A1'] = 'ID de Cotización'
     sheet['B1'] = 'Cliente'
-    sheet['C1'] = 'Producto'
-    sheet['D1'] = 'Cantidad'
-    sheet['E1'] = 'Precio'
-    sheet['F1'] = 'Subtotal'
-    sheet['G1'] = 'Total'
+    sheet['C1'] = 'Apellido'
+    sheet['D1'] = 'Producto'
+    sheet['E1'] = 'Cantidad'
+    sheet['F1'] = 'Precio'
+    sheet['G1'] = 'Descuento (%)'
+    sheet['H1'] = 'Subtotal'
+    sheet['I1'] = 'Total'
 
     # Aplicar formato de negrita a la fila 1
     for cell in sheet[1]:
@@ -253,21 +255,23 @@ def generar_reporte(request):
             id_anterior = cotizacion.id
 
             for detalle in cotizacion.detallecotizacion_set.all():
-                sheet[f'H{row}'] = cotizacion.fecha
+                sheet[f'J{row}'] = cotizacion.fecha
                 sheet[f'A{row}'] = cotizacion.id
                 sheet[f'B{row}'] = cliente.nombre
-                sheet[f'C{row}'] = detalle.producto.nombre
-                sheet[f'D{row}'] = detalle.cantidad
-                sheet[f'E{row}'] = detalle.precio
+                sheet[f'C{row}'] = cliente.apellido
+                sheet[f'D{row}'] = detalle.producto.nombre
+                sheet[f'E{row}'] = detalle.cantidad
+                sheet[f'F{row}'] = detalle.precio
+                sheet[f'G{row}'] = detalle.descuento
 
-                subtotal = detalle.cantidad * detalle.precio
-                sheet[f'F{row}'] = subtotal
+                subtotal = detalle.cantidad * detalle.precio * (100 - detalle.descuento) / 100
+                sheet[f'H{row}'] = subtotal
 
                 total += subtotal  # Acumular el subtotal en el total de la cotización
 
                 row += 1
 
-            sheet[f'G{row - 1}'] = total  # Escribir el total en la última fila de la cotización
+            sheet[f'I{row - 1}'] = total  # Escribir el total en la última fila de la cotización
 
     # Guardar el archivo de Excel en la respuesta HTTP
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -275,6 +279,7 @@ def generar_reporte(request):
     workbook.save(response)
 
     return response
+
 
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
@@ -349,4 +354,55 @@ def generar_reporte_pdf(request, cotizacion_id):
     # Construir el PDF
     pdf.build(elements)
 
+    return response
+
+from reportlab.lib.pagesizes import letter
+from django.conf import settings
+from django.utils import timezone
+from pytz import timezone as pytz_timezone
+from registration.models import Profile
+
+@login_required
+def generar_reporte_general_pdf(request):
+    profiles = Profile.objects.get(user_id=request.user.id)
+    if profiles.group_id != 1:
+        messages.add_message(request, messages.INFO, 'Intenta ingresar a una área para la que no tiene permisos')
+        return redirect('check_group_main')
+    time_zone = pytz_timezone(settings.TIME_ZONE) 
+    listado_cotizaciones = Cotizacion.objects.all()
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_Cotizacion.pdf"'
+    pdf = canvas.Canvas(response, pagesize=letter)
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(100, 750, "Reportes EcoFácil")
+    fecha_actual = timezone.now().astimezone(time_zone).strftime("%d/%m/%Y %H:%M:%S")
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(380, 750, f"Fecha del reporte: {fecha_actual}")
+    y = 700
+    x = 50
+    pdf.setFont('Helvetica-Bold', 12)
+    pdf.drawString(x, y, "Reporte de Cotizaciones")
+    pdf.setFont('Helvetica', 12)
+    y -= 22
+    pdf.drawString(x,y, "Orden:")
+    pdf.drawString(x + 50, y, "Cliente:")
+    pdf.drawString(x + 100, y, "Apellido:")
+    pdf.drawString(x + 180, y, "Fecha:")
+    pdf.drawString(x + 290, y, "Dirección:")
+    pdf.drawString(x + 420, y, "Total:")
+    y -= 18
+    for cotizacion in listado_cotizaciones:
+        pdf.drawString(x, y, str(cotizacion.id))
+        pdf.drawString(x + 50, y, cotizacion.cliente.nombre)
+        pdf.drawString(x + 100, y, cotizacion.cliente.apellido)
+        pdf.drawString(x + 180, y, str(cotizacion.fecha))
+        pdf.drawString(x + 290, y, cotizacion.cliente.direccion)
+        pdf.drawString(x + 420, y, str(cotizacion.total))
+        y -= 14
+    
+    pdf.showPage()
+    pdf.save()
+
+    request.session['redirigir_despues_de_descargar'] = True
+    
     return response
