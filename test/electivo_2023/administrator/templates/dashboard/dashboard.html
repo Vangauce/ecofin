@@ -190,8 +190,8 @@
             <div style="background-color: #00c040; color: #fff;"  class="small-box bg-primary"> 
                 <div class="inner">
             
-                <p>Graficos de</p>
-                <h2>CATEGORIA</h2>
+                <p>Popularidad de</p>
+                <h2>CATEGORIAS</h2>
                 </div>
                 
             </div>
@@ -216,8 +216,8 @@
             <div style="background-color: #00c040; color: #fff;"  class="small-box bg-primary"> 
                 <div class="inner">
             
-                <p>Graficos de</p>
-                <h2>PRODUCTO</h2>
+                <p>Venta de</p>
+                <h2>PRODUCTOS</h2>
                 </div>
                 
             </div>
@@ -227,6 +227,37 @@
             
           
             <canvas id="myGrafica4" style="width:100%;max-width:600px">
+            </canvas>
+
+
+
+            
+        </div>
+
+        
+
+      </div>
+
+
+
+      <div class="col">
+        <div class="row justify-content-center">
+
+
+            <div style="background-color: #00c040; color: #fff;"  class="small-box bg-primary"> 
+                <div class="inner">
+            
+                <p>Compra de</p>
+                <h2>INSUMOS</h2>
+                </div>
+                
+            </div>
+
+            <canvas id="myGrafica5" style="width:100%;max-width:700px">
+            </canvas>
+            
+          
+            <canvas id="myGrafica6" style="width:100%;max-width:600px">
             </canvas>
 
 
@@ -261,6 +292,14 @@
       <ul>
         <lis style="display: none;"> {{ ting.nombre }} </lis>
         <ta style="display: none;"> {{ ting.can_sol }} </ta>
+      </ul>
+      {% endfor %}
+
+
+      {% for wat in ins %}
+      <ul>
+        <liso style="display: none;"> {{ wat.nombre }} </liso>
+        <tao style="display: none;"> {{ wat.can_sol }} </tao>
       </ul>
       {% endfor %}
       
@@ -344,6 +383,7 @@
         cantidad.push(lista2[i].textContent);
     
     }
+    var numeroMasAlto = Math.max(...cantidad);
 
     var barColors = ["red", "green","aqua","orange","maroon","purple","fuchsia","lime"];
     let miCanvas2=document.getElementById("myGrafica2").getContext("2d");
@@ -362,6 +402,17 @@
 
                 }
             ]
+        },
+        options:{
+            scales:{
+                yAxes:[{
+                    ticks:{
+                        beginAtZero: true,
+                        max: numeroMasAlto
+                    }
+                }]
+                
+            }
         }
     })
 
@@ -430,6 +481,7 @@ var lista=document.getElementsByTagName("lis");
         cantidad.push(lista2[i].textContent);
     
     }
+    var numeroMasAlto = Math.max(...cantidad);
 
     var barColors = ["red", "green","aqua","orange","maroon","purple","fuchsia","lime"];
     let miCanvas4=document.getElementById("myGrafica4").getContext("2d");
@@ -448,6 +500,17 @@ var lista=document.getElementsByTagName("lis");
 
                 }
             ]
+        },
+        options:{
+            scales:{
+                yAxes:[{
+                    ticks:{
+                        beginAtZero: true,
+                        max: numeroMasAlto
+                    }
+                }]
+                
+            }
         }
     })
 
@@ -455,6 +518,97 @@ var lista=document.getElementsByTagName("lis");
 
 
 
+
+
+
+//GRAFICO 1 DE INSUMOS
+
+var lista=document.getElementsByTagName("liso");
+    var cos=[];
+    for (var i = 0; i < lista.length; i++) {
+        cos.push(lista[i].textContent);
+    
+    }
+
+    var lista2=document.getElementsByTagName("tao");
+    var cantidad=[];
+    for (var i = 0; i < lista2.length; i++) {
+        cantidad.push(lista2[i].textContent);
+    
+    }
+
+    var barColors = ["#ca4221", "green","#2596be","orange","#8ed8e5","purple","fuchsia","lime"];
+    let miCanvas5=document.getElementById("myGrafica5").getContext("2d");
+    
+    var chart= new Chart(miCanvas5,{
+        type:"pie",
+        data:{
+            
+            labels:cos,
+            
+            datasets:[
+                {
+                    label:"Grafico de categoria, pie",
+                    backgroundColor:barColors,
+                    data:cantidad
+
+                }
+            ]
+        }
+    })
+
+
+
+
+
+//GRAFICO 2 DE INSUMOS
+
+
+    var lista=document.getElementsByTagName("liso");
+    var cos=[];
+    for (var i = 0; i < lista.length; i++) {
+        cos.push(lista[i].textContent);
+    
+    }
+
+    var lista2=document.getElementsByTagName("tao");
+    var cantidad=[];
+    for (var i = 0; i < lista2.length; i++) {
+        cantidad.push(lista2[i].textContent);
+    
+    }
+    var numeroMasAlto = Math.max(...cantidad);
+
+    var barColors = ["red", "green","aqua","orange","maroon","purple","fuchsia","lime"];
+    let miCanvas6=document.getElementById("myGrafica6").getContext("2d");
+    
+    var chart= new Chart(miCanvas6,{
+        type:"bar",
+        data:{
+            
+            labels:cos,
+            
+            datasets:[
+                {
+                    label:"Grafico de categoria",
+                    backgroundColor:barColors,
+                    data:cantidad
+
+                }
+            ]
+        },
+        options:{
+            scales:{
+                yAxes:[{
+                    ticks:{
+                        beginAtZero: true,
+                        max: numeroMasAlto
+                    }
+                }]
+                
+            }
+        }
+    })
 
 
 
