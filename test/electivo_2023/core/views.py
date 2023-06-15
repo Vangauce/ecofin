@@ -21,7 +21,7 @@ def home(request):
         'profile': profile,
         'group_id': group_id,  # Pasar el ID del grupo al contexto
     }
-    return render(request, 'core/home.html', contexto)
+    return render(request, 'core/home2.html', contexto)
 
 
 
