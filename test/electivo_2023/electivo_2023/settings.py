@@ -90,7 +90,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'BASEFINAL',
         'USER': 'angel',
-        'PASSWORD': '1234'
+        'PASSWORD': '1234',
+        'OPTIONS': {
+            'options': '-c timezone=UTC',
+        }
     }
 }
 
