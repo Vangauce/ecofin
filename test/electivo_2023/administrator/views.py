@@ -1,7 +1,7 @@
 import calendar
 import json
 import random
-from turtle import home
+#from turtle import home
 import pandas as pd
 from datetime import datetime, time, timedelta
 from django.shortcuts import render, redirect
