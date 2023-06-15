@@ -95,9 +95,9 @@ DATABASES = {
     'default': {
         'HOST': 'localhost',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dataeco',
+        'NAME': 'onepiece',
         'USER': 'postgres',
-        'PASSWORD': '0922'
+        'PASSWORD': '1234'
     }
 }
 

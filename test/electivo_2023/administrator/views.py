@@ -21,7 +21,7 @@ import pandas as pd
 import xlwt
 from clientes.models import Clientes
 from ventas.models import Ventas
-from orden_compra.models import OrdenCompra
+from orden_compra.models import OrdenCompra, DetalleOrdenCompra
 from insumos.models import Insumos
 from ventas.models import Detalle_orden_venta
 from categorias.models import Categorias
@@ -64,8 +64,10 @@ def dashbo(request):
     prod = Producto.objects.all()
     cate = Categorias.objects.all()
     ord=Detalle_orden_venta.objects.all()
-    
-    
+    ins=Insumos.objects.all()
+    orde=DetalleOrdenCompra.objects.all()
+
+
     for a in cate:
         a.cantidad=0
         for b in prod:
@@ -87,8 +89,21 @@ def dashbo(request):
                 ca=d.cantidad
                 c.can_sol+=ca
                 c.save()
+
+
+    for e in ins:
+        e.can_sol=0
+        for f in orde:
+            insumo_de_orden=f.insumo
+            id_de_insumo_de_orden=insumo_de_orden.id
+            idprod=e.id
+            if id_de_insumo_de_orden==idprod:
+                ca=f.cantidad
+                e.can_sol+=ca
+                e.save()
+
     
-    return render(request, template_name, {'profiles': profiles, 'prod':prod, 'cat':cate, 'ord':ord})
+    return render(request, template_name, {'profiles': profiles, 'prod':prod, 'cat':cate, 'ord':ord, 'ins':ins})
 
 
 
